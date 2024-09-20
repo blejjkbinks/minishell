@@ -1,0 +1,6 @@
+ #!/usr/bin/bash 
+
+rm ~/Documents/programming/42/minishell/minishell;
+rm -rf ~/Documents/programming/42/minishell/obj;
+make -C ~/Documents/programming/42/minishell/;
+~/Documents/programming/42/minishell/minishell
