@@ -49,7 +49,7 @@ fclean: clean
 	@$(RM) $(NAME)
 	@$(MAKE) -C libft fclean
 
-re: fclean all
+re: clean all
 
 print:
 	@echo $(SRC)

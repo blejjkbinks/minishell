@@ -25,9 +25,13 @@ typedef struct s_mshl
 	char	*prompt;
 	char	*name;
 	char	*str;
+	char	*str1;
 	char	*str2;
 	char	*str3;
+	char	*exit_status;
 	char	**env;
+	char	**env_extra;
+	char	***arg;
 	int		i;
 	int		j;
 	int		k;

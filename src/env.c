@@ -17,7 +17,7 @@ char	**ft_env_dup(char **env)
 	char	**ret;
 	int		i;
 
-	ret = (char **)ft_malloc((ft_split_len(env) + 1) * sizeof(char *));
+	ret = (char **)ft_malloc((ft_split_len(env) + 1 + 1) * sizeof(char *));
 	i = 0;
 	while (env[i])
 	{
@@ -97,10 +97,7 @@ char	**ft_export(char **env, char *arg)
 
 	name = ft_env_name(arg);
 	if (!name)
-	{
-		ft_printf("cant export, invalid name\n");
-		return (NULL);
-	}
+		return (env + (0 * ft_printf("cant export, invalid name\n")));
 	len = ft_strlen(name);
 	if (name[len] == '=' && ft_strlen(name + len + 1))
 	{
