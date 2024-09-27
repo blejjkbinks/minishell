@@ -22,6 +22,7 @@
 typedef struct s_mshl
 {
 	char	*line;
+	char	*cash;
 	char	*prompt;
 	char	*name;
 	char	*str;
@@ -31,17 +32,21 @@ typedef struct s_mshl
 	char	*exit_status;
 	char	**env;
 	char	**env_extra;
-	char	***arg;
+	char	**pipe;
+	char	**comm;
+	//char	***arg;
 	int		i;
 	int		j;
 	int		k;
 	int		len;
+	size_t	cap;
 	pid_t	pid;
 	char	quote;
 }	t_mshl;
 
 char	**ft_env_dup(char **env);
 char	*ft_env_name(char *name);
+int		ft_env_namelen(char *name);
 char	*ft_env_get(char **env, char *name);
 int		ft_env_set(char **env, char *name, char *val);
 
@@ -52,5 +57,9 @@ int		ft_env(char **env);
 char	*ft_getcwd(void);
 int		ft_pwd(void);
 int		ft_cd(char **arg, char **env);
+
+int		quoted(char c, char *quote);
+//char	*cash_money(char *str, char **env, char *exit_status);
+char	*cash_money(t_mshl k);
 
 #endif	//minishell.h

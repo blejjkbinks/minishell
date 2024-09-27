@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: rdomange <romitdomange@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/23 17:45:50 by rdomange          #+#    #+#             */
-/*   Updated: 2024/09/23 17:45:51 by rdomange         ###   ########.fr       */
+/*   Created: 2024/09/20 00:18:55 by rdomange          #+#    #+#             */
+/*   Updated: 2024/09/20 00:18:57 by rdomange         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,18 +27,6 @@ int	quoted(char c, char *quote)
 	return (prev != *quote);
 }
 
-int	tilda(char *str, int len, char quote)
-{
-	if (!(*str == '~' && !quote))
-		return (0);
-	if (!(*(str + 1) == 0 || *(str + 1) == ' ' || *(str + 1) == '/'))
-		return (0);
-	if (!(!len || *(str - 1) == ' '))
-		return (0);
-	return (1);
-}
-
-/*
 static char	*dollar_tilda(char *str, char **env, char quote, int i, char *exit_status)
 {
 	char	*ret;
@@ -56,46 +44,76 @@ static char	*dollar_tilda(char *str, char **env, char quote, int i, char *exit_s
 	if (!ret)
 		ret = "";
 	return (ret);
-}*/
+}
 
-char	*cash_money(t_mshl k)
+static int	cash_money_len(char *str, char **env, char *exit_status)
 {
+	int		len;
+	char	*var;
+	char	quote;
+	char	*str_free;
+
+	len = 0;
+	quote = 0;
+	str_free = str;
+	while (*str)
+	{
+		quoted(*str, &quote);
+		var = dollar_tilda(str, env, quote, str == str_free, exit_status);
+		if (var)
+		{
+			if (str[0] == '$' && str[1] == '?')
+				str += 2;
+			else if (*str == '$' && ft_env_namelen(str + 1))
+				str += ft_env_namelen(str + 1) + 1;
+			else if (*str == '~')
+				str++;
+			len += ft_strlen(var);
+		}
+		else
+		{
+			str++;
+			len++;
+		}
+	}
+	return (len);
+}
+
+char	*cash_money(char *str, char **env, char *exit_status)
+{
+	int		len;
+	int		i;
 	char	*ret;
 	char	*var;
-	int		len;
-	size_t	cap;
 	char	quote;
 
+	len = cash_money_len(str, env, exit_status);
+	ret = (char *)malloc((len + 1) * sizeof(char));
+	i = 0;
 	quote = 0;
-	cap = 16;
-	ret = (char *)ft_calloc(cap, sizeof(char));
-	len = 0;
-	while (k.line && *k.line)
+	while (i < len)
 	{
-		var = NULL;
-		quoted(*k.line, &quote);
-		if (*k.line == '$' && ft_env_namelen(k.line + 1) && quote != '\'')
-		{
-			var = ft_env_get(k.env, k.line + 1);
-			k.line += ft_env_namelen(k.line + 1) + 1;
-		}
-		else if (!ft_strncmp(k.line, "$? ", 3) && quote != '\'')
-		{
-			var = k.exit_status;
-			k.line += 2;
-		}
-		else if (tilda(k.line, len, quote))
-		{
-			var = ft_env_get(k.env, "HOME");
-			k.line += 1;
-		}
-		if (len + 1 + ft_strlen(var) >= cap)
-			ret = ft_realloc(ret, len, cap + 1 + ft_strlen(var), &cap);
+		quoted(*str, &quote);
+		var = dollar_tilda(str, env, quote, i, exit_status);
 		if (var)
-			len = ft_strlcat(ret, var, ft_strlen(ret) + ft_strlen(var));
+		{
+			if (str[0] == '$' && str[1] == '?' && quote != '\'')
+				str += 2;
+			if (*str == '$' && quote != '\'' && (*(str + 1) == '_' || \
+			ft_isalpha(*(str + 1))))
+			{
+				str++;
+				while (ft_isalnum(*str) || *str == '_')
+					str++;
+			}
+			else if (*str == '~')
+				str++;
+			while (*var && i < len)
+				ret[i++] = *var++;
+		}
 		else
-			ret[len++] = *k.line++;
-		ret[len] = 0;
+			ret[i++] = *str++;
 	}
+	ret[i] = 0;
 	return (ret);
 }
