@@ -10,4 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "minishell.h"
 
+char	**ft_split_quotes(char *str)
+{
+	return (ft_split(str, " "));
+}

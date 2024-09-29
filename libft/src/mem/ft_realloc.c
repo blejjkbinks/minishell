@@ -16,7 +16,7 @@ void	*ft_realloc(void *ptr, size_t old, size_t new, size_t *cap)
 {
 	void	*ret;
 
-	if (!ptr || old <= 0 || new < old)
+	if (!ptr || old < 0 || new < old)
 		return (ptr);
 	ret = (void *)ft_calloc(new, sizeof(char));
 	if (!ret)

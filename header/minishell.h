@@ -13,6 +13,10 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# ifndef FT_EXITSTATUS
+#  define FT_EXITSTATUS(status) (((status) & 0xff00) >> 8)
+# endif
+
 # include "../libft/header/libft.h"
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -25,16 +29,17 @@ typedef struct s_mshl
 	char	*cash;
 	char	*prompt;
 	char	*name;
+	char	*last_command;
 	char	*str;
 	char	*str1;
 	char	*str2;
 	char	*str3;
 	char	*exit_status;
+	int		exit_res;
 	char	**env;
 	char	**env_extra;
 	char	**pipe;
 	char	**comm;
-	//char	***arg;
 	int		i;
 	int		j;
 	int		k;
@@ -58,8 +63,17 @@ char	*ft_getcwd(void);
 int		ft_pwd(void);
 int		ft_cd(char **arg, char **env);
 
+int		is_builtin(char *str);
+char	*ft_which(char *arg, char **env);
+int		ft_echo(char **arg);
+
 int		quoted(char c, char *quote);
-//char	*cash_money(char *str, char **env, char *exit_status);
 char	*cash_money(t_mshl k);
+
+char	**ft_split_pipes(char *str);
+char	**ft_split_quotes(char *str);
+
+int		exec_builtin(t_mshl *b);
+int		exec_fork(char **arg, char **env);
 
 #endif	//minishell.h

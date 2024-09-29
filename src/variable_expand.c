@@ -38,31 +38,21 @@ int	tilda(char *str, int len, char quote)
 	return (1);
 }
 
-/*
-static char	*dollar_tilda(char *str, char **env, char quote, int i, char *exit_status)
+int	double_exclam(char *str, int i)
 {
-	char	*ret;
-
-	if (*str == '~' && !quote)
-		if (*(str + 1) == 0 || *(str + 1) == ' ' || *(str + 1) == '/')
-			if (!i || *(str - 1) == ' ')
-				return (ft_env_get(env, "HOME"));
-	if (str[0] == '$' && str[1] == '?')
-		return (exit_status);
-	if (*str == '$' && quote != '\'')
-		ret = ft_env_get(env, str + 1);
-	if (!ret)
-		ret = ft_env_get(env_extra, str + 1);
-	if (!ret)
-		ret = "";
-	return (ret);
-}*/
+	if (!(str[i] == '!' && str[i + 1] == '!' && str[i + 2] != '!'))
+		return (0);
+	if (!(!i || str[i - 1] != '!'))
+		return (0);
+	return (1);
+}
 
 char	*cash_money(t_mshl k)
 {
 	char	*ret;
 	char	*var;
 	int		len;
+	int		i;
 	size_t	cap;
 	char	quote;
 
@@ -70,31 +60,39 @@ char	*cash_money(t_mshl k)
 	cap = 16;
 	ret = (char *)ft_calloc(cap, sizeof(char));
 	len = 0;
-	while (k.line && *k.line)
+	i = 0;
+	while (k.line && k.line[i])
 	{
-		var = NULL;
-		quoted(*k.line, &quote);
-		if (*k.line == '$' && ft_env_namelen(k.line + 1) && quote != '\'')
+		var = "its empty but not null hahahahahaha";
+		quoted(k.line[i], &quote);
+		if (k.line[i] == '$' && ft_env_namelen(&k.line[i + 1]) && quote != '\'')
 		{
-			var = ft_env_get(k.env, k.line + 1);
-			k.line += ft_env_namelen(k.line + 1) + 1;
+			var = ft_env_get(k.env, &k.line[i + 1]);
+			if (!var)
+				var = ft_env_get(k.env_extra, &k.line[i + 1]);
+			i += ft_env_namelen(&k.line[i + 1]) + 1;
 		}
-		else if (!ft_strncmp(k.line, "$? ", 3) && quote != '\'')
+		else if (!ft_strncmp(&k.line[i], "$?", 2) && quote != '\'')
 		{
 			var = k.exit_status;
-			k.line += 2;
+			i += 2;
 		}
-		else if (tilda(k.line, len, quote))
+		else if (tilda(&k.line[i], len, quote))
 		{
 			var = ft_env_get(k.env, "HOME");
-			k.line += 1;
+			i += 1;
 		}
-		if (len + 1 + ft_strlen(var) >= cap)
-			ret = ft_realloc(ret, len, cap + 1 + ft_strlen(var), &cap);
-		if (var)
-			len = ft_strlcat(ret, var, ft_strlen(ret) + ft_strlen(var));
+		else if (double_exclam(k.line, i))
+		{
+			var = k.last_command;
+			i += 2;
+		}
+		while (len + ft_strlen(var) + 1 >= cap)
+			ret = ft_realloc(ret, len, cap * 2, &cap);
+		if (ft_strncmp(var, "its empty but not null hahahahahaha", ft_strlen(var)))
+			len = ft_strlcat(ret, var, ft_strlen(ret) + ft_strlen(var) + 1);
 		else
-			ret[len++] = *k.line++;
+			ret[len++] = k.line[i++];
 		ret[len] = 0;
 	}
 	return (ret);

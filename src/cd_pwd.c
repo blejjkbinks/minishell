@@ -49,9 +49,9 @@ int	ft_cd_oldpwd(int err, char **env, char **arg)
 	char	*str;
 
 	if (err == ENOENT)
-		printf("cd: no such file or directory: %s\n", arg[1]);
+		ft_printf("cd: no such file or directory: %s\n", arg[1]);
 	if (err == ENOTDIR)
-		printf("cd: not a directory: %s\n", arg[1]);
+		ft_printf("cd: not a directory: %s\n", arg[1]);
 	if (!err)
 		ft_env_set(env, "OLDPWD", ft_env_get(env, "PWD"));
 	str = ft_getcwd();
@@ -75,7 +75,7 @@ int	ft_cd(char **arg, char **env)
 				return (1 + 0 * ft_printf("minishell: cd: OLDPWD not set\n"));
 			else
 			{
-				printf("%s\n", ft_env_get(env, "OLDPWD"));
+				ft_printf("%s\n", ft_env_get(env, "OLDPWD"));
 				chdir(ft_env_get(env, "OLDPWD"));
 			}
 		}

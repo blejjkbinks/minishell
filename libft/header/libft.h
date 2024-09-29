@@ -22,6 +22,7 @@
 # include <stdbool.h>
 # include <errno.h>
 # include "color_fmt.h"
+//# include <stdio.h>			//debug, remove when done
 
 typedef struct s_list
 {
