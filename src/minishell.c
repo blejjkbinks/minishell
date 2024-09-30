@@ -43,7 +43,8 @@ void	letsgo(t_mshl *m)
 	//ft_printf("cash:%s\n", m->line);
 	if (ft_strnstr(m->cash, "!!", ft_strlen(m->cash)))
 		ft_printf("!!:%s\n", m->line);
-	free(m->cash);
+	free(m->last_command);
+	m->last_command = m->cash;		//yikes
 	m->pipe = ft_split_pipes(m->line);
 	/*
 	ft_printf("SPLIT m->pipe:");
@@ -99,8 +100,9 @@ int	main(int argc, char **argv, char **envp_main)
 		{
 			add_history(m.line);
 			letsgo(&m);
-			free(m.last_command);
-			m.last_command = ft_strdup(m.line);
+			//free(m.last_command);
+			//m.last_command = ft_strdup(m.line);
+
 		}
 		if (!m.line)
 			return (1 + (0 * ft_printf("readline gave NULL??\n")));
