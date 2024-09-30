@@ -14,5 +14,5 @@
 
 char	**ft_split_pipes(char *str)
 {
-	return (ft_split(str, "|"));
+	return (ft_split(str, "|><"));
 }

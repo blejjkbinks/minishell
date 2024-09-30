@@ -24,6 +24,10 @@
 # include "color_fmt.h"
 //# include <stdio.h>			//debug, remove when done
 
+# ifndef DEFAULT_CAP
+#  define DEFAULT_CAP 16
+# endif
+
 typedef struct s_list
 {
 	void			*data;

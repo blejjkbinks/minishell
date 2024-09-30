@@ -1,38 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_get_next_line.c                                 :+:      :+:    :+:   */
+/*   ft_split_realloc.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rdomange <romitdomange@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/24 12:50:15 by rdomange          #+#    #+#             */
-/*   Updated: 2024/04/29 15:45:32 by rdomange         ###   ########.fr       */
+/*   Created: 2024/09/30 15:55:48 by rdomange          #+#    #+#             */
+/*   Updated: 2024/09/30 15:55:50 by rdomange         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-char	*get_next_line(int fd)
+char	**ft_split_realloc(char **split, int new, int *cap_ptr)
 {
-	char	*ret;
-	size_t	i;
-	size_t	c;
+	char	**ret;
+	int		i;
 
-	c = DEFAULT_CAP;
+	ret = (char **)ft_malloc(new * sizeof(char *));
 	i = 0;
-	ret = (char *)ft_malloc(c * sizeof(char));
-	while (ret && read(fd, &ret[i], 1) == 1)
+	while (split[i])
 	{
-		if (ret[i] == '\n')
-		{
-			ret[i] = 0;
-			return (ret);
-		}
-		ret[++i] = 0;
-		if (i == c)
-			ret = ft_realloc(ret, i, c * 2, &c);
+		ret[i] = split[i];
+		i++;
 	}
-	if (!i)
-		return (ft_free(ret));
+	ret[i] = NULL;
+	free(split);
+	if (cap_ptr)
+		*cap_ptr = new;
 	return (ret);
 }

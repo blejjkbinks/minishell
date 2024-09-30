@@ -57,7 +57,7 @@ char	*cash_money(t_mshl k)
 	char	quote;
 
 	quote = 0;
-	cap = 16;
+	cap = DEFAULT_CAP;
 	ret = (char *)ft_calloc(cap, sizeof(char));
 	len = 0;
 	i = 0;

@@ -12,28 +12,48 @@
 
 #include "minishell.h"
 
-char	**ft_split_quotes(char *str)
+char	**ft_split_quotes_uhh(char *str)
 {
 	return (ft_split(str, " "));
 }
 
-char	**ft_split_quotesss(char *str)
+char	**ft_split_quotes(char *str)
 {
 	char	**ret;
-	char	**tmp;
 	int		i;
-	int		len;
+	int		j;
+	int		k;
 	size_t	cap;
+	int		cap2;
 	char	quote;
 
-	ret = ft_env_dup(NULL);
-	i = 0;
-	len = 0;
-	cap = 16;
+	i = 0;	//str
+	j = 0;	//copied str
+	k = 0;	//index in array
+	cap2 = DEFAULT_CAP;
 	quote = 0;
+	ret = (char **)ft_malloc(cap2 * sizeof(char *));
 	while (str && str[i])
 	{
-		
+		while (str[i] == ' ')
+			i++;
+		cap = DEFAULT_CAP;
+		ret[k] = (char *)ft_malloc(cap * sizeof(char));
+		j = 0;
+		while (str[i] && (str[i] != ' ' || quote))
+		{
+			if (!quoted(str[i], &quote))
+			{
+				ret[k][j] = str[i];
+				ret[k][++j] = 0;
+			}
+			i++;
+			if (j + 1 == (int)cap)
+				ret[k] = ft_realloc(ret[k], j, cap * 2, &cap);
+		}
+		ret[++k] = NULL;
+		if (k + 1 == cap2)
+			ret = ft_split_realloc(ret, cap2 * 2, &cap2);
 	}
 	return (ret);
 }
