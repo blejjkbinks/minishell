@@ -24,7 +24,7 @@ char	**ft_split_quotes(char *str)
 	int		j;
 	int		k;
 	size_t	cap;
-	int		cap2;
+	size_t	cap2;
 	char	quote;
 
 	i = 0;	//str
@@ -52,7 +52,7 @@ char	**ft_split_quotes(char *str)
 				ret[k] = ft_realloc(ret[k], j, cap * 2, &cap);
 		}
 		ret[++k] = NULL;
-		if (k + 1 == cap2)
+		if (k + 1 == (int)cap2)
 			ret = ft_split_realloc(ret, cap2 * 2, &cap2);
 	}
 	return (ret);

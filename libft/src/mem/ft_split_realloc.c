@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
 char	**ft_split_realloc(char **split, size_t new, size_t *cap_ptr)
 {
