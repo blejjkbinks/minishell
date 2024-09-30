@@ -44,6 +44,7 @@ void	*ft_memchr(const void *s, int c, size_t len);
 int		ft_memcmp(const void *s1, const void *s2, size_t len);
 void	*ft_calloc(size_t count, size_t size);
 void	*ft_realloc(void *ptr, size_t old, size_t new, size_t *cap);
+char	**ft_split_realloc(char **split, size_t new, size_t *cap_ptr);
 char	*ft_strdup(const char *str);
 
 size_t	ft_strlen(const char *str);

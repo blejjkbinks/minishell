@@ -49,8 +49,6 @@ typedef struct s_mshl
 	char	quote;
 }	t_mshl;
 
-char	**ft_split_realloc(char **split, int new, int *cap_ptr);
-
 char	**ft_env_dup(char **env);
 char	*ft_env_name(char *name);
 int		ft_env_namelen(char *name);

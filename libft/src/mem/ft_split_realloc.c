@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-char	**ft_split_realloc(char **split, int new, int *cap_ptr)
+char	**ft_split_realloc(char **split, size_t new, size_t *cap_ptr)
 {
 	char	**ret;
 	int		i;

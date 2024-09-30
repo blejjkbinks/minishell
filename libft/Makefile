@@ -24,7 +24,7 @@ SRC_LST := \
 
 SRC_MEM := \
 	bzero	calloc	realloc	memchr	memcmp	memcpy	memmove	memset \
-	strdup	\
+	strdup	split_realloc	\
 
 SRC_NBR := \
 	atoabase	atoi	itoa	itoa_ulong	nbrlen \
