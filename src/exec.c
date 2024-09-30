@@ -40,15 +40,13 @@ int	ft_which_print(char **arg, char **env)
 
 int	ft_export_magic(t_mshl *b, int x)
 {
-	
 	if (x == 1 && ft_env_get(b->env, b->comm[0]))
 		ft_env_set(b->env, b->comm[0], ft_strchr(b->comm[0], '=') + 1);
-		//ft_env_set(b->env, b->comm[0], b->comm[0] + ft_env_namelen(b->comm[0]) + 1);
 	else if (x == 1)
 		b->env_extra = ft_export(b->env_extra, b->comm[0]);
 	if (x == 0)
 		b->env = ft_export(b->env, b->comm[1]);
-	if (x == 0 && !ft_strchr(b->comm[1], '='))
+	if (x == 0 && !ft_strchr(b->comm[1], '=') && ft_env_get(b->env_extra, b->comm[1]))
 	{
 		ft_env_set(b->env, b->comm[1], ft_env_get(b->env_extra, b->comm[1]));
 		ft_unset(b->env_extra, b->comm[1]);
@@ -93,8 +91,10 @@ int	exec_fork(char **arg, char **env)
 	else if (pid == 0)
 	{
 		str = ft_which(arg[0], env);
-		if (!str || execve(str, arg, env))
-			ft_printf("minishell: command not found: %s\n", arg[0]);//or "arg is a directory"
+		if (!str)
+			ft_printf("minishell: command not found: %s\n", arg[0]);
+		else if (execve(str, arg, env))
+			ft_printf("minishell: %s: is a directory\n", arg[0]);
 		if (str)
 			free(str);
 		exit (127);
@@ -102,7 +102,6 @@ int	exec_fork(char **arg, char **env)
 	else
 	{
 		waitpid(pid, &status, 0);
-		//printf("FORK_EXECVE exit status: %d, %d, %d\n", status, errno, FT_EXITSTATUS(status));
 		return (FT_EXITSTATUS(status));
 	}
 }

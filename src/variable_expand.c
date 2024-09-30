@@ -63,13 +63,15 @@ char	*cash_money(t_mshl k)
 	i = 0;
 	while (k.line && k.line[i])
 	{
-		var = "its empty but not null hahahahahaha";
+		var = NULL;
 		quoted(k.line[i], &quote);
 		if (k.line[i] == '$' && ft_env_namelen(&k.line[i + 1]) && quote != '\'')
 		{
 			var = ft_env_get(k.env, &k.line[i + 1]);
 			if (!var)
 				var = ft_env_get(k.env_extra, &k.line[i + 1]);
+			if (!var)
+				var = "";
 			i += ft_env_namelen(&k.line[i + 1]) + 1;
 		}
 		else if (!ft_strncmp(&k.line[i], "$?", 2) && quote != '\'')
@@ -89,7 +91,7 @@ char	*cash_money(t_mshl k)
 		}
 		while (len + ft_strlen(var) + 1 >= cap)
 			ret = ft_realloc(ret, len, cap * 2, &cap);
-		if (ft_strncmp(var, "its empty but not null hahahahahaha", ft_strlen(var)))
+		if (var)
 			len = ft_strlcat(ret, var, ft_strlen(ret) + ft_strlen(var) + 1);
 		else
 			ret[len++] = k.line[i++];

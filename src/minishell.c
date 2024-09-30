@@ -26,9 +26,11 @@ char	*ft_get_prompt(char **env, char *exit_status)
 		ret = ft_strjoin("minishell$ ./", ft_strrchr(pwd, '/') + 1);
 	free(pwd);
 	if (!ft_strncmp(exit_status, "0", 2))
-		pwd = ft_strjoin(ret, " > " FMT_GRN ":3" FMT_RESET " $ ");
+		//pwd = ft_strjoin(ret, " > :3 $ ");
+		pwd = ft_strjoin(ret, " > " CLR_GRN ":3" CLR_RESET " $ ");
 	else
-		pwd = ft_strjoin(ret, " > " FMT_RED ":(" FMT_RESET " $ ");
+		//pwd = ft_strjoin(ret, " > :( $ ");
+		pwd = ft_strjoin(ret, " > " CLR_RED ":(" CLR_RESET " $ ");
 	free(ret);
 	return (pwd);
 }
@@ -38,6 +40,7 @@ void	letsgo(t_mshl *m)
 	m->i = 0;
 	m->cash = m->line;
 	m->line = cash_money(*m);
+	//ft_printf("cash:%s\n", m->line);
 	if (ft_strnstr(m->cash, "!!", ft_strlen(m->cash)))
 		ft_printf("!!:%s\n", m->line);
 	free(m->cash);

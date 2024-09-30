@@ -17,11 +17,11 @@ char	**ft_env_dup(char **env)
 	char	**ret;
 	int		i;
 
-	if (!env)
-		return (NULL);
+	//if (!env)
+	//	return (NULL);
 	ret = (char **)ft_malloc((ft_split_len(env) + 1 + 1) * sizeof(char *));
 	i = 0;
-	while (env[i])
+	while (env && env[i])
 	{
 		ret[i] = ft_strdup(env[i]);
 		i++;
@@ -128,9 +128,13 @@ char	**ft_export(char **env, char *arg)
 
 	len = ft_env_namelen(arg);
 	if (!len || (arg[len] != 0 && arg[len] != '='))
-		return (env + (0 * ft_printf("invalid name for export\n")));
+	{
+		ft_printf("minishell: export: \'%s\': not a valid identifier\n", arg);
+		return (env);
+	}
 	if (ft_env_get(env, arg))
 	{
+		//ft_printf("in ft_export, %s already in env\n", arg);
 		if (arg[len] == '=')
 			ft_env_set(env, arg, &arg[len + 1]);
 		return (env);
@@ -138,6 +142,7 @@ char	**ft_export(char **env, char *arg)
 	ret = env;
 	env = ft_env_dup(env);
 	ft_split_free(ret);
+	//ft_printf("in ft_export, duping at %d\n", ft_split_len(env));
 	if (arg[len] == '=')
 		env[ft_split_len(env)] = ft_strdup(arg);
 	else

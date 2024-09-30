@@ -13,32 +13,32 @@
 #ifndef COLOR_FMT_H
 # define COLOR_FMT_H
 
-# ifndef FMT_RED
-#  define FMT_RED	"\033[31m"
+# ifndef CLR_RED
+#  define CLR_RED	"\033[31m"
 # endif
-# ifndef FMT_GRN
-#  define FMT_GRN	"\033[32m"
+# ifndef CLR_GRN
+#  define CLR_GRN	"\033[32m"
 # endif
-# ifndef FMT_YEL
-#  define FMT_YEL	"\033[33m"
+# ifndef CLR_YEL
+#  define CLR_YEL	"\033[33m"
 # endif
-# ifndef FMT_BLU
-#  define FMT_BLU	"\033[34m"
+# ifndef CLR_BLU
+#  define CLR_BLU	"\033[34m"
 # endif
-# ifndef FMT_MAG
-#  define FMT_MAG	"\033[35m"
+# ifndef CLR_MAG
+#  define CLR_MAG	"\033[35m"
 # endif
-# ifndef FMT_CYN
-#  define FMT_CYN	"\033[36m"
+# ifndef CLR_CYN
+#  define CLR_CYN	"\033[36m"
 # endif
-# ifndef FMT_WHT
-#  define FMT_WHT	"\033[37m"
+# ifndef CLR_WHT
+#  define CLR_WHT	"\033[37m"
 # endif
-# ifndef FMT_BLK
-#  define FMT_BLK	"\033[30m"
+# ifndef CLR_BLK
+#  define CLR_BLK	"\033[30m"
 # endif
-# ifndef FMT_RESET
-#  define FMT_RESET	"\033[0m"
+# ifndef CLR_RESET
+#  define CLR_RESET	"\033[0m"
 # endif
 
 #endif	//color_fmt.h
