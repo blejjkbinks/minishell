@@ -17,7 +17,7 @@ char	**ft_split_quotes_uhh(char *str)
 	return (ft_split(str, " "));
 }
 
-char	**ft_split_quotes(char *str)
+char	**ft_split_quotes(char *str, char d)
 {
 	char	**ret;
 	int		i;
@@ -35,12 +35,13 @@ char	**ft_split_quotes(char *str)
 	ret = (char **)ft_malloc(cap2 * sizeof(char *));
 	while (str && str[i])
 	{
-		while (str[i] == ' ')
+		while (str[i] == ' ' || str[i] == d)
 			i++;
 		cap = DEFAULT_CAP;
-		ret[k] = (char *)ft_malloc(cap * sizeof(char));
+		if (str[i])
+			ret[k] = (char *)ft_malloc(cap * sizeof(char));
 		j = 0;
-		while (str[i] && (str[i] != ' ' || quote))
+		while (str[i] && (str[i] != d || quote))
 		{
 			if (!quoted(str[i], &quote))
 			{
@@ -55,5 +56,7 @@ char	**ft_split_quotes(char *str)
 		if (k + 1 == (int)cap2)
 			ret = ft_split_realloc(ret, cap2 * 2, &cap2);
 	}
+	if (quote && d == '|')
+		ft_printf("minishell: unclosed quote haha\n");
 	return (ret);
 }

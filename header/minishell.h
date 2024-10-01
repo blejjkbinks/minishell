@@ -70,8 +70,7 @@ int		ft_echo(char **arg);
 int		quoted(char c, char *quote);
 char	*cash_money(t_mshl k);
 
-char	**ft_split_pipes(char *str);
-char	**ft_split_quotes(char *str);
+char	**ft_split_quotes(char *str, char d);
 
 int		exec_builtin(t_mshl *b);
 int		exec_fork(char **arg, char **env);

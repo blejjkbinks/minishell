@@ -45,16 +45,16 @@ void	letsgo(t_mshl *m)
 		ft_printf("!!:%s\n", m->line);
 	free(m->last_command);
 	m->last_command = m->cash;		//yikes
-	m->pipe = ft_split_pipes(m->line);
-	/*
+	m->pipe = ft_split_quotes(m->line, '|');
+	
 	ft_printf("SPLIT m->pipe:");
 	for (int p = 0; m->pipe[p]; p++)
 		ft_printf("%s,", m->pipe[p]);
 	ft_printf("\n");
-	*/
+	
 	while (m->pipe[m->i])
 	{
-		m->comm = ft_split_quotes(m->pipe[m->i]);
+		m->comm = ft_split_quotes(m->pipe[m->i], ' ');
 		/*
 		ft_printf("SPLIT m->comm:");
 		for (int p = 0; m->comm[p]; p++)
