@@ -12,11 +12,6 @@
 
 #include "minishell.h"
 
-char	**ft_split_quotes_uhh(char *str)
-{
-	return (ft_split(str, " "));
-}
-
 char	**ft_split_quotes(char *str, char d)
 {
 	char	**ret;
@@ -43,14 +38,12 @@ char	**ft_split_quotes(char *str, char d)
 		j = 0;
 		while (str[i] && (str[i] != d || quote))
 		{
-			if (!quoted(str[i], &quote))
-			{
-				ret[k][j] = str[i];
-				ret[k][++j] = 0;
-			}
-			i++;
+			if ((d == '|' && quoted(str[i], &quote) + 1) || (d == ' ' && !quoted(str[i], &quote)))
+				ret[k][j++] = str[i];
+			ret[k][j] = 0;
 			if (j + 1 == (int)cap)
 				ret[k] = ft_realloc(ret[k], j, cap * 2, &cap);
+			i++;
 		}
 		ret[++k] = NULL;
 		if (k + 1 == (int)cap2)

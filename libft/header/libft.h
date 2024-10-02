@@ -58,10 +58,12 @@ char	*ft_strnstr(const char *str, const char *find, size_t len);
 char	*ft_substr(const char *str, unsigned int start, size_t len);
 char	*ft_strjoin(const char *s1, const char *s2);
 char	*ft_strjoin_free(char *s1, char *s2, int fr);
+char	*ft_strnjoin(int count, ...);
 char	*ft_strtrim(const char *str, const char *set);
 char	**ft_split(const char *str, const char *c);
 char	**ft_split_free(char **split);
 size_t	ft_split_len(char **split);
+char	**ft_split_remove(char **split, int r);
 
 int		ft_isspace(int c);
 int		ft_isalpha_lower(int c);

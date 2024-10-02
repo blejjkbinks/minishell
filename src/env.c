@@ -17,8 +17,6 @@ char	**ft_env_dup(char **env)
 	char	**ret;
 	int		i;
 
-	//if (!env)
-	//	return (NULL);
 	ret = (char **)ft_malloc((ft_split_len(env) + 1 + 1) * sizeof(char *));
 	i = 0;
 	while (env && env[i])
@@ -149,48 +147,6 @@ char	**ft_export(char **env, char *arg)
 		env[ft_split_len(env)] = ft_strjoin(arg, "=");
 	return (env);
 }
-
-/*char	**ft_export(char **env, char *arg, char **env_extra)
-{
-	char	**ret;
-	char	*name;
-	char	*extra;
-	int		len;
-
-	name = ft_env_name(arg);
-	len = ft_strlen(name);
-	if (name)
-		free(name);
-	//ft_printf("in ft_export: %s, %d, %c\n", arg, len, arg[len]);
-	if (!len || (arg[len] != 0 && arg[len] != '='))
-		return (env + (0 * ft_printf("invalid name for export\n")));
-	if (arg[len] == '=' && ft_env_set(env, arg, arg + len + 1))
-	{
-		//ft_printf("in ft_export, case '=' + in env + probably not in extra\n");
-		return (env);
-	}
-	extra = ft_env_get(env_extra, arg);
-//	if (arg[len] != '=' && extra && ft_env_set(env, arg, extra))
-//		return (ft_unset(env_extra, arg));		//in extra AND env??? not possible!
-	if (arg[len] != '=' && ft_env_get(env, arg))
-		return (env);			//"export name" already in env, no change
-	name = ft_env_name(arg);
-	ret = ft_env_dup(env);
-	ft_split_free(env);
-	ret[ft_split_len(ret)] = ft_strjoin(name, "=");
-	if (extra)
-	{
-		//ft_printf("in ft_export, case extra\n");		//case extra
-		ft_env_set(ret, name, extra);
-	}
-	else
-	{
-		//ft_printf("in ft_export, case no extra\n");		//case no extra
-		ft_env_set(ret, name, "");
-	}
-	free(name);
-	return (ret);
-}*/
 
 char	**ft_unset(char **env, char *name)
 {

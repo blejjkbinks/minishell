@@ -91,17 +91,21 @@ int	exec_fork(char **arg, char **env)
 	else if (pid == 0)
 	{
 		str = ft_which(arg[0], env);
+		status = 127;
 		if (!str)
 			ft_printf("minishell: command not found: %s\n", arg[0]);
 		else if (execve(str, arg, env))
 			ft_printf("minishell: %s: is a directory\n", arg[0]);
 		if (str)
+			status = 126;
+		if (str)
 			free(str);
-		exit (127);
+		exit (status);
 	}
 	else
 	{
+		//#  define FT_EXITSTATUS(status) (((status) & 0xff00) >> 8)
 		waitpid(pid, &status, 0);
-		return (FT_EXITSTATUS(status));
+		return ((status & 0xff00) >> 8);
 	}
 }

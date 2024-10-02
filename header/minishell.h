@@ -13,10 +13,6 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# ifndef FT_EXITSTATUS
-#  define FT_EXITSTATUS(status) (((status) & 0xff00) >> 8)
-# endif
-
 # include "../libft/header/libft.h"
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -45,8 +41,16 @@ typedef struct s_mshl
 	int		k;
 	int		len;
 	size_t	cap;
+	size_t	cap2;
 	pid_t	pid;
 	char	quote;
+	int		redir_app;
+	char	*redir_in;
+	char	*redir_out;
+	int		fdr_in;
+	int		fdr_out;
+	int		redir_in_index;
+	int		redir_out_index;
 }	t_mshl;
 
 char	**ft_env_dup(char **env);
@@ -71,6 +75,9 @@ int		quoted(char c, char *quote);
 char	*cash_money(t_mshl k);
 
 char	**ft_split_quotes(char *str, char d);
+
+int		index_redirection(char *line, t_mshl *r);
+int		trim_redirection(t_mshl *r);
 
 int		exec_builtin(t_mshl *b);
 int		exec_fork(char **arg, char **env);

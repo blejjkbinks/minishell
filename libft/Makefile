@@ -20,20 +20,20 @@ SRC_FUN := \
 
 SRC_LST := \
 	lstadd_back		lstadd_front	lstclear	lstdelone \
-	lstlast			lstnew			lstlen 		lstindex	lstfind	\
+	lstlast			lstnew			lstlen 		lstindex	lstfind \
 
 SRC_MEM := \
 	bzero	calloc	realloc	memchr	memcmp	memcpy	memmove	memset \
-	strdup	split_realloc	\
+	strdup	split_realloc \
 
 SRC_NBR := \
 	atoabase	atoi	itoa	itoa_ulong	nbrlen \
 	min	max	abs \
 
 SRC_STR := \
-	split	split_free	split_len \
-	strchr	strrchr	strjoin	strjoin_free	\
-	strlcat	strlcpy	strlen strnlen	\
+	split	split_free	split_len	split_remove \
+	strchr	strrchr	strjoin	strjoin_free	strnjoin \
+	strlcat	strlcpy	strlen strnlen \
 	strncmp	strnstr	strtrim	substr \
 
 SRC_WRT := \

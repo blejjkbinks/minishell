@@ -46,26 +46,32 @@ void	letsgo(t_mshl *m)
 	free(m->last_command);
 	m->last_command = m->cash;		//yikes
 	m->pipe = ft_split_quotes(m->line, '|');
-	
+	/*
 	ft_printf("SPLIT m->pipe:");
 	for (int p = 0; m->pipe[p]; p++)
 		ft_printf("%s,", m->pipe[p]);
 	ft_printf("\n");
-	
+	*/
 	while (m->pipe[m->i])
 	{
-		m->comm = ft_split_quotes(m->pipe[m->i], ' ');
-		/*
-		ft_printf("SPLIT m->comm:");
-		for (int p = 0; m->comm[p]; p++)
-			ft_printf("%s,", m->comm[p]);
-		ft_printf("\n");
-		*/
-		if (is_builtin(m->comm[0]) || ft_strchr(m->comm[0], '='))
-			m->exit_res = exec_builtin(m);
-		else
-			m->exit_res = exec_fork(m->comm, m->env);
-		ft_split_free(m->comm);
+		if (!index_redirection(m->pipe[m->i], m))
+		{
+			m->comm = ft_split_quotes(m->pipe[m->i], ' ');
+			if (!trim_redirection(m))
+			{
+				/*
+				ft_printf("SPLIT m->comm:");
+				for (int p = 0; m->comm[p]; p++)
+					ft_printf("%s,", m->comm[p]);
+				ft_printf("\n");
+				*/
+				if (is_builtin(m->comm[0]) || ft_strchr(m->comm[0], '='))
+					m->exit_res = exec_builtin(m);
+				else
+					m->exit_res = exec_fork(m->comm, m->env);
+				ft_split_free(m->comm);
+			}
+		}
 		m->i++;
 	}
 	ft_split_free(m->pipe);
@@ -89,7 +95,7 @@ int	main(int argc, char **argv, char **envp_main)
 		ft_env_set(m.env, "SHLVL", m.line);
 		free(m.line);
 		m.exit_status = ft_itoa(0);
-		m.last_command = ft_strdup("^^");
+		m.last_command = ft_strdup("^^\'");
 	}
 	while (argc == 1)
 	{
@@ -100,9 +106,6 @@ int	main(int argc, char **argv, char **envp_main)
 		{
 			add_history(m.line);
 			letsgo(&m);
-			//free(m.last_command);
-			//m.last_command = ft_strdup(m.line);
-
 		}
 		if (!m.line)
 			return (1 + (0 * ft_printf("readline gave NULL??\n")));

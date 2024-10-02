@@ -1,32 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_split_realloc.c                                 :+:      :+:    :+:   */
+/*   ft_strnjoin.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rdomange <romitdomange@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/30 15:55:48 by rdomange          #+#    #+#             */
-/*   Updated: 2024/09/30 15:55:50 by rdomange         ###   ########.fr       */
+/*   Created: 2024/10/02 16:44:09 by rdomange          #+#    #+#             */
+/*   Updated: 2024/10/02 16:50:30 by rdomange         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	**ft_split_realloc(char **split, size_t new, size_t *cap_ptr)
+char	*ft_strnjoin(int count, ...)
 {
-	char	**ret;
-	int		i;
+	va_list	ap;
+	char	*ret;
+	char	*tmp;
+	char	*arg;
 
-	ret = (char **)ft_malloc(new * sizeof(char *));
-	i = 0;
-	while (split[i])
+	ret = "";
+	va_start(ap, count);
+	while (--count)
 	{
-		ret[i] = split[i];
-		i++;
+		arg = va_arg(ap, char *);
+		if (arg)
+		{
+			tmp = ft_strjoin(ret, arg);
+			ret = tmp;
+			free(tmp);
+		}
 	}
-	ret[i] = NULL;
-	free(split);
-	if (cap_ptr)
-		*cap_ptr = new;
+	va_end(ap);
 	return (ret);
 }
