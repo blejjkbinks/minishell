@@ -35,7 +35,7 @@ char	*ft_env_name(char *name)
 	int		i;
 
 	//ft_printf("in ft_env_name, asked: %s\n", name);
-	if (!ft_isalpha(name[0]) && name[0] != '_')
+	if (!name || (!ft_isalpha(name[0]) && name[0] != '_'))
 		return (NULL);
 	i = 0;
 	ret = ft_strdup(name);
