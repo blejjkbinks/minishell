@@ -8,7 +8,7 @@ CC := cc $(CFLAGS)
 AR := ar rcs
 RM := rm -rf
 MKD := mkdir -p
-CATS := CHR FUN LST MEM NBR STR WRT
+CATS := CHR FUN LST MEM NBR SPL STR WRT
 
 SRC_CHR := \
 	isalnum		isalpha		isalpha_lower		isalpha_upper \
@@ -24,14 +24,16 @@ SRC_LST := \
 
 SRC_MEM := \
 	bzero	calloc	realloc	memchr	memcmp	memcpy	memmove	memset \
-	strdup	split_realloc \
+	strdup \
 
 SRC_NBR := \
 	atoabase	atoi	itoa	itoa_ulong	nbrlen \
 	min	max	abs \
 
+SRC_SPL := \
+	split	split_free	split_len	split_realloc	split_remove \
+
 SRC_STR := \
-	split	split_free	split_len	split_remove \
 	strchr	strrchr	strjoin	strjoin_free	strnjoin \
 	strlcat	strlcpy	strlen strnlen \
 	strncmp	strnstr	strtrim	substr \

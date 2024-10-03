@@ -44,7 +44,6 @@ void	*ft_memchr(const void *s, int c, size_t len);
 int		ft_memcmp(const void *s1, const void *s2, size_t len);
 void	*ft_calloc(size_t count, size_t size);
 void	*ft_realloc(void *ptr, size_t old, size_t new, size_t *cap);
-char	**ft_split_realloc(char **split, size_t new, size_t *cap_ptr);
 char	*ft_strdup(const char *str);
 
 size_t	ft_strlen(const char *str);
@@ -60,8 +59,10 @@ char	*ft_strjoin(const char *s1, const char *s2);
 char	*ft_strjoin_free(char *s1, char *s2, int fr);
 char	*ft_strnjoin(int count, ...);
 char	*ft_strtrim(const char *str, const char *set);
+
 char	**ft_split(const char *str, const char *c);
 char	**ft_split_free(char **split);
+char	**ft_split_realloc(char **split, size_t new, size_t *cap_ptr);
 size_t	ft_split_len(char **split);
 char	**ft_split_remove(char **split, int r);
 
