@@ -46,24 +46,23 @@ void	letsgo(t_mshl *m)
 	free(m->last_command);
 	m->last_command = m->cash;		//yikes
 	m->pipe = ft_split_quotes(m->line, '|');
-	
+	//*
 	ft_printf("SPLIT m->pipe:");
 	for (int p = 0; m->pipe[p]; p++)
 		ft_printf("%s,", m->pipe[p]);
 	ft_printf("\n");
-	
+	//*/
 	while (m->pipe[m->i])
 	{
 		m->comm = ft_split_quotes(m->pipe[m->i], ' ');
 		if (!index_redirection(m->pipe[m->i], m) && !trim_redirection(m))
 		{
-			
+			//*
 			ft_printf("SPLIT m->comm:");
 			for (int p = 0; m->comm[p]; p++)
 				ft_printf("%s,", m->comm[p]);
 			ft_printf("\n______\n");
-
-
+			//*/
 			if (is_builtin(m->comm[0]) || ft_strchr(m->comm[0], '='))
 				m->exit_res = exec_builtin(m);
 			else
@@ -71,11 +70,13 @@ void	letsgo(t_mshl *m)
 		}
 		else
 			m->exit_res = (258 + (0 * ft_printf("minishell: invalid token ><\n")));
+		//*
 		if (m->redir_out)
 		{
 			ft_printf("REDIR out:%s\n", m->redir_out);
 			free(m->redir_out);
 		}
+		//*/
 		ft_split_free(m->comm);
 		m->i++;
 	}

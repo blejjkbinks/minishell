@@ -48,4 +48,14 @@ re: clean all
 print:
 	@echo $(SRC)
 
-.PHONY: all clean fclean re print
+#gpt boss
+GPT_BIN = gpt_exec
+
+gpt_%: gpt_%.c
+	cc -o $(GPT_BIN) $<
+
+gpt_clean:
+	rm -f $(GPT_BIN)
+#gpt boss
+
+.PHONY: all clean fclean re print gpt_clean

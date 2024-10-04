@@ -61,25 +61,25 @@ int	ft_export_magic(t_mshl *b, int x)
 
 int	exec_builtin(t_mshl *b)
 {
-	if (!ft_strncmp(b->comm[0], "echo", 5))
+	if (!ft_strncmp(b->comm[0], "echo", 10))
 		return (ft_echo(b->comm));
-	if (!ft_strncmp(b->comm[0], "cd", 5))
+	if (!ft_strncmp(b->comm[0], "cd", 10))
 		return (ft_cd(b->comm, b->env));
-	if (!ft_strncmp(b->comm[0], "pwd", 5))
+	if (!ft_strncmp(b->comm[0], "pwd", 10))
 		return (ft_pwd());
-	if (!ft_strncmp(b->comm[0], "export", 5))
+	if (!ft_strncmp(b->comm[0], "export", 10))
 		return (ft_export_magic(b, 0));
 	if (ft_strchr(b->comm[0], '='))
 		return (ft_export_magic(b, 1));
-	if (!ft_strncmp(b->comm[0], "unset", 5))
+	if (!ft_strncmp(b->comm[0], "unset", 10))
 		return (ft_export_magic(b, 2));
-	if (!ft_strncmp(b->comm[0], "env", 4))
+	if (!ft_strncmp(b->comm[0], "env", 10))
 		return (ft_env(b->env));
 	//if (!ft_strncmp(b->comm[0], "env_extra", 10))
 	//	return (ft_env(b->env_extra));
-	if (!ft_strncmp(b->comm[0], "which", 5))
+	if (!ft_strncmp(b->comm[0], "which", 10))
 		return (ft_which_print(b->comm, b->env));
-	if (!ft_strncmp(b->comm[0], "exit", 5))
+	if (!ft_strncmp(b->comm[0], "exit", 10))
 		exit (0 + (0 * ft_printf("byebye minishell\n")));
 	return (-1);
 }
@@ -114,7 +114,6 @@ int	exec_fork(char **arg, char **env)
 		return ((status & 0xff00) >> 8);
 	}
 }
-
 
 /*int	exec_fork(t_mshl *b)
 {
