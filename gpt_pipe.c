@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -6,7 +5,7 @@
 #include <string.h>
 #include <sys/wait.h>
 
-// Function to check if a command is a builtin (this is just an example)
+// Function to check if a command is a builtin
 int is_builtin(char *cmd) {
     return (strcmp(cmd, "echo") == 0 || strcmp(cmd, "cd") == 0);  // Example builtins
 }
@@ -29,12 +28,47 @@ void restore_fds(int stdin_copy, int stdout_copy) {
     close(stdout_copy);
 }
 
+// Handle redirection for the current command
+void handle_redirection(char *input_file, char *output_file, int output_type) {
+    if (input_file) {
+        int in_fd = open(input_file, O_RDONLY);
+        if (in_fd < 0) {
+            perror("Error opening input file");
+            exit(EXIT_FAILURE);
+        }
+        dup2(in_fd, STDIN_FILENO);
+        close(in_fd);
+    }
+
+    if (output_file) {
+        int out_fd;
+        if (output_type == 1) {  // ">"
+            out_fd = open(output_file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+        } else if (output_type == 2) {  // ">>"
+            out_fd = open(output_file, O_WRONLY | O_CREAT | O_APPEND, 0644);
+        }
+
+        if (out_fd < 0) {
+            perror("Error opening output file");
+            exit(EXIT_FAILURE);
+        }
+        dup2(out_fd, STDOUT_FILENO);
+        close(out_fd);
+    }
+}
+
 int main() {
+    // Array of commands with optional input/output redirection files
     char *commands[][4] = {
-        {"echo", "hello", NULL},    // Builtin command
-        {"grep", "h", NULL},        // External command
-        {"wc", "-l", NULL}          // External command
+        {"echo", "hello", NULL},          // Builtin command
+        {"grep", "h", NULL},              // External command
+        {"wc", "-l", NULL}                // External command
     };
+
+    // Simulated input/output files for redirection
+    char *input_file = "input.txt";       // Example input redirection
+    char *output_file = "output.txt";     // Example output redirection (could be NULL)
+    int output_type = 1;                  // 1 = ">", 2 = ">>" (can be dynamically set)
 
     int num_cmds = 3;
     int pipe_fd[2];
@@ -58,6 +92,11 @@ int main() {
                 dup2(input_fd, STDIN_FILENO);
                 close(input_fd);
             }
+
+            // Handle input/output redirection for builtin
+            handle_redirection(i == 0 ? input_file : NULL,  // Apply input redirection for first cmd
+                               (i == num_cmds - 1) ? output_file : NULL,  // Apply output redirection for last cmd
+                               output_type);
 
             // If there's an output pipe, redirect stdout
             if (i < num_cmds - 1) {
@@ -85,6 +124,11 @@ int main() {
                     close(pipe_fd[0]);
                     close(pipe_fd[1]);
                 }
+
+                // Handle input/output redirection for external commands
+                handle_redirection(i == 0 ? input_file : NULL,
+                                   (i == num_cmds - 1) ? output_file : NULL,
+                                   output_type);
 
                 // Execute the external command
                 execvp(commands[i][0], commands[i]);
@@ -115,148 +159,3 @@ int main() {
 
     return 0;
 }
-
-
-
-// #include <stdio.h>
-// #include <stdlib.h>
-// #include <unistd.h>
-// #include <fcntl.h>
-// #include <sys/wait.h>
-// #include <string.h>
-
-// // Function to execute a single command with input/output redirection
-// void execute_command(char *cmd[], int input_fd, int output_fd, int append_fd, int input_redir_fd)
-// {
-//     if (input_fd != -1) {
-//         dup2(input_fd, STDIN_FILENO);  // Redirect input (from previous pipe)
-//         close(input_fd);
-//     }
-
-//     if (input_redir_fd != -1) {
-//         dup2(input_redir_fd, STDIN_FILENO);  // Redirect input from a file
-//         close(input_redir_fd);
-//     }
-
-//     if (append_fd != -1) {
-//         dup2(append_fd, STDOUT_FILENO);  // Redirect output to a file (append mode)
-//         close(append_fd);
-//     } else if (output_fd != -1) {
-//         dup2(output_fd, STDOUT_FILENO);  // Redirect output to a file (truncate mode)
-//         close(output_fd);
-//     }
-
-//     // Execute the command
-//     if (execvp(cmd[0], cmd) == -1) {
-//         perror("execvp");
-//         exit(EXIT_FAILURE);
-//     }
-// }
-
-// int main()
-// {
-//     // Example commands (without redirection for now)
-//     char *commands[][4] = {
-//         {"cat", "input.txt", NULL},   // cat < input.txt
-//         {"grep", "hello", NULL},      // grep hello
-//         {"wc", "-l", NULL}            // wc -l > output.txt
-//     };
-
-//     int num_cmds = 3;  // Number of commands
-
-//     // Redirection types and file names for each command
-//     char *redirections[] = {NULL, NULL, ">"};     // Last command has output redirection
-//     char *files[] = {NULL, NULL, "output.txt"};   // Redirection to "output.txt"
-
-//     int pipe_fd[2];       // Pipe file descriptors
-//     int input_fd = -1;    // Input from previous pipe
-//     int input_redir_fd = -1;  // Input redirection file descriptor
-//     int output_fd = -1;   // Output redirection file descriptor
-//     int append_fd = -1;   // Append redirection file descriptor
-//     pid_t pid;
-
-//     // Loop over all commands
-//     for (int i = 0; i < num_cmds; i++) {
-//         // Check for input/output redirection
-//         if (redirections[i]) {
-//             if (strcmp(redirections[i], "<") == 0) {
-//                 input_redir_fd = open(files[i], O_RDONLY);
-//                 if (input_redir_fd == -1) {
-//                     perror("open input file");
-//                     exit(EXIT_FAILURE);
-//                 }
-//             } else if (strcmp(redirections[i], ">") == 0) {
-//                 output_fd = open(files[i], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-//                 if (output_fd == -1) {
-//                     perror("open output file");
-//                     exit(EXIT_FAILURE);
-//                 }
-//             } else if (strcmp(redirections[i], ">>") == 0) {
-//                 append_fd = open(files[i], O_WRONLY | O_CREAT | O_APPEND, 0644);
-//                 if (append_fd == -1) {
-//                     perror("open append file");
-//                     exit(EXIT_FAILURE);
-//                 }
-//             }
-//         }
-
-//         // Create a pipe for every command except the last one
-//         if (i < num_cmds - 1) {
-//             pipe(pipe_fd);
-//         }
-
-//         // Fork a child process
-//         if ((pid = fork()) == 0) {
-//             // In the child process
-//             if (input_fd != -1) {
-//                 // Redirect input from the previous command's output
-//                 dup2(input_fd, STDIN_FILENO);
-//                 close(input_fd);
-//             }
-
-//             if (i < num_cmds - 1) {
-//                 // Redirect output to the next command's input (pipe write end)
-//                 dup2(pipe_fd[1], STDOUT_FILENO);
-//                 close(pipe_fd[0]);
-//                 close(pipe_fd[1]);
-//             }
-
-//             // Execute the current command with redirection (if any)
-//             execute_command(commands[i], -1, output_fd, append_fd, input_redir_fd);
-//         }
-
-//         // In the parent process
-//         if (input_fd != -1) {
-//             // Close the previous command's pipe read end
-//             close(input_fd);
-//         }
-
-//         if (i < num_cmds - 1) {
-//             // Close the write end of the current pipe (since it's now handled by the child)
-//             close(pipe_fd[1]);
-//             // The next command's input will be the read end of this pipe
-//             input_fd = pipe_fd[0];
-//         }
-
-//         // Close file descriptors if used for redirection
-//         if (input_redir_fd != -1) {
-//             close(input_redir_fd);
-//             input_redir_fd = -1;
-//         }
-//         if (output_fd != -1) {
-//             close(output_fd);
-//             output_fd = -1;
-//         }
-//         if (append_fd != -1) {
-//             close(append_fd);
-//             append_fd = -1;
-//         }
-//     }
-
-//     // Wait for all child processes
-//     for (int i = 0; i < num_cmds; i++) {
-//         wait(NULL);
-//     }
-
-//     return 0;
-// }
