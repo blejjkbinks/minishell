@@ -21,21 +21,20 @@ int	index_redirection(char *line, t_mshl *r)
 	r->k = 0;
 	r->j = 0;
 	r->quote = 0;
-	r->redir_in_index = 0;
-	r->redir_out_index = 0;
-	//return (0);
+	r->redir_in_index = -1;
+	r->redir_out_index = -1;
 	while (line[r->k])
 	{
 		quoted(line[r->k], &r->quote);
 		if (!r->quote && line[r->k] == '<')
 		{
-			if (r->redir_in_index)
+			if (r->redir_in_index != -1)
 				return (1);
 			r->redir_in_index = r->j;
 		}
 		if (!r->quote && line[r->k] == '>')
 		{
-			if (r->redir_out_index)
+			if (r->redir_out_index != -1)
 				return (1);
 			r->redir_out_index = r->j;
 		}
@@ -53,7 +52,7 @@ int	trim_redirection(t_mshl *r)
 	r->fdr_out = -1;
 	r->redir_out = NULL;
 	//return (0);
-	if (r->redir_out_index)
+	if (r->redir_out_index >= 0)
 	{
 		if (!r->comm[r->redir_out_index + 1])
 			return (1);
@@ -69,7 +68,7 @@ int	trim_redirection(t_mshl *r)
 		ft_split_remove(r->comm, r->redir_out_index);
 		ft_split_remove(r->comm, r->redir_out_index);
 	}
-	if (r->redir_in_index)
+	if (r->redir_in_index >= 0)
 	{
 		if (!r->comm[r->redir_out_index + 1])
 			return (1);
