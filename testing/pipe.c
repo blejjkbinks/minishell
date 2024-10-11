@@ -10,13 +10,13 @@ typedef struct s_m
 	char **pipe;
 }	t_m;
 
-void	print_comms(t_m *m)
+void	print_comms(char **line)
 {
 	char	**comm;
 
-	for (int i = 0; m->pipe[i]; i++)
+	for (int i = 0; line[i]; i++)
 	{
-		comm = ft_split(m->pipe[i], " ");
+		comm = ft_split(line[i], " ");
 		for (int j = 0; comm[j]; j++)
 		{
 			if (ft_strchr(comm[j], '/'))
@@ -32,67 +32,68 @@ void	print_comms(t_m *m)
 	printf("_________\n");
 }
 
-void	ex_pipe(t_m *m)
+void	exec_pipe(char **line)
 {
 	int		i;
-	int		pfd[2];
-	int		fd_tmp;
-	int		pid;
+	int		pipe_fd[2];
+	int		prev_fd;
+	int		*pid;
+	int		status;
 	char	**comm;
 
-	fd_tmp = -1;
+	pid = (int *)malloc(ft_split_len(line) * sizeof(int));
+	prev_fd = -1;
 	i = 0;
-	while (m->pipe[i])
+	while (line[i])
 	{
-		comm = ft_split(m->pipe[i], " ");
-		if (m->pipe[i + 1])
-			pipe(pfd);
-		pid = fork();
-		if (pid == 0)
+		comm = ft_split(line[i], " ");
+		if (line[i + 1])
+			pipe(pipe_fd);
+		pid[i] = fork();
+		if (pid[i] == 0)
 		{
-			if (fd_tmp != -1)
+			if (prev_fd != -1)
 			{
-				dup2(fd_tmp, STDIN_FILENO);
-				close(fd_tmp);
+				dup2(prev_fd, STDIN_FILENO);
+				close(prev_fd);
 			}
-			if (m->pipe[i + 1])
+			if (line[i + 1])
 			{
-				close(pfd[0]);
-				dup2(pfd[1], STDOUT_FILENO);
-				close(pfd[1]);
+				close(pipe_fd[0]);
+				dup2(pipe_fd[1], STDOUT_FILENO);
+				close(pipe_fd[1]);
 			}
 			execve(comm[0], comm, NULL);
 			exit (0 * printf("execve didnt work\n"));
 		}
 		else
 		{
-			if (fd_tmp != -1)
-				close(fd_tmp);
-			if (m->pipe[i + 1])
+			if (prev_fd != -1)
+				close(prev_fd);
+			if (line[i + 1])
 			{
-				close(pfd[1]);
-				fd_tmp = pfd[0];
+				close(pipe_fd[1]);
+				prev_fd = pipe_fd[0];
 			}
-			wait(NULL);
+			waitpid(pid[i], &status, 0);
 		}
 	i++;
 	}
+	free(pid);
 }
 
 int main()
 {
 	char	*s;
-	char	**pipe;
+	char	**line;
 //	s = "/bin/ls | /usr/bin/grep i";
-	s = "/bin/cat | /bin/cat | /bin/ls";
-//	s = "/bin/cat file | /usr/bin/grep bla | /usr/bin/more";
+//	s = "/bin/cat | /bin/cat | /bin/ls";
+	s = "/bin/cat file | /usr/bin/grep bla | /usr/bin/more";
 //	s = "/bin/ls filethatdoesnotexist | /usr/bin/grep bla | /usr/bin/more";
 
-	pipe = ft_split(s, "|");
-	t_m	m;
-	m.pipe = pipe;
-	print_comms(&m);
-	ex_pipe(&m);
-	ft_split_free(pipe);
+	line = ft_split(s, "|");
+	print_comms(line);
+	exec_pipe(line);
+	ft_split_free(line);
 	return (0);
 }
