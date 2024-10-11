@@ -37,21 +37,25 @@ void	exec_pipe(char **line)
 	int		i;
 	int		pipe_fd[2];
 	int		prev_fd;
-	int		*pid;
+	int		pid;
 	int		status;
 	char	**comm;
 
-	pid = (int *)malloc(ft_split_len(line) * sizeof(int));
 	prev_fd = -1;
 	i = 0;
 	while (line[i])
 	{
+		printf("---i:%d\n", i);
 		comm = ft_split(line[i], " ");
 		if (line[i + 1])
-			pipe(pipe_fd);
-		pid[i] = fork();
-		if (pid[i] == 0)
 		{
+			pipe(pipe_fd);
+			printf("---pipe(pipe_fd): [0]:%d, [1]:%d\n", pipe_fd[0], pipe_fd[1]);
+		}
+		pid = fork();
+		if (pid == 0)
+		{
+			printf("---in child: pid=%d\n", pid);
 			if (prev_fd != -1)
 			{
 				dup2(prev_fd, STDIN_FILENO);
@@ -64,10 +68,11 @@ void	exec_pipe(char **line)
 				close(pipe_fd[1]);
 			}
 			execve(comm[0], comm, NULL);
-			exit (0 * printf("execve didnt work\n"));
+			exit (0 * printf("---execve didnt work\n"));
 		}
 		else
 		{
+			printf("---in parent: pid=%d\n", pid);
 			if (prev_fd != -1)
 				close(prev_fd);
 			if (line[i + 1])
@@ -75,20 +80,19 @@ void	exec_pipe(char **line)
 				close(pipe_fd[1]);
 				prev_fd = pipe_fd[0];
 			}
-			waitpid(pid[i], &status, 0);
+			waitpid(pid, &status, 0);
 		}
 	i++;
 	}
-	free(pid);
 }
 
 int main()
 {
 	char	*s;
 	char	**line;
-//	s = "/bin/ls | /usr/bin/grep i";
+	s = "/bin/ls | /usr/bin/grep i";
 //	s = "/bin/cat | /bin/cat | /bin/ls";
-	s = "/bin/cat file | /usr/bin/grep bla | /usr/bin/more";
+//	s = "/bin/cat file | /usr/bin/grep bla | /usr/bin/more";
 //	s = "/bin/ls filethatdoesnotexist | /usr/bin/grep bla | /usr/bin/more";
 
 	line = ft_split(s, "|");
