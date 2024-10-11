@@ -22,7 +22,7 @@
 # include <stdbool.h>
 # include <errno.h>
 # include "color_fmt.h"
-//# include <stdio.h>			//debug, remove when done
+//# include <stdio.h>		//debug, remove when done
 
 # ifndef DEFAULT_CAP
 #  define DEFAULT_CAP 16
@@ -65,6 +65,7 @@ char	**ft_split_free(char **split);
 char	**ft_split_realloc(char **split, size_t new, size_t *cap_ptr);
 size_t	ft_split_len(char **split);
 char	**ft_split_remove(char **split, int r);
+//char	**ft_split_quotes(char *str);
 
 int		ft_isspace(int c);
 int		ft_isalpha_lower(int c);

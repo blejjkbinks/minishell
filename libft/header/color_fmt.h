@@ -37,8 +37,8 @@
 # ifndef CLR_BLK
 #  define CLR_BLK	"\033[30m"
 # endif
-# ifndef CLR_RESET
-#  define CLR_RESET	"\033[0m"
+# ifndef CLR_RST
+#  define CLR_RST	"\033[0m"
 # endif
 
 #endif	//color_fmt.h

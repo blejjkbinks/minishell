@@ -27,10 +27,10 @@ char	*ft_get_prompt(char **env, char *exit_status)
 	free(pwd);
 	if (!ft_strncmp(exit_status, "0", 2))
 		//pwd = ft_strjoin(ret, " > :3 $ ");
-		pwd = ft_strjoin(ret, " > " CLR_GRN ":3" CLR_RESET " $ ");
+		pwd = ft_strjoin(ret, " > " CLR_GRN ":3" CLR_RST " $ ");
 	else
 		//pwd = ft_strjoin(ret, " > :( $ ");
-		pwd = ft_strjoin(ret, " > " CLR_RED ":(" CLR_RESET " $ ");
+		pwd = ft_strjoin(ret, " > " CLR_RED ":(" CLR_RST " $ ");
 	free(ret);
 	return (pwd);
 }
@@ -55,6 +55,7 @@ void	letsgo(t_mshl *m)
 	while (m->pipe[m->i])
 	{
 		m->comm = ft_split_quotes(m->pipe[m->i], ' ');
+		ft_strtolower(m->comm[0]);
 		if (!index_redirection(m->pipe[m->i], m) && !trim_redirection(m))
 		{
 			//*
