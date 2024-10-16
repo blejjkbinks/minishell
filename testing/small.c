@@ -6,6 +6,8 @@ int main()
 {
 	int fd;
 
+	printf("%d\n", STDIN_FILENO);
+	return (0);
 	fd = open("example.txt", O_WRONLY | O_CREAT, 0644);
 	dup2(fd, STDOUT_FILENO);
 	close(fd);

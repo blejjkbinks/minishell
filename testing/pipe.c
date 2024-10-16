@@ -36,12 +36,12 @@ void	exec_pipe(char **line)
 {
 	int		i;
 	int		pipe_fd[2];
-	int		prev_fd;
+	int		save_fd[2];
 	int		pid;
 	int		status;
 	char	**comm;
 
-	prev_fd = -1;
+	save_fd[0] = -1;
 	i = 0;
 	while (line[i])
 	{
@@ -56,10 +56,10 @@ void	exec_pipe(char **line)
 		if (pid == 0)
 		{
 			printf("---in child: pid=%d\n", pid);
-			if (prev_fd != -1)
+			if (save_fd[0] != -1)
 			{
-				dup2(prev_fd, STDIN_FILENO);
-				close(prev_fd);
+				dup2(save_fd[0], STDIN_FILENO);
+				close(save_fd[0]);
 			}
 			if (line[i + 1])
 			{
@@ -73,12 +73,12 @@ void	exec_pipe(char **line)
 		else
 		{
 			printf("---in parent: pid=%d\n", pid);
-			if (prev_fd != -1)
-				close(prev_fd);
+			if (save_fd[0] != -1)
+				close(save_fd[0]);
 			if (line[i + 1])
 			{
 				close(pipe_fd[1]);
-				prev_fd = pipe_fd[0];
+				save_fd[0] = pipe_fd[0];
 			}
 			waitpid(pid, &status, 0);
 		}
