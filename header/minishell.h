@@ -14,6 +14,7 @@
 # define MINISHELL_H
 
 # include "../libft/header/libft.h"
+# include <sys/wait.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <dirent.h>

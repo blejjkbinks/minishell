@@ -34,25 +34,19 @@ static char	*ft_itoa_base_rev(char buffer[], int len)
 static char	*ft_itoa_base(unsigned long nbr, int base)
 {
 	size_t	i;
-	int		sign;
 	char	buffer[65];
 	char	*dict;
 
 	dict = "0123456789abcdef";
-	sign = +1;
-	if (nbr < 0)
-		sign = -1;
 	if (nbr == 0 || base < 2 || base > 16)
 		return (ft_strdup("0"));
 	i = 0;
 	while (nbr)
 	{
-		buffer[i] = dict[sign * (nbr % base)];
+		buffer[i] = dict[nbr % base];
 		nbr /= base;
 		i++;
 	}
-	if (sign == -1)
-		buffer[i++] = '-';
 	return (ft_itoa_base_rev(buffer, i));
 }
 
