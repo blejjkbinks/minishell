@@ -57,7 +57,8 @@ void	letsgo(t_mshl *m)
 		m->comm = ft_split_quotes(m->pipe[m->i], ' ');
 		ft_strtolower(m->comm[0]);
 		if (!index_redirection(m->pipe[m->i], m) && !trim_redirection(m))
-		{
+		{//redirection trimming needs to happen before splitting pipes
+		 //redirections applies to the pipeline as a whole, not to individual commands
 			//*
 			ft_printf("SPLIT m->comm:");
 			for (int p = 0; m->comm[p]; p++)
