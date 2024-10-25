@@ -73,6 +73,18 @@ void	exec_pipe(char **comm)
 	}
 }
 
+/*
+
+redirection stripping happens before splitting around pipes(|) character
+redir in only applies to first command
+redir out only applies to last command
+for the purposes of passing the eval its fine because they only check pipes or redirection, but not both at once
+builtins will execute inside of forked child process
+"echo asd | cd /" or "echo asd | export var=value", because cd and export are running in a child, their effect will not last
+this is fine, bash behaves the same, this makes it easier to handles pipes and dup2 and stuff
+
+*/
+
 int main()
 {
 	char	*s;
