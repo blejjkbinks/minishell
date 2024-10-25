@@ -1,5 +1,7 @@
+CFLAGS := -Wall -Wextra -Werror
+
 all:
-	cc -Wall -Wextra -Werror pipe.c ../libft/libft.a -o p && ./p
+	cc pipe.c ../libft/libft.a -o p && ./p
 
 clean:
 	rm -rf p

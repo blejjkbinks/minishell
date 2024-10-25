@@ -1,3 +1,6 @@
+#include "../libft/header/libft.h"
+#include <stdio.h>
+
 void	print_comms(char **line)
 {
 	char	**comm;
@@ -21,21 +24,68 @@ void	print_comms(char **line)
 }
 
 
+//	cat | cat | ls
+// cat file | grep bla | more
+// cat filethatdoesnotexist | grep bla | more
+
+void	ft_close_pipe(int pipefd[2])
+{
+	close(pipefd[0]);
+	close(pipefd[1]);
+}
+
+void	ft_exec(char **arg, int first, int last, int pipefd[2], int *prevfd)
+{
+	int pid = fork();
+	if (pid == 0)
+	{
+		printf("in child, comm:%s, f:%d, l:%d\n", arg[0], first, last);
+		if (!last)
+			dup2(pipefd[1], STDOUT_FILENO);
+		if (!first)
+			dup2(pipefd[0], STDIN_FILENO);
+		ft_close_pipe(pipefd);
+		execve(arg[0], arg, NULL);
+	}
+	waitpid(pid, NULL, 0);
+	// if (!first)
+	// 	close(*prevfd);
+	// if (!last)
+	// 	close(pipefd[1]);
+	// *prevfd = pipefd[0];
+}
+
+void	exec_pipe(char **comm)
+{
+	int	i = 0;
+	int	pipefd[2];
+	int	prevfd;
+
+	prevfd = dup(STDIN_FILENO);
+	while (comm[i])
+	{
+		char **arg = ft_split(comm[i], " ");
+		if (comm[i + 1] != NULL)
+			pipe(pipefd);
+		ft_exec(arg, i == 0, comm[i + 1] == NULL, pipefd, &prevfd);
+		ft_split_free(arg);
+		i++;
+	}
+}
 
 int main()
 {
 	char	*s;
 	char	**line;
-	char	**redir_in;
-	char	**redir_out;
+//	char	**redir_in;
+//	char	**redir_out;
 
-//	s = "/bin/ls | /usr/bin/grep i";
-	s = "/bin/cat | /bin/cat | /bin/ls";
+	s = "/bin/ls | /usr/bin/grep i";
+//	s = "/bin/cat | /bin/cat | /bin/ls";
+//	s = "/bin/cat file | /usr/bin/grep bla"
 //	s = "/bin/cat file | /usr/bin/grep bla | /usr/bin/more";
 //	s = "/bin/ls filethatdoesnotexist | /usr/bin/grep bla | /usr/bin/more";
 	line = ft_split(s, "|");
-
-	redir_in = 
 
 	print_comms(line);
 	exec_pipe(line);
