@@ -13,7 +13,7 @@
 NAME := minishell
 
 HDR := ./header
-CFLAGS := -Wall -Wextra -Werror -I$(HDR)
+CFLAGS := -Wall -Wextra -Werror -I$(HDR) -g
 CC := cc $(CFLAGS)
 AR := ar rcs
 RM := rm -rf

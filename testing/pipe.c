@@ -28,6 +28,7 @@ void	print_comms(char **line)
 // cat file | grep bla | more
 // cat filethatdoesnotexist | grep bla | more
 
+/*
 void	ft_close_pipe(int pipefd[2])
 {
 	close(pipefd[0]);
@@ -72,6 +73,7 @@ void	exec_pipe(char **comm)
 		i++;
 	}
 }
+*/
 
 /*
 
@@ -85,6 +87,71 @@ this is fine, bash behaves the same, this makes it easier to handles pipes and d
 
 */
 
+/*
+NEW GPT
+*/
+void exec_pipe(char **comm)
+{
+	int i = 0;
+	int pipefd[2];
+	int prevfd = STDIN_FILENO;
+
+	while (comm[i])
+	{
+		char **arg = ft_split(comm[i], " ");
+		int is_last = (comm[i + 1] == NULL);
+
+		if (!is_last && pipe(pipefd) < 0)
+		{
+			perror("pipe");
+			exit(EXIT_FAILURE);
+		}
+
+		int pid = fork();
+		if (pid < 0)
+		{
+			perror("fork");
+			exit(EXIT_FAILURE);
+		}
+
+		if (pid == 0) // Child process
+		{
+			if (prevfd != STDIN_FILENO)
+			{
+				dup2(prevfd, STDIN_FILENO);
+				close(prevfd);
+			}
+			if (!is_last)
+			{
+				dup2(pipefd[1], STDOUT_FILENO);
+				close(pipefd[1]);
+			}
+			if (!is_last)
+				close(pipefd[0]);
+
+			execve(arg[0], arg, NULL);
+			perror("execve"); // If execve fails
+			exit(EXIT_FAILURE);
+		}
+
+		// Parent process
+		if (prevfd != STDIN_FILENO)
+			close(prevfd);
+		if (!is_last)
+			close(pipefd[1]);
+
+		prevfd = is_last ? STDIN_FILENO : pipefd[0];
+
+		ft_split_free(arg);
+		i++;
+	}
+
+	// Wait for all children
+	while (wait(NULL) > 0)
+		;
+}
+
+
 int main()
 {
 	char	*s;
@@ -92,9 +159,9 @@ int main()
 //	char	**redir_in;
 //	char	**redir_out;
 
-	s = "/bin/ls | /usr/bin/grep i";
+//	s = "/bin/ls | /usr/bin/grep i";
 //	s = "/bin/cat | /bin/cat | /bin/ls";
-//	s = "/bin/cat file | /usr/bin/grep bla"
+	s = "/bin/cat file | /usr/bin/grep bla";
 //	s = "/bin/cat file | /usr/bin/grep bla | /usr/bin/more";
 //	s = "/bin/ls filethatdoesnotexist | /usr/bin/grep bla | /usr/bin/more";
 	line = ft_split(s, "|");
