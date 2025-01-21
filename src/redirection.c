@@ -42,7 +42,7 @@ int	index_redirection(char *line, t_mshl *r)
 			r->j++;
 		r->k++;
 	}
-	ft_printf("index in:%d, out:%d\n", r->redir_in_index, r->redir_out_index);
+	//ft_printf("index in:%d, out:%d\n", r->redir_in_index, r->redir_out_index);
 	return (0);
 }
 
@@ -73,7 +73,7 @@ int	trim_redirection(t_mshl *r)
 		if (!r->comm[r->redir_out_index + 1])
 			return (1);
 	}
-	ft_printf("fdr in:%d, out:%d\n", r->fdr_in, r->fdr_out);
+	//ft_printf("fdr in:%d, out:%d\n", r->fdr_in, r->fdr_out);
 	return (0);
 }
 

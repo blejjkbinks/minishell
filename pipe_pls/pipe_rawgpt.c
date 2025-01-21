@@ -28,7 +28,9 @@ void	print_comms(char **line)
 // cat file | grep bla | more
 // cat filethatdoesnotexist | grep bla | more
 
+
 /*
+
 void	ft_close_pipe(int pipefd[2])
 {
 	close(pipefd[0]);
@@ -90,6 +92,7 @@ this is fine, bash behaves the same, this makes it easier to handles pipes and d
 /*
 NEW GPT
 */
+
 void exec_pipe(char **comm)
 {
 	int i = 0;
@@ -151,6 +154,142 @@ void exec_pipe(char **comm)
 		;
 }
 
+/*
+void ft_exec(char **arg, int first, int last, int pipefd[2], int *prevfd, int fd_in, int fd_out)
+{
+	int pid = fork();
+	if (pid == 0)
+	{
+		// Handle input redirection for the first command
+		if (first && fd_in >= 0)
+		{
+			dup2(fd_in, STDIN_FILENO);
+			close(fd_in);
+		}
+		else if (!first)
+			dup2(*prevfd, STDIN_FILENO);
+
+		// Handle output redirection for the last command
+		if (last && fd_out >= 0)
+		{
+			dup2(fd_out, STDOUT_FILENO);
+			close(fd_out);
+		}
+		else if (!last)
+			dup2(pipefd[1], STDOUT_FILENO);
+
+		close(pipefd[0]);
+		close(pipefd[1]);
+		execve(arg[0], arg, NULL);
+		perror("execve");
+		exit(EXIT_FAILURE);
+	}
+	// Parent process waits for the child
+	waitpid(pid, NULL, 0);
+}
+
+void exec_pipe(char **comm, char *redir_in, char *redir_out, int out_mode, char *heredoc_delim)
+{
+	int i = 0;
+	int pipefd[2];
+	int prevfd = STDIN_FILENO;
+
+	int fd_in = -1, fd_out = -1;
+
+	// Handle heredoc (`<<`)
+	if (heredoc_delim)
+	{
+		char *tmpfile = "/tmp/heredoc_tmp.txt";
+		fd_in = open(tmpfile, O_CREAT | O_WRONLY | O_TRUNC, 0600);
+		if (fd_in < 0)
+		{
+			perror(tmpfile);
+			exit(EXIT_FAILURE);
+		}
+
+		char *line;
+		while (1)
+		{
+			printf("heredoc> ");
+			line = get_next_line(STDIN_FILENO); // Implement or replace with your version
+			if (!line || ft_strncmp(line, heredoc_delim, ft_strlen(line)) == 0)
+				break;
+			write(fd_in, line, ft_strlen(line));
+			write(fd_in, "\n", 1);
+			free(line);
+		}
+		free(line);
+		close(fd_in);
+
+		fd_in = open(tmpfile, O_RDONLY);
+		if (fd_in < 0)
+		{
+			perror(tmpfile);
+			exit(EXIT_FAILURE);
+		}
+	}
+	// Handle input redirection (`<`)
+	else if (redir_in)
+	{
+		fd_in = open(redir_in, O_RDONLY);
+		if (fd_in < 0)
+		{
+			perror(redir_in);
+			exit(EXIT_FAILURE);
+		}
+	}
+
+	// Handle output redirection (`>` or `>>`)
+	if (redir_out)
+	{
+		int flags = O_CREAT | O_WRONLY | (out_mode == 0 ? O_TRUNC : O_APPEND);
+		fd_out = open(redir_out, flags, 0644);
+		if (fd_out < 0)
+		{
+			perror(redir_out);
+			exit(EXIT_FAILURE);
+		}
+	}
+
+	while (comm[i])
+	{
+		char **arg = ft_split(comm[i], " ");
+		int is_first = (i == 0);
+		int is_last = (comm[i + 1] == NULL);
+
+		// Create a pipe if this is not the last command
+		if (!is_last && pipe(pipefd) < 0)
+		{
+			perror("pipe");
+			exit(EXIT_FAILURE);
+		}
+
+		// Execute the command
+		ft_exec(arg, is_first, is_last, pipefd, &prevfd, fd_in, fd_out);
+
+		// Close unnecessary file descriptors in the parent
+		if (prevfd != STDIN_FILENO)
+			close(prevfd);
+		if (!is_last)
+			close(pipefd[1]);
+
+		prevfd = is_last ? STDIN_FILENO : pipefd[0];
+
+		ft_split_free(arg);
+		i++;
+	}
+
+	// Close the redirection file descriptors in the parent
+	if (fd_in >= 0)
+		close(fd_in);
+	if (fd_out >= 0)
+		close(fd_out);
+
+	// Wait for all child processes
+	while (wait(NULL) > 0)
+		;
+}
+*/
 
 int main()
 {
@@ -160,14 +299,17 @@ int main()
 //	char	**redir_out;
 
 //	s = "/bin/ls | /usr/bin/grep i";
-//	s = "/bin/cat | /bin/cat | /bin/ls";
-	s = "/bin/cat file | /usr/bin/grep bla";
+	s = "/bin/cat | /bin/cat | /bin/ls";
+//	s = "/bin/cat file | /usr/bin/grep bla";
 //	s = "/bin/cat file | /usr/bin/grep bla | /usr/bin/more";
 //	s = "/bin/ls filethatdoesnotexist | /usr/bin/grep bla | /usr/bin/more";
 	line = ft_split(s, "|");
 
 	print_comms(line);
 	exec_pipe(line);
+
+//	exec_pipe(line, NULL, NULL);
+//	exec_pipe(line, NULL, NULL, 0, NULL);
 
 	ft_split_free(line);
 	return (0);

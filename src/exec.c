@@ -80,7 +80,7 @@ int	exec_builtin(t_mshl *b)
 	if (!ft_strncmp(b->comm[0], "which", 10))
 		return (ft_which_print(b->comm, b->env));
 	if (!ft_strncmp(b->comm[0], "exit", 10))
-		exit (0 + (0 * ft_printf("byebye minishell\n")));
+		exit (0);// + (0 * ft_printf("byebye minishell\n")));
 	return (-1);
 }
 
