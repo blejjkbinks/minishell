@@ -29,20 +29,20 @@ int	index_redirection(char *line, t_mshl *r)
 		if (!r->quote && line[r->k] == '<')
 		{
 			if (r->redir_in_index != -1)
-				return (1);
+				return (2);
 			r->redir_in_index = r->j;
 		}
 		if (!r->quote && line[r->k] == '>')
 		{
 			if (r->redir_out_index != -1)
-				return (1);
+				return (3);
 			r->redir_out_index = r->j;
 		}
 		if (!r->quote && line[r->k] != ' ' && ((line[r->k + 1] == ' ') || line[r->k + 1] == 0))
 			r->j++;
 		r->k++;
 	}
-	//ft_printf("index in:%d, out:%d\n", r->redir_in_index, r->redir_out_index);
+	ft_printf("index in:%d, out:%d\n", r->redir_in_index, r->redir_out_index);
 	return (0);
 }
 
@@ -50,32 +50,58 @@ int	trim_redirection(t_mshl *r)
 {
 	r->fdr_in = -1;
 	r->fdr_out = -1;
+	r->redir_in = NULL;
 	r->redir_out = NULL;
+	r->redir_app = -1;
+	r->redir_heredoc = -1;
 	//return (0);
 	if (r->redir_out_index >= 0)
 	{
-		if (!r->comm[r->redir_out_index + 1])
-			return (1);
-		if (r->comm[r->redir_out_index][1] == 0)
+		if (!r->pipe[r->redir_out_index + 1])
+			return (5);
+		if (r->pipe[r->redir_out_index][1] == 0)
 			//r->fdr_out = open(r->comm[r->redir_out_index + 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 			r->redir_app = 0;
-		else if (r->comm[r->redir_out_index][1] == '>' && r->comm[r->redir_out_index][2] == 0)
+		else if (r->pipe[r->redir_out_index][1] == '>' && r->pipe[r->redir_out_index][2] == 0)
 			//r->fdr_out = open(r->comm[r->redir_out_index + 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
 			r->redir_app = 1;
 		else
-			return (1);
-		r->redir_out = ft_strdup(r->comm[r->redir_out_index + 1]);
-		ft_split_remove(r->comm, r->redir_out_index);
-		ft_split_remove(r->comm, r->redir_out_index);
+			return (6);
+		r->redir_out = ft_strdup(r->pipe[r->redir_out_index + 1]);
+		ft_split_remove(r->pipe, r->redir_out_index);
+		ft_split_remove(r->pipe, r->redir_out_index);
 	}
 	if (r->redir_in_index >= 0)
 	{
-		if (!r->comm[r->redir_out_index + 1])
-			return (1);
+		if (!r->pipe[r->redir_in_index + 1])
+			return (7);
+		if (r->pipe[r->redir_in_index][1] == 0)
+			r->redir_heredoc = 0;
+		else if (r->pipe[r->redir_in_index][1] == '<' && r->pipe[r->redir_in_index][2] == 0)
+			r->redir_heredoc = 1;
+		else
+			return (8);
+		r->redir_in = ft_strdup(r->pipe[r->redir_in_index + 1]);
+		ft_split_remove(r->pipe, r->redir_in_index);
+		ft_split_remove(r->pipe, r->redir_in_index);
 	}
 	//ft_printf("fdr in:%d, out:%d\n", r->fdr_in, r->fdr_out);
 	return (0);
 }
+
+void	get_redir_info(t_mshl *m)
+{
+	m->redir_in = 0;
+}
+
+/*
+use same idea as before
+exept now index is from 2 dimensions instead of 1, still a 1d index tho
+find index, check its unique, check it has 1 argument after him
+and then trim it
+open and pipes is handled in ft_exec i guess
+good work!!
+*/
 
 /*int	split_redirection(t_mshl *r)
 {

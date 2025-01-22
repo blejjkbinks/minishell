@@ -12,6 +12,34 @@
 
 #include "minishell.h"
 
+void	ft_print_triple_comm(char ***triple)
+{
+	int	i;
+	int	j;
+	int	k;
+
+	ft_printf("vvvvv\n");
+	i = 0;
+	while (triple[i])
+	{
+		j = 0;
+		while (triple[i][j])
+		{
+			k = 0;
+			while (triple[i][j][k])
+			{
+				ft_printf("%c", triple[i][j][k]);
+				k++;
+			}
+			ft_printf(",");
+			j++;
+		}
+		ft_printf("\n");
+		i++;
+	}
+	ft_printf("^^^^\n");
+}
+
 char	*ft_get_prompt(char **env, char *exit_status)
 {
 	char	*ret;
@@ -35,56 +63,51 @@ char	*ft_get_prompt(char **env, char *exit_status)
 	return (pwd);
 }
 
+void	letsgo_cleanup(t_mshl *m)
+{
+	ft_free_triple(m->triple);
+	m->redir_in = ft_free(m->redir_in);
+	m->redir_out = ft_free(m->redir_out);
+	free(m->exit_status);
+	m->exit_status = ft_itoa(m->exit_res);
+}
+
 void	letsgo(t_mshl *m)
 {
 	m->i = 0;
 	m->cash = m->line;
 	m->line = cash_money(*m);
-	//ft_printf("cash:%s\n", m->line);
 	if (ft_strnstr(m->cash, "!!", ft_strlen(m->cash)))
 		ft_printf("!!:%s\n", m->line);
 	free(m->last_command);
-	m->last_command = m->cash;		//yikes
-	m->pipe = ft_split_quotes(m->line, '|');
-	/*
-	ft_printf("SPLIT m->pipe:");
-	for (int p = 0; m->pipe[p]; p++)
-		ft_printf("%s,", m->pipe[p]);
-	ft_printf("\n");
-	*/
-	while (m->pipe[m->i])
+	m->last_command = m->cash;	//yikes		//???note to self: write real comments #yikes
+	m->triple = ft_split_triple(m->line);
+	get_redir_info(m);
+	while (m->triple[m->i])
 	{
-		m->comm = ft_split_quotes(m->pipe[m->i], ' ');
+		m->comm = m->triple[m->i];
 		ft_strtolower(m->comm[0]);
-		if (!index_redirection(m->pipe[m->i], m) && !trim_redirection(m))
-		{//redirection trimming needs to happen before splitting pipes
-		 //redirections applies to the pipeline as a whole, not to individual commands
-			/*
-			ft_printf("SPLIT m->comm:");
-			for (int p = 0; m->comm[p]; p++)
-				ft_printf("%s,", m->comm[p]);
-			ft_printf("\n______\n");
-			*/
-			if (is_builtin(m->comm[0]) || ft_strchr(m->comm[0], '='))
-				m->exit_res = exec_builtin(m);
-			else
-				m->exit_res = exec_fork(m->comm, m->env);
-		}
+		if (is_builtin(m->comm[0]) || ft_strchr(m->comm[0], '='))
+			m->exit_res = exec_builtin(m);
 		else
-			m->exit_res = (258 + (0 * ft_printf("minishell: invalid token ><\n")));
-		/*
-		if (m->redir_out)
-		{
-			ft_printf("REDIR out:%s\n", m->redir_out);
-			free(m->redir_out);
-		}
-		*/
-		ft_split_free(m->comm);
+			m->exit_res = exec_fork(m->comm, m->env);
 		m->i++;
 	}
-	ft_split_free(m->pipe);
-	free(m->exit_status);
-	m->exit_status = ft_itoa(m->exit_res);
+	letsgo_cleanup(m);
+}
+
+void	init_t_mshl(t_mshl *m, char **envp_main)
+{
+	m->redir_in = NULL;
+	m->redir_out = NULL;
+	m->env = ft_env_dup(envp_main);
+	m->env = ft_export(m->env, "OLDPWD=");
+	m->env_extra = ft_split("yea=YEAAA,extra=EXXXTRA", ",");
+	m->line = ft_itoa(ft_atoi(ft_env_get(m->env, "SHLVL")) + 1);
+	ft_env_set(m->env, "SHLVL", m->line);
+	free(m->line);
+	m->exit_status = ft_itoa(0);
+	m->last_command = ft_strdup("^^\'");
 }
 
 int	main(int argc, char **argv, char **envp_main)
@@ -92,16 +115,7 @@ int	main(int argc, char **argv, char **envp_main)
 	t_mshl	m;
 
 	if (argc == 1)
-	{
-		m.env = ft_env_dup(envp_main);
-		m.env = ft_export(m.env, "OLDPWD=");
-		m.env_extra = ft_split("yea=YEAAA,extra=EXXXTRA", ",");
-		m.line = ft_itoa(ft_atoi(ft_env_get(m.env, "SHLVL")) + 1);
-		ft_env_set(m.env, "SHLVL", m.line);
-		free(m.line);
-		m.exit_status = ft_itoa(0);
-		m.last_command = ft_strdup("^^\'");
-	}
+		init_t_mshl(&m, envp_main);
 	while (argc == 1)
 	{
 		m.prompt = ft_get_prompt(m.env, m.exit_status);

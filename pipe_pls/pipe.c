@@ -144,12 +144,11 @@ void exec_pipe(char **comm)
 }
 
 
-void ft_exec(char **arg, int first, int last, int pipefd[2], int *prevfd, int fd_in, int fd_out)
+int ft_exec(char **arg, int first, int last, int pipefd[2], int *prevfd, int fd_in, int fd_out)
 {
 	int pid = fork();
 	if (pid == 0)
 	{
-		// Handle input redirection for the first command
 		if (first && fd_in >= 0)
 		{
 			dup2(fd_in, STDIN_FILENO);
@@ -157,8 +156,6 @@ void ft_exec(char **arg, int first, int last, int pipefd[2], int *prevfd, int fd
 		}
 		else if (!first)
 			dup2(*prevfd, STDIN_FILENO);
-
-		// Handle output redirection for the last command
 		if (last && fd_out >= 0)
 		{
 			dup2(fd_out, STDOUT_FILENO);
@@ -173,15 +170,17 @@ void ft_exec(char **arg, int first, int last, int pipefd[2], int *prevfd, int fd
 		perror("execve");
 		exit(EXIT_FAILURE);
 	}
-	// Parent process waits for the child
-	waitpid(pid, NULL, 0);
+	return (pid);
 }
 
-void exec_pipe_full(char **comm, char *redir_in, char *redir_out, int out_mode, char *heredoc_delim)
+int exec_pipe_full(char **comm, char *redir_in, char *redir_out, int out_mode, char *heredoc_delim)
 {
 	int i = 0;
 	int pipefd[2];
 	int prevfd = STDIN_FILENO;
+	int flags;
+	int pid;
+	int status;
 
 	int fd_in = -1, fd_out = -1;
 
@@ -199,7 +198,8 @@ void exec_pipe_full(char **comm, char *redir_in, char *redir_out, int out_mode, 
 		char *line;
 		while (1)
 		{
-			printf("heredoc> ");
+			write(1, "heredoc> ", 9);
+			//printf("heredoc> ");
 			line = get_next_line(STDIN_FILENO); // Implement or replace with your version
 			if (!line || ft_strncmp(line, heredoc_delim, ft_strlen(line)) == 0)
 				break;
@@ -222,22 +222,19 @@ void exec_pipe_full(char **comm, char *redir_in, char *redir_out, int out_mode, 
 	{
 		fd_in = open(redir_in, O_RDONLY);
 		if (fd_in < 0)
-		{
-			perror(redir_in);
-			exit(EXIT_FAILURE);
-		}
+			exit(8);
 	}
 
 	// Handle output redirection (`>` or `>>`)
 	if (redir_out)
 	{
-		int flags = O_CREAT | O_WRONLY | (out_mode == 0 ? O_TRUNC : O_APPEND);
+		if (out_mode == 0)
+			flags = O_CREAT | O_WRONLY | O_TRUNC;
+		else
+			flags = O_CREAT | O_WRONLY | O_APPEND;
 		fd_out = open(redir_out, flags, 0644);
 		if (fd_out < 0)
-		{
-			perror(redir_out);
-			exit(EXIT_FAILURE);
-		}
+			exit(9);
 	}
 
 	while (comm[i])
@@ -254,7 +251,7 @@ void exec_pipe_full(char **comm, char *redir_in, char *redir_out, int out_mode, 
 		}
 
 		// Execute the command
-		ft_exec(arg, is_first, is_last, pipefd, &prevfd, fd_in, fd_out);
+		pid = ft_exec(arg, is_first, is_last, pipefd, &prevfd, fd_in, fd_out);
 
 		// Close unnecessary file descriptors in the parent
 		if (prevfd != STDIN_FILENO)
@@ -275,8 +272,11 @@ void exec_pipe_full(char **comm, char *redir_in, char *redir_out, int out_mode, 
 		close(fd_out);
 
 	// Wait for all child processes
-	while (wait(NULL) > 0)
-		;
+	while (wait(NULL) > 0) ;
+	return (0);
+	//waitpid(pid, &status, 0);
+	//return ((status & 0xff00) >> 8);
+
 }
 
 int main()
@@ -284,25 +284,29 @@ int main()
 	char	*s;
 	char	**line;
 	char	*redir_in = NULL;
-	char	*redir_out = NULL;
+	char	*redir_out = "file_out";
 	int		out_mode = 0;
 	char	*heredoc_delim = NULL;
+	int		ret;
 
-	s = "/bin/ls | /usr/bin/grep i";
-//	s = "/bin/cat | /bin/cat | /bin/ls";
-//	s = "/bin/cat file | /usr/bin/grep bla";
-//	s = "/bin/cat file | /usr/bin/grep bla | /usr/bin/more";
+//	s = "/bin/ls | /usr/bin/grep i";
+	s = "/bin/cat | /bin/cat | /bin/ls";
+//	s = "/bin/cat file_in | /usr/bin/grep bla";
+//	s = "/bin/cat file_in | /usr/bin/grep bla | /usr/bin/more";
 //	s = "/bin/ls filethatdoesnotexist | /usr/bin/grep bla | /usr/bin/more";
+//	s = "/bin/cat";
 
 	line = ft_split(s, "|");
 
+/*
 	print_comms(line);
 	exec_pipe(line);
 	printf("^^^^^^\n");
-
+*/
 	print_comms(line);
-	exec_pipe_full(line, redir_in, redir_out, out_mode, heredoc_delim);
+	ret = exec_pipe_full(line, redir_in, redir_out, out_mode, heredoc_delim);
 	printf("^^^^^^\n");
+	printf("%d\n", ret);
 
 	ft_split_free(line);
 	return (0);

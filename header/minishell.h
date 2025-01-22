@@ -37,6 +37,7 @@ typedef struct s_mshl
 	char	**env_extra;
 	char	**pipe;
 	char	**comm;
+	char	***triple;
 	int		i;
 	int		j;
 	int		k;
@@ -46,6 +47,7 @@ typedef struct s_mshl
 	pid_t	pid;
 	char	quote;
 	int		redir_app;
+	int		redir_heredoc;
 	char	*redir_in;
 	char	*redir_out;
 	int		fdr_in;
@@ -76,9 +78,12 @@ int		quoted(char c, char *quote);
 char	*cash_money(t_mshl k);
 
 char	**ft_split_quotes(char *str, char d);
+char	***ft_split_triple(char *line);
+void	ft_free_triple(char ***triple);
 
 int		index_redirection(char *line, t_mshl *r);
 int		trim_redirection(t_mshl *r);
+void	get_redir_info(t_mshl *m);
 
 int		exec_builtin(t_mshl *b);
 int		exec_fork(char **arg, char **env);

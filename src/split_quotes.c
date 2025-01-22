@@ -53,3 +53,42 @@ char	**ft_split_quotes(char *str, char d)
 		ft_printf("minishell: unclosed quote haha\n");
 	return (ret);
 }
+
+char	***ft_split_triple(char *line)
+{
+	char	***ret;
+	char	**first;
+	int		i;
+
+	first = ft_split_quotes(line, '|');
+	ret = (char ***)malloc((ft_split_len(first) + 1) * sizeof(char **));
+	i = 0;
+	while (first[i])
+	{
+		ret[i] = ft_split_quotes(first[i], ' ');
+		i++;
+	}
+	ret[i] = NULL;
+	ft_split_free(first);
+	return (ret);
+}
+
+void	ft_free_triple(char ***triple)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (triple && triple[i])
+	{
+		j = 0;
+		while (triple[i][j])
+		{
+			free(triple[i][j]);
+			j++;
+		}
+		free(triple[i]);
+		i++;
+	}
+	free(triple);
+}
