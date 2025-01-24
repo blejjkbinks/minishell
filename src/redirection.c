@@ -12,86 +12,151 @@
 
 #include "minishell.h"
 
-//after separating pipes
-//before splitting arguments
-//line is the raw command with quotes;
-
 int	index_redirection(char *line, t_mshl *r)
 {
-	r->k = 0;
-	r->j = 0;
-	r->quote = 0;
-	r->redir_in_index = -1;
-	r->redir_out_index = -1;
-	while (line[r->k])
+	while (line[r->i])
 	{
-		quoted(line[r->k], &r->quote);
-		if (!r->quote && line[r->k] == '<')
+		quoted(line[r->i], &r->quote);
+		if (!r->quote && line[r->i] == ' ' && line[r->i + 1] == '<')
 		{
 			if (r->redir_in_index != -1)
 				return (2);
 			r->redir_in_index = r->j;
 		}
-		if (!r->quote && line[r->k] == '>')
+		if (!r->quote && line[r->i] == ' ' && line[r->i + 1] == '>')
 		{
 			if (r->redir_out_index != -1)
 				return (3);
 			r->redir_out_index = r->j;
 		}
-		if (!r->quote && line[r->k] != ' ' && ((line[r->k + 1] == ' ') || line[r->k + 1] == 0))
+		r->c = line[r->i];
+		r->d = line[r->i + 1];
+		if (!r->quote && (r->c != ' ' && (r->d == ' ' || r->d == 0)))
 			r->j++;
-		r->k++;
+		if (!r->quote && r->c == '|' && r->d != '|')
+			r->j--;
+		r->i++;
 	}
-	ft_printf("index in:%d, out:%d\n", r->redir_in_index, r->redir_out_index);
 	return (0);
 }
 
-int	trim_redirection(t_mshl *r)
+void	show_index_triple(char ***triple, int index)
 {
-	r->fdr_in = -1;
-	r->fdr_out = -1;
-	r->redir_in = NULL;
-	r->redir_out = NULL;
-	r->redir_app = -1;
-	r->redir_heredoc = -1;
-	//return (0);
-	if (r->redir_out_index >= 0)
+	int	i;
+	int	j;
+
+	if (index == -1)
+		return ;
+	i = 0;
+	while (triple && triple[i])
 	{
-		if (!r->pipe[r->redir_out_index + 1])
-			return (5);
-		if (r->pipe[r->redir_out_index][1] == 0)
-			//r->fdr_out = open(r->comm[r->redir_out_index + 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-			r->redir_app = 0;
-		else if (r->pipe[r->redir_out_index][1] == '>' && r->pipe[r->redir_out_index][2] == 0)
-			//r->fdr_out = open(r->comm[r->redir_out_index + 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
-			r->redir_app = 1;
-		else
-			return (6);
-		r->redir_out = ft_strdup(r->pipe[r->redir_out_index + 1]);
-		ft_split_remove(r->pipe, r->redir_out_index);
-		ft_split_remove(r->pipe, r->redir_out_index);
+		j = 0;
+		while (triple[i][j])
+		{
+			if (index == 0)
+			{
+				ft_printf("found:%s\n", triple[i][j]);
+				return ;
+			}
+			index--;
+			j++;
+		}
+		i++;
 	}
-	if (r->redir_in_index >= 0)
-	{
-		if (!r->pipe[r->redir_in_index + 1])
-			return (7);
-		if (r->pipe[r->redir_in_index][1] == 0)
-			r->redir_heredoc = 0;
-		else if (r->pipe[r->redir_in_index][1] == '<' && r->pipe[r->redir_in_index][2] == 0)
-			r->redir_heredoc = 1;
-		else
-			return (8);
-		r->redir_in = ft_strdup(r->pipe[r->redir_in_index + 1]);
-		ft_split_remove(r->pipe, r->redir_in_index);
-		ft_split_remove(r->pipe, r->redir_in_index);
-	}
-	//ft_printf("fdr in:%d, out:%d\n", r->fdr_in, r->fdr_out);
-	return (0);
+	ft_printf("out of bounds of triple, didnt find\n");
 }
 
-void	get_redir_info(t_mshl *m)
+int	trim_redirection_in(t_mshl *r)
 {
-	m->redir_in = 0;
+	r->i = 0;
+	if (r->redir_in_index < 0)
+		return (0);
+	while (r->triple && r->triple[r->i])
+	{
+		r->j = 0;
+		while (r->triple[r->i][r->j])
+		{
+			if (r->redir_in_index == 0)
+			{
+				r->str = r->triple[r->i][r->j];
+				if (r->str[1] == 0)
+					r->redir_heredoc = 0;
+				else if (r->str[1] == '<' && r->str[2] == 0)
+					r->redir_heredoc = 1;
+				else
+					return (3);
+				ft_split_remove(r->triple[r->i], r->j);
+				r->redir_in = ft_strdup(r->triple[r->i][r->j]);
+				if (!r->redir_in)
+					return (4);
+				ft_split_remove(r->triple[r->i], r->j);
+				r->redir_out_index -= 2;
+				return (0);
+			}
+			r->redir_in_index--;
+			r->j++;
+		}
+		r->i++;
+	}
+	return (5);
+}
+
+int	trim_redirection_out(t_mshl *r)
+{
+	r->i = 0;
+	if (r->redir_out_index < 0)
+		return (0);
+	while (r->triple && r->triple[r->i])
+	{
+		r->j = 0;
+		while (r->triple[r->i][r->j])
+		{
+			if (r->redir_out_index == 0)
+			{
+				r->str = r->triple[r->i][r->j];
+				if (r->str[1] == 0)
+					r->redir_app = 0;
+				else if (r->str[1] == '>' && r->str[2] == 0)
+					r->redir_app = 1;
+				else
+					return (6);
+				ft_split_remove(r->triple[r->i], r->j);
+				r->redir_out = ft_strdup(r->triple[r->i][r->j]);
+				if (!r->redir_out)
+					return (7);
+				ft_split_remove(r->triple[r->i], r->j);
+				return (0);
+			}
+			r->redir_out_index--;
+			r->j++;
+		}
+		r->i++;
+	}
+	return (8);
+}
+
+int	get_redir_info(t_mshl *m)
+{
+	int	redir_token;
+
+	m->i = 0;
+	m->j = 0;
+	m->quote = 0;
+	m->redir_in_index = -1;
+	m->redir_out_index = -1;
+	m->redir_app = -1;
+	m->redir_heredoc = -1;
+	redir_token = index_redirection(m->line, m);
+	ft_printf("redir_index: in:%d, out:%d\n", m->redir_in_index, m->redir_out_index);
+	show_index_triple(m->triple, m->redir_in_index);
+	show_index_triple(m->triple, m->redir_out_index);
+	if (!redir_token)
+		redir_token = trim_redirection_in(m);
+	if (!redir_token)
+		redir_token = trim_redirection_out(m);
+	if (redir_token)
+		return (258 + (0 * ft_printf("minishell: invalid token ><\n")));
+	return (0);
 }
 
 /*
@@ -102,39 +167,3 @@ and then trim it
 open and pipes is handled in ft_exec i guess
 good work!!
 */
-
-/*int	split_redirection(t_mshl *r)
-{
-	int	i;
-
-	r->redir_in = NULL;
-	r->redit_out = NULL;
-	i = 0;
-	while (r->comm[i])
-	{
-		if (r->comm[i][0] == '>')
-		{
-			if (r->comm[i][1] == 0)
-				r->redir_app = 0;
-			else if (r->comm[i][1] == '>' && r->comm[i][2] == 0)
-				r->redir_app = 1;
-			else
-				return (1);
-			if (!r->comm[i + 1] || r->redit_out)
-				return (1);
-			r->redir_out = r->comm[i + 1];
-			//ft_split_remove(split, i);
-			//ft_split_remove(split, i + 1);
-		}
-		if (r->comm[i][0] == '<')
-		{
-			if (!r->comm[i + 1] || r->redir_in || r->comm[i][1] != 0)
-				return (1);
-			r->redir_in = r->comm[i + 1];
-		}
-		i++;
-	}
-	if (!ft_strncmp(r->redir_in, r->redir_out, ft_strlen(r->redir_in)))
-		return (1);
-	return (0);
-}*/

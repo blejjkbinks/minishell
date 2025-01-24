@@ -38,6 +38,8 @@ typedef struct s_mshl
 	char	**pipe;
 	char	**comm;
 	char	***triple;
+	char	c;
+	char	d;
 	int		i;
 	int		j;
 	int		k;
@@ -83,7 +85,7 @@ void	ft_free_triple(char ***triple);
 
 int		index_redirection(char *line, t_mshl *r);
 int		trim_redirection(t_mshl *r);
-void	get_redir_info(t_mshl *m);
+int		get_redir_info(t_mshl *m);
 
 int		exec_builtin(t_mshl *b);
 int		exec_fork(char **arg, char **env);

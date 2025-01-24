@@ -47,6 +47,7 @@ re: clean all
 
 print:
 	@echo $(SRC)
+	@echo $(CC)
 
 #gpt boss
 GPT_BIN = gpt_exec

@@ -31,7 +31,10 @@ void	ft_print_triple_comm(char ***triple)
 				ft_printf("%c", triple[i][j][k]);
 				k++;
 			}
-			ft_printf(",");
+			if (triple[i][j + 1])
+				ft_printf(",");
+			else
+				ft_printf(";");
 			j++;
 		}
 		ft_printf("\n");
@@ -63,6 +66,23 @@ char	*ft_get_prompt(char **env, char *exit_status)
 	return (pwd);
 }
 
+void	letsgo_getready(t_mshl *m)
+{
+	m->cash = m->line;
+	m->line = cash_money(*m);
+	if (ft_strnstr(m->cash, "!!", ft_strlen(m->cash)))
+		ft_printf("!!:%s\n", m->line);
+	free(m->last_command);
+	m->last_command = m->cash;	//yikes		//???note to self: write real comments #yikes
+	m->triple = ft_split_triple(m->line);
+	m->exit_res = get_redir_info(m);
+	ft_print_triple_comm(m->triple);
+	ft_printf("in:%s, heredoc:%d, out:%s, append:%d\n", m->redir_in, m->redir_heredoc, m->redir_out, m->redir_app);
+	m->redir_in = NULL;
+	m->redir_out = NULL;
+	m->i = 0;
+}
+
 void	letsgo_cleanup(t_mshl *m)
 {
 	ft_free_triple(m->triple);
@@ -74,16 +94,8 @@ void	letsgo_cleanup(t_mshl *m)
 
 void	letsgo(t_mshl *m)
 {
-	m->i = 0;
-	m->cash = m->line;
-	m->line = cash_money(*m);
-	if (ft_strnstr(m->cash, "!!", ft_strlen(m->cash)))
-		ft_printf("!!:%s\n", m->line);
-	free(m->last_command);
-	m->last_command = m->cash;	//yikes		//???note to self: write real comments #yikes
-	m->triple = ft_split_triple(m->line);
-	get_redir_info(m);
-	while (m->triple[m->i])
+	letsgo_getready(m);
+	if (!m->exit_res && m->triple[m->i]) //was while but need to handle differently later
 	{
 		m->comm = m->triple[m->i];
 		ft_strtolower(m->comm[0]);

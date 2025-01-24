@@ -96,6 +96,7 @@ int	exec_fork(char **arg, char **env)
 	else if (pid == 0)
 	{
 		str = ft_which(arg[0], env);
+		//ft_printf("executing which command?:%s\n", str);
 		if (!str)
 			ft_printf("minishell: %s: command not found\n", arg[0]);
 		else if (execve(str, arg, env))

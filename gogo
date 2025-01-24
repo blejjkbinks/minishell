@@ -1,9 +1,13 @@
  #!/usr/bin/bash 
 
-clear;
-#rm ~/Documents/programming/42/minishell/minishell;
-#rm -rf ~/Documents/programming/42/minishell/obj;
-make -C ~/Documents/programming/42/minishell/ clean;
-make -C ~/Documents/programming/42/minishell/;
-printf "~/Documents/programming/42/minishell/minishell\n"
-~/Documents/programming/42/minishell/minishell
+clear
+make -C ~/Documents/programming/42/minishell/ clean
+make -C ~/Documents/programming/42/minishell/
+
+if [ $? -eq 0 ]; then
+	echo "~/Documents/programming/42/minishell/minishell"
+	~/Documents/programming/42/minishell/minishell
+else
+	echo "no compile :("
+fi
+
