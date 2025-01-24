@@ -100,7 +100,7 @@ int	exec_fork(char **arg, char **env)
 		if (!str)
 			ft_printf("minishell: %s: command not found\n", arg[0]);
 		else if (execve(str, arg, env))
-			ft_printf("minishell: %s: is a directory\n", arg[0]);
+			ft_printf("minishell: %s: is a directory (or a script?)\n", arg[0]);
 		if (str)
 			status = 126;
 		else
