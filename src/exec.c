@@ -84,6 +84,22 @@ int	exec_builtin(t_mshl *b)
 	return (-1);
 }
 
+int	ft_exec_bash_script(char **arg, char **env)
+{
+	char	**tmp;
+	int		i;
+
+	tmp = ft_env_dup(arg);
+	i = ft_split_len(arg);
+	while (i > 0)
+	{
+		tmp[i] = tmp[i - 1];
+		i--;
+	}
+	tmp[0] = "/bin/bash";
+	return (execve(tmp[0], tmp, env));
+}
+
 int	exec_fork(char **arg, char **env)
 {
 	pid_t	pid;
@@ -97,16 +113,17 @@ int	exec_fork(char **arg, char **env)
 	{
 		str = ft_which(arg[0], env);
 		//ft_printf("executing which command?:%s\n", str);
-		if (!str)
+		if (!str && !access(arg[0], R_OK))
+			ft_printf("minishell: %s: is a directory\n", arg[0]);
+		else if (!str)
 			ft_printf("minishell: %s: command not found\n", arg[0]);
-		else if (execve(str, arg, env))
-			ft_printf("minishell: %s: is a directory (or a script?)\n", arg[0]);
+		else if (execve(str, arg, env) && ft_exec_bash_script(arg, env))
+			ft_printf("minishell: %s: permission denied\n", arg[0]);
 		if (str)
 			status = 126;
 		else
 			status = 127;
-		if (str)
-			free(str);
+		str = ft_free(str);
 		exit (status);
 	}
 	else

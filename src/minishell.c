@@ -76,8 +76,10 @@ void	letsgo_getready(t_mshl *m)
 	m->last_command = m->cash;	//yikes		//???note to self: write real comments #yikes
 	m->triple = ft_split_triple(m->line);
 	m->exit_res = get_redir_info(m);
+	//
 	ft_print_triple_comm(m->triple);
 	ft_printf("in:%s, heredoc:%d, out:%s, append:%d\n", m->redir_in, m->redir_heredoc, m->redir_out, m->redir_app);
+	//
 	m->redir_in = NULL;
 	m->redir_out = NULL;
 	m->i = 0;
