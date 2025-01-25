@@ -52,8 +52,13 @@ typedef struct s_mshl
 	int		redir_heredoc;
 	char	*redir_in;
 	char	*redir_out;
-	int		fdr_in;
-	int		fdr_out;
+	char	*tmp_heredoc;
+	char	*line2;
+	int		fd_in;
+	int		fd_out;
+	int		flags;
+	int		pipefd[2];
+	int		prevfd;
 	int		redir_in_index;
 	int		redir_out_index;
 }	t_mshl;
@@ -87,7 +92,9 @@ int		index_redirection(char *line, t_mshl *r);
 int		trim_redirection(t_mshl *r);
 int		get_redir_info(t_mshl *m);
 
-int		exec_builtin(t_mshl *b);
-int		exec_fork(char **arg, char **env);
+int		ft_exec_builtin(t_mshl *b);
+int		ft_exec_which(int *status, char **arg, char **env);
+int		ft_exec_single(t_mshl *m, char **arg, char **env);
+int		ft_exec_pipesegment(t_mshl *m);
 
 #endif	//minishell.h

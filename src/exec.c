@@ -59,7 +59,7 @@ int	ft_export_magic(t_mshl *b, int x)
 	return (0);
 }
 
-int	exec_builtin(t_mshl *b)
+int	ft_exec_builtin(t_mshl *b)
 {
 	if (!ft_strncmp(b->comm[0], "echo", 10))
 		return (ft_echo(b->comm));
@@ -100,37 +100,69 @@ int	ft_exec_bash_script(char **arg, char **env)
 	return (execve(tmp[0], tmp, env));
 }
 
-int	exec_fork(char **arg, char **env)
+int	ft_exec_which(int *status, char **arg, char **env)
 {
-	pid_t	pid;
 	char	*str;
+
+	str = ft_which(arg[0], env);
+	//ft_printf("executing which command?:%s\n", str);
+	if (!str && !access(arg[0], R_OK))
+		ft_printf("minishell: %s: is a directory\n", arg[0]);
+	else if (!str)
+		ft_printf("minishell: %s: command not found\n", arg[0]);
+	else if (execve(str, arg, env) && ft_exec_bash_script(arg, env))
+		ft_printf("minishell: %s: permission denied\n", arg[0]);
+	if (str)
+		*status = 126;
+	else
+		*status = 127;		//can turn those 4 lines into 1 glory to norminette
+	str = ft_free(str);
+	exit (*status);
+}
+
+int	ft_exec_pipesegment(t_mshl *m)
+{
+	int	status;
+
+	m->pid = fork();
+	if (m->pid == 0)
+	{
+		if (m->i == 0 && m->fd_in >= 0)
+		{
+			dup2(m->fd_in, STDIN_FILENO);
+			close(m->fd_in);
+		}
+		else if (m->i != 0)
+			dup2(m->prevfd, STDIN_FILENO);
+		if (!m->triple[m->i + 1] && m->fd_out >= 0)
+		{
+			dup2(m->fd_out, STDOUT_FILENO);
+			close(m->fd_out);
+		}
+		else if (m->triple[m->i + 1])
+			dup2(m->pipefd[1], STDOUT_FILENO);
+		close(m->pipefd[0]);
+		close(m->pipefd[1]);
+		ft_exec_which(&status, m->comm, m->env);
+		exit(6 + (0 * ft_printf("exec_pipesegment %d failed\n", m->i)));
+	}
+	return (m->pid);
+}
+
+int	ft_exec_single(t_mshl *m, char **arg, char **env)
+{
 	int		status;
 
-	pid = fork();
-	if (pid < 0)
+	if (is_builtin(m->comm[0]) || ft_strchr(m->comm[0], '='))
+		return (ft_exec_builtin(m));
+	m->pid = fork();
+	if (m->pid < 0)
 		return (4 + (0 * ft_printf("fork error\n")));
-	else if (pid == 0)
-	{
-		str = ft_which(arg[0], env);
-		//ft_printf("executing which command?:%s\n", str);
-		if (!str && !access(arg[0], R_OK))
-			ft_printf("minishell: %s: is a directory\n", arg[0]);
-		else if (!str)
-			ft_printf("minishell: %s: command not found\n", arg[0]);
-		else if (execve(str, arg, env) && ft_exec_bash_script(arg, env))
-			ft_printf("minishell: %s: permission denied\n", arg[0]);
-		if (str)
-			status = 126;
-		else
-			status = 127;
-		str = ft_free(str);
-		exit (status);
-	}
-	else
-	{
-		waitpid(pid, &status, 0);
-		return ((status & 0xff00) >> 8);
-	}
+	else if (m->pid == 0)
+		ft_exec_which(&status, arg, env);
+	else	//norminette can remove else and 2 bracket lines
+	waitpid(m->pid, &status, 0);
+	return ((status & 0xff00) >> 8);
 }
 
 /*int	exec_fork(t_mshl *b)
