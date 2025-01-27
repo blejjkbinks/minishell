@@ -146,6 +146,7 @@ void exec_pipe(char **comm)
 
 int ft_exec(char **arg, int first, int last, int pipefd[2], int *prevfd, int fd_in, int fd_out)
 {
+	int	status;
 	int pid = fork();
 	if (pid == 0)
 	{
@@ -170,6 +171,7 @@ int ft_exec(char **arg, int first, int last, int pipefd[2], int *prevfd, int fd_
 		perror("execve");
 		exit(EXIT_FAILURE);
 	}
+	//waitpid(pid, &status, 0);
 	return (pid);
 }
 
@@ -284,7 +286,7 @@ int main()
 	char	*s;
 	char	**line;
 	char	*redir_in = NULL;
-	char	*redir_out = "file_out";
+	char	*redir_out = NULL;
 	int		out_mode = 0;
 	char	*heredoc_delim = NULL;
 	int		ret;

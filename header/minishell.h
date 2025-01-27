@@ -61,6 +61,10 @@ typedef struct s_mshl
 	int		prevfd;
 	int		redir_in_index;
 	int		redir_out_index;
+	int		is_first;
+	int		is_last;
+	pid_t	pids[99];
+	int		waitpid_status;
 }	t_mshl;
 
 char	**ft_env_dup(char **env);
@@ -78,6 +82,7 @@ int		ft_pwd(void);
 int		ft_cd(char **arg, char **env);
 
 int		is_builtin(char *str);
+int		is_builtin_dontfork(char *str);
 char	*ft_which(char *arg, char **env);
 int		ft_echo(char **arg);
 

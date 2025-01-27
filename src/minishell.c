@@ -73,17 +73,28 @@ void	letsgo_getready(t_mshl *m)
 	if (ft_strnstr(m->cash, "!!", ft_strlen(m->cash)))
 		ft_printf("!!:%s\n", m->line);
 	free(m->last_command);
-	m->last_command = m->cash;	//yikes		//???note to self: write real comments #yikes
+	m->last_command = m->cash;
 	m->triple = ft_split_triple(m->line);
 	m->exit_res = get_redir_info(m);
-	//
-	ft_print_triple_comm(m->triple);
-	//
 	m->i = 0;
+	m->pids[0] = 0;
 }
 
 void	letsgo_cleanup(t_mshl *m)
 {
+	if (m->fd_in >= 0)
+		close(m->fd_in);
+	if (m->fd_out >= 0)
+		close(m->fd_out);
+	m->i = 0;
+	while (m->triple[m->i])
+	{
+		if (m->pids[m->i] > 0)
+			waitpid(m->pids[m->i], &m->waitpid_status, 0);
+		m->i++;
+		m->exit_res = ((m->waitpid_status & 0xff00) >> 8);
+	}
+
 	ft_free_triple(m->triple);
 	m->redir_in = ft_free(m->redir_in);
 	m->redir_out = ft_free(m->redir_out);
@@ -93,11 +104,10 @@ void	letsgo_cleanup(t_mshl *m)
 
 int	ft_open_redirs(t_mshl *m)
 {
-	//
-	ft_printf("in:%s, heredoc:%d, out:%s, append:%d\n", m->redir_in, m->redir_heredoc, m->redir_out, m->redir_app);
-	//
 	m->prevfd = STDIN_FILENO;
-	if (m->redir_heredoc)
+	m->fd_in = -1;
+	m->fd_out = -1;
+	if (m->redir_heredoc == 1)
 	{
 		m->tmp_heredoc = "/tmp/minishell_romain_heredoc_tmp.txt";
 		m->fd_in = open(m->tmp_heredoc, O_CREAT | O_WRONLY | O_TRUNC, 0600);
@@ -138,40 +148,52 @@ int	ft_open_redirs(t_mshl *m)
 	return (0);
 }
 
+void	ft_ready_pipe(t_mshl *m)
+{
+	m->comm = m->triple[m->i];
+	ft_strtolower(m->comm[0]);
+	m->is_first = (m->i == 0);
+	m->is_last = (m->comm[m->i + 1] == NULL);
+	if (!m->is_last && pipe(m->pipefd) < 0)
+		exit(5 + (0 * ft_printf("pipe failed\n")));
+}
+
+void	ft_cleanup_pipe(t_mshl *m)
+{
+	if (m->prevfd != STDIN_FILENO)
+		close(m->prevfd);
+	if (!m->is_last)
+		close(m->pipefd[1]);
+	if (m->is_last)
+		m->prevfd = STDIN_FILENO;
+	else
+		m->prevfd = m->pipefd[0];
+}
+
 void	letsgo(t_mshl *m)
 {
 	letsgo_getready(m);
 	ft_open_redirs(m);
+	//
+	ft_printf("in:%s, heredoc:%d, out:%s, append:%d\n", m->redir_in, m->redir_heredoc, m->redir_out, m->redir_app);
+	ft_print_triple_comm(m->triple);
+	//
 	m->comm = m->triple[0];
 	ft_strtolower(m->comm[0]);
-	if (!m->triple[1])
-		m->exit_res = ft_exec_single(m, m->comm, m->env);
-	while (m->triple[1] && !m->exit_res && m->triple[m->i])
+	if (!m->triple[1] && (is_builtin_dontfork(m->comm[0]) || ft_strchr(m->comm[0], '=')))
+		m->exit_res = ft_exec_builtin(m);
+	//if (!m->triple[1])
+	//	m->exit_res = ft_exec_single(m, m->comm, m->env);
+	while (!m->exit_res && m->triple[m->i] && !is_builtin_dontfork(m->triple[0][0]))
 	{
-		m->comm = m->triple[m->i];
-		ft_strtolower(m->comm[0]);
-		if (m->triple[m->i + 1] && pipe(m->pipefd))
-			exit(5 + (0 * ft_printf("pipe failed\n")));
+		ft_ready_pipe(m);
 		ft_exec_pipesegment(m);
-		if (m->prevfd != STDIN_FILENO)
-			close(m->prevfd);
-		if (m->triple[m->i + 1])
-			close(m->pipefd[1]);
-		if (!m->triple[m->i + 1])
-			m->prevfd = STDIN_FILENO;
-		else
-			m->prevfd = m->pipefd[0];
+		ft_cleanup_pipe(m);
 		//
-		//ft_printf("pipe loop %d, %s\n", m->i, m->comm[0]);
+		ft_printf("pipe loop %d, %s\n", m->i, m->comm[0]);
 		//
 		m->i++;
 	}
-	if (m->fd_in >= 0)
-		close(m->fd_in);
-	if (m->fd_out >= 0)
-		close(m->fd_out);
-	while (wait(NULL) > 0)
-		;
 	letsgo_cleanup(m);
 }
 

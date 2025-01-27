@@ -12,6 +12,29 @@
 
 #include "minishell.h"
 
+
+int	is_builtin_dontfork(char *str)
+{
+	char	**builtin;
+	char	*s;
+	int		i;
+
+	//s = "echo,pwd,env,which";
+	s = "cd,export,unset,exit";
+	builtin = ft_split(s, ",");
+	i = -1;
+	while (builtin[++i])
+	{
+		if (!ft_strncmp(str, builtin[i], ft_strlen(builtin[i]) + 1))
+		{
+			ft_split_free(builtin);
+			return (1);
+		}
+	}
+	ft_split_free(builtin);
+	return (0);
+}
+
 int	is_builtin(char *str)
 {
 	char	**builtin;

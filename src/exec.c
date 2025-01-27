@@ -80,7 +80,7 @@ int	ft_exec_builtin(t_mshl *b)
 	if (!ft_strncmp(b->comm[0], "which", 10))
 		return (ft_which_print(b->comm, b->env));
 	if (!ft_strncmp(b->comm[0], "exit", 10))
-		exit (0);// + (0 * ft_printf("byebye minishell\n")));
+		exit (0 + (0 * ft_printf("byebye minishell\n")));
 	return (-1);
 }
 
@@ -127,31 +127,37 @@ int	ft_exec_pipesegment(t_mshl *m)
 	m->pid = fork();
 	if (m->pid == 0)
 	{
-		if (m->i == 0 && m->fd_in >= 0)
+		if (m->is_first && m->fd_in >= 0)
 		{
 			dup2(m->fd_in, STDIN_FILENO);
 			close(m->fd_in);
 		}
-		else if (m->i != 0)
+		else if (!m->is_first)
 			dup2(m->prevfd, STDIN_FILENO);
-		if (!m->triple[m->i + 1] && m->fd_out >= 0)
+		if (m->is_last && m->fd_out >= 0)
 		{
 			dup2(m->fd_out, STDOUT_FILENO);
 			close(m->fd_out);
 		}
-		else if (m->triple[m->i + 1])
+		else if (m->is_last)
 			dup2(m->pipefd[1], STDOUT_FILENO);
 		close(m->pipefd[0]);
 		close(m->pipefd[1]);
+		if (is_builtin(m->comm[0]))
+		{
+			ft_exec_builtin(m);
+			exit(0);
+		}
 		ft_exec_which(&status, m->comm, m->env);
 		exit(6 + (0 * ft_printf("exec_pipesegment %d failed\n", m->i)));
 	}
+	m->pids[m->i] = m->pid;
 	return (m->pid);
 }
 
 int	ft_exec_single(t_mshl *m, char **arg, char **env)
 {
-	int		status;
+	int	status;
 
 	if (is_builtin(m->comm[0]) || ft_strchr(m->comm[0], '='))
 		return (ft_exec_builtin(m));
@@ -160,7 +166,7 @@ int	ft_exec_single(t_mshl *m, char **arg, char **env)
 		return (4 + (0 * ft_printf("fork error\n")));
 	else if (m->pid == 0)
 		ft_exec_which(&status, arg, env);
-	else	//norminette can remove else and 2 bracket lines
+		//norminette can remove else and 2 bracket lines
 	waitpid(m->pid, &status, 0);
 	return ((status & 0xff00) >> 8);
 }
