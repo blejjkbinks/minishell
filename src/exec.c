@@ -75,12 +75,12 @@ int	ft_exec_builtin(t_mshl *b)
 		return (ft_export_magic(b, 2));
 	if (!ft_strncmp(b->comm[0], "env", 10))
 		return (ft_env(b->env));
-	//if (!ft_strncmp(b->comm[0], "env_extra", 10))
-	//	return (ft_env(b->env_extra));
+	if (!ft_strncmp(b->comm[0], "env_extra", 10))
+		return (ft_env(b->env_extra));
 	if (!ft_strncmp(b->comm[0], "which", 10))
 		return (ft_which_print(b->comm, b->env));
 	if (!ft_strncmp(b->comm[0], "exit", 10))
-		exit (0 + (0 * ft_printf("byebye minishell\n")));
+		exit (0 + (0 * ft_printf("byebye minishell (˶ᵔ ᵕ ᵔ˶)ノ\n")));
 	return (-1);
 }
 
@@ -144,10 +144,7 @@ int	ft_exec_pipesegment(t_mshl *m)
 		close(m->pipefd[0]);
 		close(m->pipefd[1]);
 		if (is_builtin(m->comm[0]))
-		{
-			ft_exec_builtin(m);
-			exit(0);
-		}
+			exit(ft_exec_builtin(m));
 		ft_exec_which(&status, m->comm, m->env);
 		exit(6 + (0 * ft_printf("exec_pipesegment %d failed\n", m->i)));
 	}

@@ -175,7 +175,7 @@ int ft_exec(char **arg, int first, int last, int pipefd[2], int *prevfd, int fd_
 	return (pid);
 }
 
-int exec_pipe_full(char **comm, char *redir_in, char *redir_out, int out_mode, char *heredoc_delim)
+int exec_pipe_full(char **comm, char *redir_in, char *redir_out, int out_mode, char *heredoc_delim, int pids[99])
 {
 	int i = 0;
 	int pipefd[2];
@@ -254,6 +254,7 @@ int exec_pipe_full(char **comm, char *redir_in, char *redir_out, int out_mode, c
 
 		// Execute the command
 		pid = ft_exec(arg, is_first, is_last, pipefd, &prevfd, fd_in, fd_out);
+		pids[i] = pid;
 
 		// Close unnecessary file descriptors in the parent
 		if (prevfd != STDIN_FILENO)
@@ -274,7 +275,15 @@ int exec_pipe_full(char **comm, char *redir_in, char *redir_out, int out_mode, c
 		close(fd_out);
 
 	// Wait for all child processes
-	while (wait(NULL) > 0) ;
+	i = 0;
+	while (comm[i])
+	{
+		if (pids[i] > 0)
+			waitpid(pids[i], &status, 0);
+		printf("done waiting for pid[%d]:%d\n", i, pids[i]);
+		i++;
+	}
+	//while (wait(NULL) > 0) ;
 	return (0);
 	//waitpid(pid, &status, 0);
 	//return ((status & 0xff00) >> 8);
@@ -290,9 +299,10 @@ int main()
 	int		out_mode = 0;
 	char	*heredoc_delim = NULL;
 	int		ret;
+	int		pids[99];
 
-//	s = "/bin/ls | /usr/bin/grep i";
-	s = "/bin/cat | /bin/cat | /bin/ls";
+	s = "/bin/ls | /usr/bin/grep i";
+//	s = "/bin/cat | /bin/cat | /bin/ls";
 //	s = "/bin/cat file_in | /usr/bin/grep bla";
 //	s = "/bin/cat file_in | /usr/bin/grep bla | /usr/bin/more";
 //	s = "/bin/ls filethatdoesnotexist | /usr/bin/grep bla | /usr/bin/more";
@@ -306,7 +316,7 @@ int main()
 	printf("^^^^^^\n");
 */
 	print_comms(line);
-	ret = exec_pipe_full(line, redir_in, redir_out, out_mode, heredoc_delim);
+	ret = exec_pipe_full(line, redir_in, redir_out, out_mode, heredoc_delim, pids);
 	printf("^^^^^^\n");
 	printf("%d\n", ret);
 

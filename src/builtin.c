@@ -19,7 +19,8 @@ int	is_builtin_dontfork(char *str)
 	char	*s;
 	int		i;
 
-	//s = "echo,pwd,env,which";
+	if (ft_strchr(str, '='))
+		return (1);
 	s = "cd,export,unset,exit";
 	builtin = ft_split(s, ",");
 	i = -1;

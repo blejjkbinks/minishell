@@ -147,9 +147,12 @@ int	get_redir_info(t_mshl *m)
 	m->redir_app = -1;
 	m->redir_heredoc = -1;
 	redir_token = index_redirection(m->line, m);
-	ft_printf("redir_index: in:%d, out:%d\n", m->redir_in_index, m->redir_out_index);
-	show_index_triple(m->triple, m->redir_in_index);
-	show_index_triple(m->triple, m->redir_out_index);
+	//
+	//ft_printf("redir_index: in:%d, out:%d\n", m->redir_in_index, m->redir_out_index);
+	//
+	//show_index_triple(m->triple, m->redir_in_index);
+	//show_index_triple(m->triple, m->redir_out_index);
+	//
 	if (!redir_token)
 		redir_token = trim_redirection_in(m);
 	if (!redir_token)
@@ -158,12 +161,3 @@ int	get_redir_info(t_mshl *m)
 		return (258 + (0 * ft_printf("minishell: invalid token ><\n")));
 	return (0);
 }
-
-/*
-use same idea as before
-exept now index is from 2 dimensions instead of 1, still a 1d index tho
-find index, check its unique, check it has 1 argument after him
-and then trim it
-open and pipes is handled in ft_exec i guess
-good work!!
-*/

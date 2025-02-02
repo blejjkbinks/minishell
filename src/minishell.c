@@ -175,22 +175,20 @@ void	letsgo(t_mshl *m)
 	letsgo_getready(m);
 	ft_open_redirs(m);
 	//
-	ft_printf("in:%s, heredoc:%d, out:%s, append:%d\n", m->redir_in, m->redir_heredoc, m->redir_out, m->redir_app);
-	ft_print_triple_comm(m->triple);
+	//ft_printf("in:%s, heredoc:%d, out:%s, append:%d\n", m->redir_in, m->redir_heredoc, m->redir_out, m->redir_app);
+	//ft_print_triple_comm(m->triple);
 	//
 	m->comm = m->triple[0];
 	ft_strtolower(m->comm[0]);
-	if (!m->triple[1] && (is_builtin_dontfork(m->comm[0]) || ft_strchr(m->comm[0], '=')))
+	if (!m->triple[1] && is_builtin_dontfork(m->comm[0]))
 		m->exit_res = ft_exec_builtin(m);
-	//if (!m->triple[1])
-	//	m->exit_res = ft_exec_single(m, m->comm, m->env);
 	while (!m->exit_res && m->triple[m->i] && !is_builtin_dontfork(m->triple[0][0]))
 	{
 		ft_ready_pipe(m);
 		ft_exec_pipesegment(m);
 		ft_cleanup_pipe(m);
 		//
-		ft_printf("pipe loop %d, %s\n", m->i, m->comm[0]);
+		//ft_printf("pipe loop %d, %s\n", m->i, m->comm[0]);
 		//
 		m->i++;
 	}
@@ -199,6 +197,7 @@ void	letsgo(t_mshl *m)
 
 void	init_t_mshl(t_mshl *m, char **envp_main)
 {
+	ft_printf("(✿ ◕‿ ◕) hi~~ welcome to minishell (っ＾▿＾)っ\n");
 	m->redir_in = NULL;
 	m->redir_out = NULL;
 	m->env = ft_env_dup(envp_main);
@@ -217,7 +216,7 @@ int	main(int argc, char **argv, char **envp_main)
 
 	if (argc == 1)
 		init_t_mshl(&m, envp_main);
-	while (argc == 1)
+	while (argc == 1 && argv[0])
 	{
 		m.prompt = ft_get_prompt(m.env, m.exit_status);
 		m.line = readline(m.prompt);
@@ -231,5 +230,5 @@ int	main(int argc, char **argv, char **envp_main)
 			return (1 + (0 * ft_printf("readline gave NULL??\n")));
 		free(m.line);
 	}
-	return (2 + (0 * ft_printf("usage: %s\n", argv[0])));
+	return (2 + (0 * ft_printf("usage: %s\n", "./minishell")));
 }
