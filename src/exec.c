@@ -120,31 +120,28 @@ int	ft_exec_which(int *status, char **arg, char **env)
 	exit (*status);
 }
 
-int	ft_exec_pipesegment(t_mshl *m)
+int ft_exec_pipesegment(t_mshl *m)
 {
-	int	status;
+	int status;
 
 	m->pid = fork();
 	if (m->pid == 0)
 	{
-		if (m->is_first && m->fd_in >= 0)
+		if (m->prevfd != STDIN_FILENO)
 		{
-			dup2(m->fd_in, STDIN_FILENO);
-			close(m->fd_in);
-		}
-		else if (!m->is_first)
 			dup2(m->prevfd, STDIN_FILENO);
-		if (m->is_last && m->fd_out >= 0)
-		{
-			dup2(m->fd_out, STDOUT_FILENO);
-			close(m->fd_out);
+			close(m->prevfd);
 		}
-		else if (m->is_last)
+		if (!m->is_last)
+		{
 			dup2(m->pipefd[1], STDOUT_FILENO);
+			close(m->pipefd[1]);
+		}
 		close(m->pipefd[0]);
-		close(m->pipefd[1]);
+
 		if (is_builtin(m->comm[0]))
 			exit(ft_exec_builtin(m));
+
 		ft_exec_which(&status, m->comm, m->env);
 		exit(6 + (0 * ft_printf("exec_pipesegment %d failed\n", m->i)));
 	}

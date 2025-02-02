@@ -148,17 +148,7 @@ int	ft_open_redirs(t_mshl *m)
 	return (0);
 }
 
-void	ft_ready_pipe(t_mshl *m)
-{
-	m->comm = m->triple[m->i];
-	ft_strtolower(m->comm[0]);
-	m->is_first = (m->i == 0);
-	m->is_last = (m->comm[m->i + 1] == NULL);
-	if (!m->is_last && pipe(m->pipefd) < 0)
-		exit(5 + (0 * ft_printf("pipe failed\n")));
-}
-
-void	ft_cleanup_pipe(t_mshl *m)
+void ft_cleanup_pipe(t_mshl *m)
 {
 	if (m->prevfd != STDIN_FILENO)
 		close(m->prevfd);
@@ -168,6 +158,16 @@ void	ft_cleanup_pipe(t_mshl *m)
 		m->prevfd = STDIN_FILENO;
 	else
 		m->prevfd = m->pipefd[0];
+}
+
+void ft_ready_pipe(t_mshl *m)
+{
+	m->comm = m->triple[m->i];
+	ft_strtolower(m->comm[0]);
+	m->is_first = (m->i == 0);
+	m->is_last = (m->triple[m->i + 1] == NULL);
+	if (!m->is_last && pipe(m->pipefd) < 0)
+		exit(5 + (0 * ft_printf("pipe failed\n")));
 }
 
 void	letsgo(t_mshl *m)
