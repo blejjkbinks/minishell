@@ -42,7 +42,6 @@ int	is_builtin(char *str)
 	char	*s;
 	int		i;
 
-//	s = "echo,cd,pwd,export,unset,env,exit,which";
 	s = "echo,cd,pwd,export,unset,env,exit,which,env_extra";
 	builtin = ft_split(s, ",");
 	i = -1;

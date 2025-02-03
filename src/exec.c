@@ -105,7 +105,9 @@ int	ft_exec_which(int *status, char **arg, char **env)
 	char	*str;
 
 	str = ft_which(arg[0], env);
+	//
 	//ft_printf("executing which command?:%s\n", str);
+	//
 	if (!str && !access(arg[0], R_OK))
 		ft_printf("minishell: %s: is a directory\n", arg[0]);
 	else if (!str)
@@ -148,7 +150,7 @@ int ft_exec_pipesegment(t_mshl *m)
 	m->pids[m->i] = m->pid;
 	return (m->pid);
 }
-
+/*
 int	ft_exec_single(t_mshl *m, char **arg, char **env)
 {
 	int	status;
@@ -160,10 +162,10 @@ int	ft_exec_single(t_mshl *m, char **arg, char **env)
 		return (4 + (0 * ft_printf("fork error\n")));
 	else if (m->pid == 0)
 		ft_exec_which(&status, arg, env);
-		//norminette can remove else and 2 bracket lines
 	waitpid(m->pid, &status, 0);
 	return ((status & 0xff00) >> 8);
 }
+*/
 
 /*int	exec_fork(t_mshl *b)
 {

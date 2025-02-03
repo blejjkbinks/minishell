@@ -168,6 +168,11 @@ void ft_ready_pipe(t_mshl *m)
 	m->is_last = (m->triple[m->i + 1] == NULL);
 	if (!m->is_last && pipe(m->pipefd) < 0)
 		exit(5 + (0 * ft_printf("pipe failed\n")));
+	
+	if (m->fd_in != -1 && m->is_first)
+		m->prevfd = m->fd_in;
+	if (m->fd_out != -1 && m->is_last)
+		m->pipefd[1] = m->fd_out;
 }
 
 void	letsgo(t_mshl *m)
