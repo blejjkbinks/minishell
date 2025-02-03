@@ -84,7 +84,7 @@ char	*ft_which(char *arg, char **env)
 	}
 	path = ft_split(ft_env_get(env, "PATH"), ":");
 	i = 0;
-	while (path[i])
+	while (path && path[i])
 	{
 		pwd = ft_strjoin(path[i], "/");
 		ret = ft_strjoin(pwd, arg);
