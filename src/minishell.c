@@ -12,42 +12,15 @@
 
 #include "minishell.h"
 
-void	ft_print_triple_comm(char ***triple)
-{
-	int	i;
-	int	j;
-	int	k;
-
-	ft_printf("vvvvv\n");
-	i = 0;
-	while (triple[i])
-	{
-		j = 0;
-		while (triple[i][j])
-		{
-			k = 0;
-			while (triple[i][j][k])
-			{
-				ft_printf("%c", triple[i][j][k]);
-				k++;
-			}
-			if (triple[i][j + 1])
-				ft_printf(",");
-			else
-				ft_printf(";");
-			j++;
-		}
-		ft_printf("\n");
-		i++;
-	}
-	ft_printf("^^^^\n");
-}
-
 char	*ft_get_prompt(char **env, char *exit_status)
 {
 	char	*ret;
 	char	*pwd;
+	char	t1;
+	char	t2;
 
+	t1 = '>';
+	t2 = '$';
 	pwd = ft_getcwd();
 	if (ft_strchr(pwd, '/') == ft_strrchr(pwd, '/'))
 		ret = ft_strjoin("minishell$ ", pwd);
@@ -57,11 +30,9 @@ char	*ft_get_prompt(char **env, char *exit_status)
 		ret = ft_strjoin("minishell$ ./", ft_strrchr(pwd, '/') + 1);
 	free(pwd);
 	if (!ft_strncmp(exit_status, "0", 2))
-		//pwd = ft_strjoin(ret, " > :3 $ ");
-		pwd = ft_strjoin(ret, " > " CLR_GRN ":3" CLR_RST " $ ");
+		pwd = ft_strjoin(ret, " %c " CLR_GRN ":3" CLR_RST " %c ", t1, t2);
 	else
-		//pwd = ft_strjoin(ret, " > :( $ ");
-		pwd = ft_strjoin(ret, " > " CLR_RED ":(" CLR_RST " $ ");
+		pwd = ft_strjoin(ret, " %c " CLR_RED ":(" CLR_RST " %c ", t1, t2);
 	free(ret);
 	return (pwd);
 }
@@ -168,7 +139,6 @@ void ft_ready_pipe(t_mshl *m)
 	m->is_last = (m->triple[m->i + 1] == NULL);
 	if (!m->is_last && pipe(m->pipefd) < 0)
 		exit(5 + (0 * ft_printf("pipe failed\n")));
-
 	if (m->fd_in != -1 && m->is_first)
 		m->prevfd = m->fd_in;
 	if (m->fd_out != -1 && m->is_last)
