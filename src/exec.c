@@ -129,7 +129,7 @@ int ft_exec_pipesegment(t_mshl *m)
 	m->pid = fork();
 	if (m->pid == 0)
 	{
-		if (m->fd_in != -1 && m->is_first)
+		if (m->fd_in != -1)
 		{
 			dup2(m->fd_in, STDIN_FILENO);
 			close(m->fd_in);

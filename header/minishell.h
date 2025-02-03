@@ -105,9 +105,9 @@ int		ft_exec_which(int *status, char **arg, char **env);
 int		ft_exec_single(t_mshl *m, char **arg, char **env);
 int		ft_exec_pipesegment(t_mshl *m);
 
-void		init_signals(void);
-void		ms_sig_interupt(int signo);
-void		ms_sig_interupt_alt(int signo);
-void		swap_signal_for_execute(void);
+void	init_signals(void);
+void	ms_sig_interupt(int signo);
+void	ms_sig_interupt_alt(int signo);
+void	swap_signal_for_execute(void);
 
 #endif	//minishell.h
