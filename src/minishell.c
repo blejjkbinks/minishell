@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+int	g_last_signal = 0;
+
 char	*ft_get_prompt(char **env, char *exit_status)
 {
 	char	*ret;
