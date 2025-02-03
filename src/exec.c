@@ -129,12 +129,22 @@ int ft_exec_pipesegment(t_mshl *m)
 	m->pid = fork();
 	if (m->pid == 0)
 	{
-		if (m->prevfd != STDIN_FILENO)
+		if (m->fd_in != -1 && m->is_first)
+		{
+			dup2(m->fd_in, STDIN_FILENO);
+			close(m->fd_in);
+		}
+		else if (m->prevfd != STDIN_FILENO)
 		{
 			dup2(m->prevfd, STDIN_FILENO);
 			close(m->prevfd);
 		}
-		if (!m->is_last)
+		if (m->fd_out != -1 && m->is_last)
+		{
+			dup2(m->fd_out, STDOUT_FILENO);
+			close(m->fd_out);
+		}
+		else if (!m->is_last)
 		{
 			dup2(m->pipefd[1], STDOUT_FILENO);
 			close(m->pipefd[1]);
@@ -150,6 +160,7 @@ int ft_exec_pipesegment(t_mshl *m)
 	m->pids[m->i] = m->pid;
 	return (m->pid);
 }
+
 /*
 int	ft_exec_single(t_mshl *m, char **arg, char **env)
 {
