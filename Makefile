@@ -52,14 +52,9 @@ print:
 	@echo $(SRC)
 	@echo $(CC)
 
-#gpt boss
-GPT_BIN = gpt_exec
+go:
+	@$(MAKE) clean
+	@$(MAKE)
+	./minishell
 
-gpt_%: gpt_%.c
-	cc -o $(GPT_BIN) $<
-
-gpt_clean:
-	rm -f $(GPT_BIN)
-#gpt boss
-
-.PHONY: all clean fclean re print gpt_clean
+.PHONY: all clean fclean re print
