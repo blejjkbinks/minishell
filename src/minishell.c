@@ -18,11 +18,11 @@ char	*ft_get_prompt(char **env, char *exit_status)
 {
 	char	*ret;
 	char	*pwd;
-	char	t1;
-	char	t2;
+	//char	t1;
+	//char	t2;
 
-	t1 = '>';
-	t2 = '$';
+	//t1 = '>';
+	//t2 = '$';
 	pwd = ft_getcwd();
 	if (ft_strchr(pwd, '/') == ft_strrchr(pwd, '/'))
 		ret = ft_strjoin("minishell$ ", pwd);
@@ -32,9 +32,9 @@ char	*ft_get_prompt(char **env, char *exit_status)
 		ret = ft_strjoin("minishell$ ./", ft_strrchr(pwd, '/') + 1);
 	free(pwd);
 	if (!ft_strncmp(exit_status, "0", 2))
-		pwd = ft_strjoin(ret, " %c " CLR_GRN ":3" CLR_RST " %c ", t1, t2);
+		pwd = ft_strjoin(ret, " > " CLR_GRN ":3" CLR_RST " $ ");
 	else
-		pwd = ft_strjoin(ret, " %c " CLR_RED ":(" CLR_RST " %c ", t1, t2);
+		pwd = ft_strjoin(ret, " > " CLR_RED ":(" CLR_RST " $ ");
 	free(ret);
 	return (pwd);
 }
