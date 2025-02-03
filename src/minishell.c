@@ -174,6 +174,7 @@ void	letsgo(t_mshl *m)
 
 void	init_t_mshl(t_mshl *m, char **envp_main)
 {
+	init_signals();
 	ft_printf("(✿ ◕‿ ◕) hi~~ welcome to minishell (っ＾▿＾)っ\n");
 	m->redir_in = NULL;
 	m->redir_out = NULL;
@@ -204,7 +205,7 @@ int	main(int argc, char **argv, char **envp_main)
 			letsgo(&m);
 		}
 		if (!m.line)
-			return (1 + (0 * ft_printf("readline gave NULL??\n")));
+			return (0 + (0 * ft_printf("o(*￣○￣)ゝ ctrl+d, bye minishell\n")));
 		free(m.line);
 	}
 	return (2 + (0 * ft_printf("usage: %s\n", "./minishell")));
