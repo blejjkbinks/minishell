@@ -1,12 +1,12 @@
  #!/usr/bin/bash 
 
 clear
-make -C ~/Documents/programming/42/minishell/ clean
-make -C ~/Documents/programming/42/minishell/
+
+make -C ./ clean
+make -C ./
 
 if [ $? -eq 0 ]; then
-	echo "~/Documents/programming/42/minishell/minishell"
-	~/Documents/programming/42/minishell/minishell
+	./minishell
 else
 	echo "no compile :("
 fi

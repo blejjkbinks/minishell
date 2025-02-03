@@ -19,6 +19,9 @@ AR := ar rcs
 RM := rm -rf
 MK := mkdir -p
 
+L_FT := -Llibft -lft
+L_READLINE := -L/usr/local/opt/readline/lib -lreadline
+
 SRC_DIR := ./src
 OBJ_DIR := ./obj
 
@@ -32,7 +35,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 
 $(NAME): $(OBJ)
 	@$(MAKE) -C libft
-	$(CC) $(OBJ) -Llibft -lft -ledit -o $(NAME)
+	$(CC) $(OBJ) $(L_FT) $(L_READLINE) -o $(NAME)
 
 all: $(NAME)
 

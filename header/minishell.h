@@ -15,10 +15,10 @@
 
 # include "../libft/header/libft.h"
 # include <sys/wait.h>
+# include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <dirent.h>
-# include <stdio.h>
 
 typedef struct s_mshl
 {
