@@ -12,7 +12,6 @@
 
 #include "minishell.h"
 
-
 int	is_builtin_dontfork(char *str)
 {
 	char	**builtin;
