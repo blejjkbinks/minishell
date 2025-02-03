@@ -1,5 +1,0 @@
-Makefile
-file_in
-file_out
-pipe.c
-pipe_rawgpt.c
