@@ -101,6 +101,7 @@ int		double_exclam(char *str, int i);
 char	*cash_money(t_mshl k);
 
 //
+void	finaly_done_with_norm(t_mshl *o);
 char	**ft_split_quotes(char *str, char d);
 char	***ft_split_triple(char *line);
 void	ft_free_triple(char ***triple);
