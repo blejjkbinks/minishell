@@ -22,9 +22,9 @@ char	**ft_split_quotes(char *str, char d)
 	size_t	cap2;
 	char	quote;
 
-	i = 0;	//str
-	j = 0;	//copied str
-	k = 0;	//index in array
+	i = 0;
+	j = 0;
+	k = 0;
 	cap2 = DEFAULT_CAP;
 	quote = 0;
 	ret = (char **)ft_malloc(cap2 * sizeof(char *));

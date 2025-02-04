@@ -56,13 +56,37 @@ int	is_builtin(char *str)
 	return (0);
 }
 
-char	*ft_which(char *arg, char **env)
+static char	*ft_which_norm(char *arg, char **env, char *pwd, char *ret)
 {
 	char	**path;
-	char	*pwd;
-	char	*ret;
 	int		i;
 
+	path = ft_split(ft_env_get(env, "PATH"), ":");
+	i = 0;
+	while (path && path[i])
+	{
+		pwd = ft_strjoin(path[i], "/");
+		ret = ft_strjoin(pwd, arg);
+		free(pwd);
+		if (!access(ret, X_OK))
+		{
+			ft_split_free(path);
+			return (ret);
+		}
+		free(ret);
+		i++;
+	}
+	ft_split_free(path);
+	return (NULL);
+}
+
+char	*ft_which(char *arg, char **env)
+{
+	char	*pwd;
+	char	*ret;
+
+	pwd = NULL;
+	ret = NULL;
 	if (is_builtin(arg))
 		return (NULL);
 	if (!ft_strncmp(arg, "./", 2))
@@ -82,23 +106,7 @@ char	*ft_which(char *arg, char **env)
 			return (ft_strdup(arg));
 		return (NULL);
 	}
-	path = ft_split(ft_env_get(env, "PATH"), ":");
-	i = 0;
-	while (path && path[i])
-	{
-		pwd = ft_strjoin(path[i], "/");
-		ret = ft_strjoin(pwd, arg);
-		free(pwd);
-		if (!access(ret, X_OK))
-		{
-			ft_split_free(path);
-			return (ret);
-		}
-		free(ret);
-		i++;
-	}
-	ft_split_free(path);
-	return (NULL);
+	return (ft_which_norm(arg, env, pwd, ret));
 }
 
 int	ft_echo(char **arg)

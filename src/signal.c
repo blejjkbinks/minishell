@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   signal.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rdomange <romitdomange@gmail.com>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/04 16:53:33 by rdomange          #+#    #+#             */
+/*   Updated: 2025/02/04 16:53:38 by rdomange         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	ms_sig_interupt(int signo)
@@ -11,7 +23,6 @@ void	ms_sig_interupt(int signo)
 
 void	ms_sig_interupt_alt(int signo)
 {
-	g_last_signal = signo;
 	if (signo == SIGINT)
 		printf("\n");
 	else if (signo == SIGQUIT)

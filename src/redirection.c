@@ -40,32 +40,6 @@ int	index_redirection(char *line, t_mshl *r)
 	return (0);
 }
 
-void	show_index_triple(char ***triple, int index)
-{
-	int	i;
-	int	j;
-
-	if (index == -1)
-		return ;
-	i = 0;
-	while (triple && triple[i])
-	{
-		j = 0;
-		while (triple[i][j])
-		{
-			if (index == 0)
-			{
-				ft_printf("found:%s\n", triple[i][j]);
-				return ;
-			}
-			index--;
-			j++;
-		}
-		i++;
-	}
-	ft_printf("out of bounds of triple, didnt find\n");
-}
-
 int	trim_redirection_in(t_mshl *r)
 {
 	r->i = 0;
@@ -77,22 +51,7 @@ int	trim_redirection_in(t_mshl *r)
 		while (r->triple[r->i][r->j])
 		{
 			if (r->redir_in_index == 0)
-			{
-				r->str = r->triple[r->i][r->j];
-				if (r->str[1] == 0)
-					r->redir_heredoc = 0;
-				else if (r->str[1] == '<' && r->str[2] == 0)
-					r->redir_heredoc = 1;
-				else
-					return (3);
-				ft_split_remove(r->triple[r->i], r->j);
-				r->redir_in = ft_strdup(r->triple[r->i][r->j]);
-				if (!r->redir_in)
-					return (4);
-				ft_split_remove(r->triple[r->i], r->j);
-				r->redir_out_index -= 2;
-				return (0);
-			}
+				return (trim_in_norm(r));
 			r->redir_in_index--;
 			r->j++;
 		}
@@ -112,21 +71,7 @@ int	trim_redirection_out(t_mshl *r)
 		while (r->triple[r->i][r->j])
 		{
 			if (r->redir_out_index == 0)
-			{
-				r->str = r->triple[r->i][r->j];
-				if (r->str[1] == 0)
-					r->redir_app = 0;
-				else if (r->str[1] == '>' && r->str[2] == 0)
-					r->redir_app = 1;
-				else
-					return (6);
-				ft_split_remove(r->triple[r->i], r->j);
-				r->redir_out = ft_strdup(r->triple[r->i][r->j]);
-				if (!r->redir_out)
-					return (7);
-				ft_split_remove(r->triple[r->i], r->j);
-				return (0);
-			}
+				trim_out_norm(r);
 			r->redir_out_index--;
 			r->j++;
 		}
@@ -147,12 +92,6 @@ int	get_redir_info(t_mshl *m)
 	m->redir_app = -1;
 	m->redir_heredoc = -1;
 	redir_token = index_redirection(m->line, m);
-	//
-	//ft_printf("redir_index: in:%d, out:%d\n", m->redir_in_index, m->redir_out_index);
-	//
-	//show_index_triple(m->triple, m->redir_in_index);
-	//show_index_triple(m->triple, m->redir_out_index);
-	//
 	if (!redir_token)
 		redir_token = trim_redirection_in(m);
 	if (!redir_token)
