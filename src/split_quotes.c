@@ -14,63 +14,59 @@
 
 char	**ft_split_quotes(char *str, char d)
 {
-	char	**ret;
-	int		i;
-	int		j;
-	int		k;
-	size_t	cap;
-	size_t	cap2;
-	char	quote;
+	t_mshl	o;
 
-	i = 0;
-	j = 0;
-	k = 0;
-	cap2 = DEFAULT_CAP;
-	quote = 0;
-	ret = (char **)ft_malloc(cap2 * sizeof(char *));
-	while (str && str[i])
+	o.str = str;
+	o.d = d;
+	o.i = 0;
+	o.j = 0;
+	o.k = 0;
+	o.cap2 = DEFAULT_CAP;
+	o.quote = 0;
+	o.pipe = (char **)ft_malloc(o.cap2 * sizeof(char *));
+	while (o.str && o.str[o.i])
 	{
-		while (str[i] == ' ' || str[i] == d)
-			i++;
-		cap = DEFAULT_CAP;
-		if (str[i])
-			ret[k] = (char *)ft_malloc(cap * sizeof(char));
-		j = 0;
-		while (str[i] && (str[i] != d || quote))
+		while (o.str[o.i] == ' ' || o.str[o.i] == o.d)
+			o.i++;
+		o.cap = DEFAULT_CAP;
+		if (o.str[o.i])
+			o.pipe[o.k] = (char *)ft_malloc(o.cap * sizeof(char));
+		o.j = 0;
+		while (o.str[o.i] && (o.str[o.i] != o.d || o.quote))
 		{
-			if ((d == '|' && quoted(str[i], &quote) + 1) || (d == ' ' && !quoted(str[i], &quote)))
-				ret[k][j++] = str[i];
-			ret[k][j] = 0;
-			if (j + 1 == (int)cap)
-				ret[k] = ft_realloc(ret[k], j, cap * 2, &cap);
-			i++;
+			if ((o.d == '|' && quoted(o.str[o.i], &(o.quote)) + 1) || (o.d == ' ' && !quoted(o.str[o.i], &(o.quote))))
+				o.pipe[o.k][o.j++] = o.str[o.i];
+			o.pipe[o.k][o.j] = 0;
+			if (o.j + 1 == (int)o.cap)
+				o.pipe[o.k] = ft_realloc(o.pipe[o.k], o.j, o.cap * 2, &(o.cap));
+			o.i++;
 		}
-		ret[++k] = NULL;
-		if (k + 1 == (int)cap2)
-			ret = ft_split_realloc(ret, cap2 * 2, &cap2);
+		o.pipe[++o.k] = NULL;
+		if (o.k + 1 == (int)o.cap2)
+			o.pipe = ft_split_realloc(o.pipe, o.cap2 * 2, &(o.cap2));
 	}
-	if (quote && d == '|')
+	if (o.quote && o.d == '|')
 		ft_printf("minishell: unclosed quote haha\n");
-	return (ret);
+	return (o.pipe);
 }
 
 char	***ft_split_triple(char *line)
 {
-	char	***ret;
-	char	**first;
+	char	***triple;
+	char	**pipe;
 	int		i;
 
-	first = ft_split_quotes(line, '|');
-	ret = (char ***)malloc((ft_split_len(first) + 1) * sizeof(char **));
+	pipe = ft_split_quotes(line, '|');
+	triple = (char ***)malloc((ft_split_len(pipe) + 1) * sizeof(char **));
 	i = 0;
-	while (first[i])
+	while (pipe[i])
 	{
-		ret[i] = ft_split_quotes(first[i], ' ');
+		triple[i] = ft_split_quotes(pipe[i], ' ');
 		i++;
 	}
-	ret[i] = NULL;
-	ft_split_free(first);
-	return (ret);
+	triple[i] = NULL;
+	ft_split_free(pipe);
+	return (triple);
 }
 
 void	ft_free_triple(char ***triple)
