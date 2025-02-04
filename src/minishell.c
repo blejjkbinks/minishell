@@ -59,6 +59,8 @@ void	letsgo_cleanup(t_mshl *m)
 		close(m->fd_in);
 	if (m->fd_out != -1)
 		close(m->fd_out);
+
+	swap_signal_for_execute();
 	m->i = 0;
 	while (m->triple[m->i])
 	{
@@ -67,6 +69,7 @@ void	letsgo_cleanup(t_mshl *m)
 		m->i++;
 		m->exit_res = ((m->waitpid_status & 0xff00) >> 8);
 	}
+	swap_signal_for_execute();
 
 	ft_free_triple(m->triple);
 	m->redir_in = ft_free(m->redir_in);
