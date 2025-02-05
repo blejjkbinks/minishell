@@ -13,6 +13,14 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# ifndef M_CUTE
+#  define M_CUTE 1
+# endif
+
+# ifndef M_DEBUG
+#  define M_DEBUG 1
+# endif
+
 # include "../libft/header/libft.h"
 # include <sys/wait.h>
 # include <stdio.h>
