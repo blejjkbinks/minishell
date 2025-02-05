@@ -42,3 +42,7 @@ make strnjoin_free? join n strings and specify whichs to free?
 - with that done maybe i can do !! properly
 
 - add debug and cute options
+
+- add alias like env_extra
+
+- ignore line starting with #, is a comment
