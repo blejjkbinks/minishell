@@ -16,6 +16,9 @@ or forget keep and make
 ft_trim_quotes(char *str)
 ```
 
+`strjoin strjoin_free strnjoin`
+make strnjoin_free? join n strings and specify whichs to free?
+
 # better structure for minishell
 
 - think smarter about funny norm names
