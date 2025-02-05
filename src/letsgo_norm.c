@@ -14,6 +14,7 @@
 
 void	letsgo_getready(t_mshl *m)
 {
+	m->exit_res = 0;
 	m->cash = m->line;
 	m->line = cash_money(*m);
 	if (ft_strnstr(m->cash, "!!", ft_strlen(m->cash)))

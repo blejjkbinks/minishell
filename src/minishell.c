@@ -87,6 +87,11 @@ int	main(int argc, char **argv, char **envp_main)
 			add_history(m.line);
 			letsgo(&m);
 		}
+		else
+		{
+			free(m.exit_status);
+			m.exit_status = ft_itoa(0);
+		}
 		if (!m.line)
 			return (0 + (0 * ft_printf("o(*￣○￣)ゝ ctrl+d, bye minishell\n")));
 		free(m.line);
