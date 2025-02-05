@@ -59,6 +59,33 @@ int	ft_which_print(char **arg, char **env)
 	return (ret);
 }
 
+static	int	ft_exit_builtin(t_mshl *m)
+{
+	int		i;
+	char	*a;
+	char	*b;
+	char	*c;
+
+	a = "minishell: exit: ";
+	b = "too many arguments";
+	c = "numeric argument required";
+	if (m->comm[1] && m->comm[2])
+		return (1 + (0 * ft_printf("%s%s\n", a, b)));
+	if (m->comm[1])
+	{
+		i = 0;
+		while (m->comm[1][i])
+		{
+			if (!ft_isdigit(m->comm[1][i]))
+				return (1 + (0 * ft_printf("%s%s: %s\n", a, m->comm[1], c)));
+			i++;
+		}
+		ft_printf("o(*￣○￣)ゝ kill%s bye minishell\n", m->comm[1]);
+		exit(ft_atoi(m->comm[1]));
+	}
+	exit (0 + (0 * ft_printf("byebye minishell (˶ᵔ ᵕ ᵔ˶)ノ\n")));
+}
+
 int	ft_exec_builtin(t_mshl *b)
 {
 	if (!ft_strncmp(b->comm[0], "echo", 10))
@@ -80,6 +107,6 @@ int	ft_exec_builtin(t_mshl *b)
 	if (!ft_strncmp(b->comm[0], "which", 10))
 		return (ft_which_print(b->comm, b->env));
 	if (!ft_strncmp(b->comm[0], "exit", 10))
-		exit (0 + (0 * ft_printf("byebye minishell (˶ᵔ ᵕ ᵔ˶)ノ\n")));
+		return (ft_exit_builtin(b));
 	return (-1);
 }
