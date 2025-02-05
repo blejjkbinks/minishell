@@ -38,7 +38,8 @@ void	letsgo(t_mshl *m)
 	int	eroor_line_too_long;
 
 	letsgo_getready(m);
-	ft_open_redirs(m);
+	if (ft_open_redirs(m))
+		return ;
 	m->comm = m->triple[0];
 	ft_strtolower(m->comm[0]);
 	if (!m->triple[1] && is_builtin_dontfork(m->comm[0]))

@@ -71,7 +71,7 @@ int	trim_redirection_out(t_mshl *r)
 		while (r->triple[r->i][r->j])
 		{
 			if (r->redir_out_index == 0)
-				trim_out_norm(r);
+				return (trim_out_norm(r));
 			r->redir_out_index--;
 			r->j++;
 		}

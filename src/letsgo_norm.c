@@ -37,9 +37,11 @@ void	letsgo_cleanup(t_mshl *m)
 	while (m->triple[m->i])
 	{
 		if (m->pids[m->i] > 0)
+		{
 			waitpid(m->pids[m->i], &m->waitpid_status, 0);
+			m->exit_res = ((m->waitpid_status & 0xff00) >> 8);
+		}
 		m->i++;
-		m->exit_res = ((m->waitpid_status & 0xff00) >> 8);
 	}
 	swap_signal_for_execute();
 	ft_free_triple(m->triple);

@@ -72,6 +72,7 @@ void	ft_exec_pipesegment(t_mshl *m)
 	m->pids[m->i] = fork();
 	if (m->pids[m->i] == 0)
 	{
+		ft_exec_pipe_segment_norm(m);
 		if (is_builtin(m->comm[0]))
 			exit(ft_exec_builtin(m));
 		ft_exec_which(m->comm, m->env);
