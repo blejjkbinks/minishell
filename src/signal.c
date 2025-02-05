@@ -6,7 +6,7 @@
 /*   By: rdomange <romitdomange@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 16:53:33 by rdomange          #+#    #+#             */
-/*   Updated: 2025/02/04 16:53:38 by rdomange         ###   ########.fr       */
+/*   Updated: 2025/02/05 14:54:02 by rdomange         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	ms_sig_interupt(int signo)
 	(void)signo;
 	printf("\n");
 	rl_on_new_line();
-	//rl_replace_line("", 1);
+	rl_replace_line("", 1);
 	rl_redisplay();
 }
 
