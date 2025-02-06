@@ -5,40 +5,36 @@
 #                                                     +:+ +:+         +:+      #
 #    By: rdomange <romitdomange@gmail.com>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2025/02/06 14:41:49 by rdomange          #+#    #+#              #
-#    Updated: 2025/02/06 14:42:52 by rdomange         ###   ########.fr        #
+#    Created: 2024/09/19 19:49:07 by rdomange          #+#    #+#              #
+#    Updated: 2024/09/19 20:01:06 by rdomange         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME := minishell
 
-SRC_DIR := ./src/
-HDR_DIR := ./header/
-OBJ_DIR := ./obj/
-CFLAGS := -Wall -Wextra -Werror -O3 -I$(HDR_DIR)
+HDR := ./header
+CFLAGS := -Wall -Wextra -Werror -I$(HDR) -g
 CC := cc $(CFLAGS)
+AR := ar rcs
 RM := rm -rf
-MKD := mkdir -p
+MK := mkdir -p
 
-LIBFT := libft.a
 L_FT := -Llibft -lft
 L_READLINE := -L/usr/local/opt/readline/lib -lreadline
 
+SRC_DIR := ./src
+OBJ_DIR := ./obj
+
 SRC := $(wildcard $(SRC_DIR)/*.c)
-#	was wildcard always allowed?
-#	i could always write them all down haha zzz
 
-OBJ := $(patsubst $(SRC_DIR)%.c, $(OBJ_DIR)%.o, $(SRC))
-
-
-$(LIBFT):
-	$(MAKE) -C libft
+OBJ := $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRC))
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@$(MK) $(OBJ_DIR)
 	@$(CC) -c $< -o $@
 
-$(NAME): $(OBJ) $(LIBFT)
+$(NAME): $(OBJ)
+	@$(MAKE) -C libft
 	$(CC) $(OBJ) $(L_FT) $(L_READLINE) -o $(NAME)
 
 all: $(NAME)
@@ -50,6 +46,15 @@ fclean: clean
 	@$(RM) $(NAME)
 	@$(MAKE) -C libft fclean
 
-re: fclean all
+re: clean all
 
-.PHONY: all clean fclean re
+print:
+	@echo $(SRC)
+	@echo $(CC)
+
+go:
+	@$(MAKE) clean
+	@$(MAKE)
+	./minishell
+
+.PHONY: all clean fclean re print

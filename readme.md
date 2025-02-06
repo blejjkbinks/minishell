@@ -49,3 +49,8 @@ make strnjoin_free? join n strings and specify whichs to free?
 - "which builtin" to show a list of builtins
 
 - minishellrc, source
+
+
+## other stuff
+
+?
