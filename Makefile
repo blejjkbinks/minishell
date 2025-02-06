@@ -38,12 +38,9 @@ all: $(NAME)
 
 $(LIBFT):
 	git clone git@github.com:blejjkbinks/libft.git libft
+	$(RM) libft/.git
 
-pull_libft:
-	@echo pulling libft
-#	i wanna check that nothing changed in the cloud or the clone
-
-$(LIBFT_A): $(LIBFT) pull_libft
+$(LIBFT_A): $(LIBFT)
 	$(MAKE) -C libft
 
 $(OBJ_DIR):
@@ -60,7 +57,9 @@ clean:
 
 fclean: clean
 	$(RM) $(NAME)
-	@$(MAKE) -C libft fclean
+	@if [ -d "$(LIBFT)" ]; then \
+		@$(MAKE) -C libft fclean; \
+	fi
 
 re: fclean all
 
