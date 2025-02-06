@@ -12,7 +12,8 @@
 
 #include "minishell.h"
 
-int	main(int argc, char **argv, char **envp)
+//int	main(int argc, char **argv, char **envp)
+int	main(void)
 {
 	ft_printf("minishell main\n");
 	return (0);
