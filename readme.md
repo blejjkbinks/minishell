@@ -1,21 +1,16 @@
 # cleanup libft
 
-```c
-ft_split(char *str, char delim)
-```
+### split
+`ft_split(char *str, char delim)`
 
-```c
-ft_split_set(char *str, char *delim)
-```
+`ft_split_set(char *str, char *delim)`
 
-```c
-ft_split_quotes(char *str, char delim, int keep)
-```
+`ft_split_quotes(char *str, char delim, int keep)`
+
 or forget keep and make
-```c
-ft_trim_quotes(char *str)
-```
+`ft_trim_quotes(char *str)`
 
+### join
 `strjoin strjoin_free strnjoin`
 make strnjoin_free? join n strings and specify whichs to free?
 
