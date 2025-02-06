@@ -58,7 +58,7 @@ clean:
 fclean: clean
 	$(RM) $(NAME)
 	@if [ -d "$(LIBFT)" ]; then \
-		@$(MAKE) -C libft fclean; \
+		$(MAKE) -C libft fclean; \
 	fi
 
 re: fclean all
