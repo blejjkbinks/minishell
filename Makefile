@@ -20,7 +20,9 @@ CC := cc $(CFLAGS)
 RM := rm -rf
 MKD := mkdir -p
 
-LIBFT := libft.a
+LIBFT := ./libft/
+LIBFT_A := libft.a
+
 L_FT := -Llibft -lft
 L_READLINE := -L/usr/local/opt/readline/lib -lreadline
 
@@ -30,15 +32,19 @@ SRC := $(wildcard $(SRC_DIR)/*.c)
 
 OBJ := $(patsubst $(SRC_DIR)%.c, $(OBJ_DIR)%.o, $(SRC))
 
+##  rules  ##
 
 $(LIBFT):
+	git clone git@github.com:blejjkbinks/libft.git libft
+
+$(LIBFT_A): $(LIBFT)
 	$(MAKE) -C libft
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@$(MK) $(OBJ_DIR)
 	@$(CC) -c $< -o $@
 
-$(NAME): $(OBJ) $(LIBFT)
+$(NAME): $(OBJ) $(LIBFT_A)
 	$(CC) $(OBJ) $(L_FT) $(L_READLINE) -o $(NAME)
 
 all: $(NAME)
