@@ -75,4 +75,4 @@ gitpush:
 print:
 	@echo i love makefile
 
-.PHONY: all clean fclean re print
+.PHONY: all clean fclean re print gitstat gitpush

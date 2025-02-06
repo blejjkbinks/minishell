@@ -17,7 +17,7 @@ void	ms_sig_interupt(int signo)
 	(void)signo;
 	printf("\n");
 	rl_on_new_line();
-	rl_replace_line("", 1);
+	//rl_replace_line("", 1);
 	rl_redisplay();
 }
 
