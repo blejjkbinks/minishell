@@ -21,6 +21,8 @@ make strnjoin_free? join n strings and specify whichs to free?
 
 # better structure for minishell
 
+> The shell then parses these tokens into commands and other constructs, removes the special meaning of certain words or characters, expands others, redirects input and output as needed, executes the specified command, waits for the command’s exit status, and makes that exit status available for further inspection or processing.
+
 - think smarter about funny norm names
 
 - rethink file structure, make it easy to follow down function calls
@@ -43,6 +45,12 @@ make strnjoin_free? join n strings and specify whichs to free?
 
 - add debug and cute options
 
-- add alias like env_extra
+- add alias like env_extra, unalias
 
 - ignore line starting with #, is a comment
+
+- var='$val' needs to be expanded and trimmed of quotes
+
+- "which builtin" to show a list of builtins
+
+- minishellrc, source
