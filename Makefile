@@ -41,36 +41,40 @@ $(LIBFT):
 	$(RM) libft/.git
 
 $(LIBFT_A): $(LIBFT)
-	$(MAKE) -C libft
+	@$(MAKE) -C libft
 
 $(OBJ_DIR):
-	$(MKD) $(OBJ_DIR)
+	@$(MKD) $(OBJ_DIR)
 
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c $(OBJ_DIR)
-	$(CC) -c $< -o $@
+	@$(CC) -c $< -o $@
 
 $(NAME): $(LIBFT_A) $(OBJ)
-	$(CC) $(OBJ) $(L_FT) $(L_READLINE) -o $(NAME)
+	@echo compiling $(NAME)
+	@$(CC) $(OBJ) $(L_FT) $(L_READLINE) -o $(NAME)
 
 clean:
-	$(RM) $(OBJ_DIR)
+	@echo cleaning $(NAME)
+	@$(RM) $(OBJ_DIR)
 
 fclean: clean
-	$(RM) $(NAME)
+	@$(RM) $(NAME)
 	@if [ -d "$(LIBFT)" ]; then \
 		$(MAKE) -C libft fclean; \
 	fi
 
 re: fclean all
 
+##  funny rules  ##
+
 gitstat: fclean
-	find . -name '.DS_Store' -type f -delete
-	git status
+	@find . -name '.DS_Store' -type f -delete
+	@git status
 
 gitpush:
-	git add .
-	git commit -m "pushed from minishell makefile on $(shell date +"%d/%m %H:%M")"
-	git push
+	@git add .
+	@git commit -m "pushed from minishell makefile on $(shell date +"%d/%m %H:%M")"
+	@git push
 
 print:
 	@echo i love makefile
