@@ -42,15 +42,13 @@ char	**ft_export(char **env, char *arg)
 			ft_env_set(env, arg, &arg[len + 1]);
 		return (env);
 	}
-	//if (arg[len] != '=')	//"export var" with no value
-	//	return (env);
+	if (arg[len] != '=')
+		return (env);
 	clean = env;
 	env = ft_env_dup(env);
 	ft_split_free(clean);
 	if (arg[len] == '=')
 		env[ft_split_len(env)] = ft_strdup(arg);
-	else	//i think here means no export
-		env[ft_split_len(env)] = ft_strjoin(arg, "=");
 	return (env);
 }
 

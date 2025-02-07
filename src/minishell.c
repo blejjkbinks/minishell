@@ -13,7 +13,7 @@
 #include "minishell.h"
 
 void	*init_minishell(char **env[3], char **envp_main, char **cash_question, char **last_command);
-char	*get_prompt(char **prompt, char **env, int cash_question);
+char	*get_prompt(char *prompt, char **env, int cash_question);
 void	letsgo(char *input, char **env[3], char **cash_question, char **last_command);
 
 int	main(int argc, char **argv, char **envp)
@@ -28,11 +28,12 @@ int	main(int argc, char **argv, char **envp)
 		prompt = init_minishell(env, envp, &cash_question, &last_command);
 	while (argc == 1 && argv[0])
 	{
-		input = readline(get_prompt(&prompt, env[0], ft_atoi(cash_question)));
+		prompt = get_prompt(prompt, env[0], ft_atoi(cash_question));
+		input = readline(prompt);
 		if (ft_strlen(input))
 			letsgo(input, env, &cash_question, &last_command);
-		else
-			cash_question = ft_itoa(0 + *((int *)ft_free(cash_question)));
+		else if (!ft_free(cash_question))
+			cash_question = ft_itoa(0);
 		if (!input && MS_CUTE)
 			return (0 + (0 * ft_printf("ctrl+d message\n")));
 		free(input);
@@ -49,11 +50,11 @@ void	letsgo(char *input, char **env[3], char **cash_question, char **last_comman
 	(void)last_command;
 }
 
+//	init_signals();
 void	*init_minishell(char **env[3], char **envp_main, char **cash_question, char **last_command)
 {
 	char	*str;
 
-	//init_signals();
 	if (MS_CUTE)
 		ft_printf("(✿ ◕‿ ◕) hi~~ welcome to minishell (っ＾▿＾)っ\n");
 	env[0] = ft_env_dup(envp_main);
@@ -68,10 +69,7 @@ void	*init_minishell(char **env[3], char **envp_main, char **cash_question, char
 	return (NULL);
 }
 
-
-//	minishell$ user@./pwd :3 $ 
-
-char	*get_prompt(char **prompt, char **env, int cash_question)
+char	*get_prompt(char *prompt, char **env, int cash_question)
 {
 	char	*pwd;
 	char	*d[7];
@@ -94,7 +92,8 @@ char	*get_prompt(char **prompt, char **env, int cash_question)
 	else
 		d[5] = CLR_RED ":(" CLR_RST;
 	d[6] = " $ ";
-	cash_question = (ft_free(pwd) == ft_free(*prompt));
-	*prompt = ft_strnjoin(7, d[0], d[1], d[2], d[3], d[4], d[5], d[6]);
-	return (*prompt);
+	ft_free(prompt);
+	prompt = ft_strnjoin(7, d[0], d[1], d[2], d[3], d[4], d[5], d[6]);
+	ft_free(pwd);
+	return (prompt);
 }

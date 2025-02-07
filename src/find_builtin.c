@@ -14,15 +14,17 @@
 
 static char	*ft_which_path(char *arg, char **env, char *pwd, char *ret);
 
+//s = "cd,export,unset,exit";
+//s = "echo,cd,pwd,export,unset,env,exit,which,env_extra";
+//s = "echo,pwd,env,which,cd,export,unset,env_extra,alias,unalias,source,exit";
+
 int	is_builtin(char *str)
 {
 	char	**builtin;
 	char	*s;
 	int		i;
 
-//	s = "cd,export,unset,exit";
-//	s = "echo,cd,pwd,export,unset,env,exit,which,env_extra";
-	s = "echo,pwd,env,which,cd,export,unset,exit,env_extra,alias,unalias";
+	s = "echo,pwd,env,which,cd,export,unset,alias,unalias,source,exit";
 	builtin = ft_split(s, ",");
 	i = 0;
 	while (builtin[i])
@@ -30,6 +32,7 @@ int	is_builtin(char *str)
 		if (!ft_strcmp(str, builtin[i]))
 		{
 			ft_split_free(builtin);
+			ft_printf("i:%d\n", i);
 			if (i > 3)
 				return (2);
 			return (1);
