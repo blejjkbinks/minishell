@@ -79,7 +79,4 @@ gitpush: gitstat
 	@git commit -m "$(GIT_PUSH_MESSAGE)"
 	@git push
 
-print:
-	@echo i love makefile
-
 .PHONY: all clean fclean re print gitstat gitpush
