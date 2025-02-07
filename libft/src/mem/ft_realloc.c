@@ -12,18 +12,18 @@
 
 #include "libft.h"
 
-void	*ft_realloc(void *ptr, size_t old, size_t new, size_t *cap)
+void	*ft_realloc(void *ptr, size_t old, size_t new_cap, size_t *cap)
 {
 	void	*ret;
 
-	if (!ptr || new < old)
+	if (!ptr || new_cap < old)
 		return (ptr);
-	ret = (void *)ft_calloc(new, sizeof(char));
+	ret = (void *)ft_calloc(new_cap, sizeof(char));
 	if (!ret)
 		return (ptr);
 	ft_memcpy(ret, ptr, old);
 	ft_free (ptr);
 	if (cap)
-		*cap = new;
+		*cap = new_cap;
 	return (ret);
 }
