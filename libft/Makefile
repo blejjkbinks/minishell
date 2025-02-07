@@ -6,7 +6,7 @@
 #    By: rdomange <romitdomange@gmail.com>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/24 14:35:21 by rdomange          #+#    #+#              #
-#    Updated: 2025/01/24 14:35:25 by rdomange         ###   ########.fr        #
+#    Updated: 2025/02/07 15:19:34 by rdomange         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -56,7 +56,7 @@ SRC_NBR := \
 
 SRC_SPLIT := \
 	split	split_set	split_free	split_len	split_realloc	split_remove \
-	split_quotes \
+	split_quotes	isquoted	split_trim_quotes \
 
 SRC_STR := \
 	strchr	strrchr	strjoin	strjoin_free	strnjoin \
@@ -109,13 +109,16 @@ countfiles: all testclean
 	@tree $(OBJ_DIR) | grep files
 	@$(MAKE) fclean
 
-gitstat:
+gitstat: fclean
 	find . -name '.DS_Store' -type f -delete
 	git status
 
-gitpush:
+m := pushed from libft makefile on $(shell date +"%d/%m %H:%M")
+GIT_PUSH_MESSAGE := $(m)
+
+gitpush: fclean
 	git add .
-	git commit -m "pushed from libft makefile on $(shell date +"%d/%m %H:%M")"
+	git commit -m "$(GIT_PUSH_MESSAGE)"
 	git push
 
 TEST := test.c

@@ -1,36 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strtrim_quotes.c                                :+:      :+:    :+:   */
+/*   ft_isquoted.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rdomange <romitdomange@gmail.com>          +#+  +:+       +#+        */
+/*   By: rdomange <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/05 23:09:33 by rdomange          #+#    #+#             */
-/*   Updated: 2025/02/05 23:09:44 by rdomange         ###   ########.fr       */
+/*   Created: 2025/02/07 14:43:48 by rdomange          #+#    #+#             */
+/*   Updated: 2025/02/07 14:44:04 by rdomange         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_strtrim_quotes(char *str)
+int	ft_isquoted(char c, int *q)
 {
-	int	i;
-	int	j;
-	int	q;
+	int	prev;
 
-	if (!str)
-		return ;
-	i = 0;
-	j = 0;
-	q = 0;
-	while (str && str[i])
+	prev = *q;
+	if (c == '\'' || c == '\"')
 	{
-		if (!ft_isquoted(str[i], &q))
-		{
-			str[j] = str[i];
-			j++;
-		}
-		i++;
+		if (!*q)
+			*q = c;
+		else if (c == *q)
+			*q = 0;
 	}
-	str[j] = 0;
+	if (prev != *q)
+		return (1);
+	else
+		return (0);
 }

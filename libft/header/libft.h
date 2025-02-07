@@ -78,7 +78,9 @@ char	**ft_split_free(char **split);
 char	**ft_split_realloc(char **split, size_t new, size_t *cap_ptr);
 int		ft_split_len(char **split);
 char	**ft_split_remove(char **split, int r);
+int		ft_isquoted(char c, int *q);
 char	**ft_split_quotes(char *str, char d);
+void	ft_split_trim_quotes(char **split);
 
 //chr
 int		ft_isspace(int c);

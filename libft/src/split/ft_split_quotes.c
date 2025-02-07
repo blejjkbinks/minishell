@@ -12,27 +12,12 @@
 
 #include "libft.h"
 
-static int	quoted(char c, int *q)
-{
-	int	prev;
-
-	prev = *q;
-	if (c == '\'' || c == '\"')
-	{
-		if (!*q)
-			*q = c;
-		else if (c == *q)
-			*q = 0;
-	}
-	return (prev != *q);
-}
-
 static char	**ft_split_quotes_word(char *str, char **ret, char d, int i[6])
 {
 	i[1] = 0;
 	while (str[i[0]] && (str[i[0]] != d || i[3]))
 	{
-		quoted(str[i[0]], &i[3]);
+		ft_isquoted(str[i[0]], &i[3]);
 		ret[i[2]][i[1]++] = str[i[0]++];
 		ret[i[2]][i[1]] = 0;
 		if (i[1] + 1 == i[4])

@@ -71,9 +71,12 @@ gitstat: fclean
 	@find . -name '.DS_Store' -type f -delete
 	@git status
 
-gitpush:
+m := pushed from libft makefile on $(shell date +"%d/%m %H:%M")
+GIT_PUSH_MESSAGE := $(m)
+
+gitpush: gitstat
 	@git add .
-	@git commit -m "pushed from minishell makefile on $(shell date +"%d/%m %H:%M")"
+	@git commit -m "pushed from minishell makefile on $(GIT_PUSH_MESSAGE)"
 	@git push
 
 print:
