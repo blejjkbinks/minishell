@@ -63,9 +63,9 @@ make strnjoin_free? join n strings and specify whichs to free?
 
 - 2: split_quotes by ' '
 
-- 3: cash_money
+- 3: redirection first
 
-- 4: redirection
+- 4: cash_money after
 
 - 5: (last) trim quotes
 

@@ -27,9 +27,9 @@ int	ft_env(char **env)
 
 char	**ft_export(char **env, char *arg)
 {
-	char	**ret;
+	char	**clean;
 	int		len;
-//check if it works if env is NULL, for env_extra without init
+
 	len = ft_env_namelen(arg);
 	if (!len || (arg[len] != 0 && arg[len] != '='))
 	{
@@ -44,9 +44,9 @@ char	**ft_export(char **env, char *arg)
 	}
 	//if (arg[len] != '=')	//"export var" with no value
 	//	return (env);
-	ret = env;
+	clean = env;
 	env = ft_env_dup(env);
-	ft_split_free(ret);
+	ft_split_free(clean);
 	if (arg[len] == '=')
 		env[ft_split_len(env)] = ft_strdup(arg);
 	else	//i think here means no export

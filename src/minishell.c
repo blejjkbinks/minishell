@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void	init_minishell(char **env[3], char **envp_main, char **cash_question, char **last_command);
+void	*init_minishell(char **env[3], char **envp_main, char **cash_question, char **last_command);
 char	*get_prompt(char **prompt, char **env, int cash_question);
 void	letsgo(char *input, char **env[3], char **cash_question, char **last_command);
 
@@ -21,21 +21,18 @@ int	main(int argc, char **argv, char **envp)
 	char	*input;
 	char	*prompt;
 	char	*cash_question;
-	char	*last_command;	//char	*line[4] : input, $?, !!
+	char	*last_command;
 	char	**env[3];
 
 	if (argc == 1)
-		init_minishell(env, envp, &cash_question, &last_command);
-	prompt = NULL;
+		prompt = init_minishell(env, envp, &cash_question, &last_command);
 	while (argc == 1 && argv[0])
 	{
-		//prompt = get_prompt(prompt, env[0], ft_atoi(cash_question));
-		//input = readline(prompt);
 		input = readline(get_prompt(&prompt, env[0], ft_atoi(cash_question)));
 		if (ft_strlen(input))
 			letsgo(input, env, &cash_question, &last_command);
 		else
-			cash_question = ft_itoa(0) + *((int *)ft_free(cash_question));
+			cash_question = ft_itoa(0 + *((int *)ft_free(cash_question)));
 		if (!input && MS_CUTE)
 			return (0 + (0 * ft_printf("ctrl+d message\n")));
 		free(input);
@@ -52,7 +49,7 @@ void	letsgo(char *input, char **env[3], char **cash_question, char **last_comman
 	(void)last_command;
 }
 
-void	init_minishell(char **env[3], char **envp_main, char **cash_question, char **last_command)
+void	*init_minishell(char **env[3], char **envp_main, char **cash_question, char **last_command)
 {
 	char	*str;
 
@@ -61,21 +58,55 @@ void	init_minishell(char **env[3], char **envp_main, char **cash_question, char 
 		ft_printf("(✿ ◕‿ ◕) hi~~ welcome to minishell (っ＾▿＾)っ\n");
 	env[0] = ft_env_dup(envp_main);
 	env[0] = ft_export(env[0], "OLDPWD=");
-	//env[1] = ft_split("yea=YEAAA,extra=EXXXTRA", ",");
 	env[1] = NULL;
 	env[2] = NULL;
 	str = ft_itoa(ft_atoi(ft_env_get(env[0], "SHLVL")) + 1);
 	ft_env_set(env[0], "SHLVL", str);
 	ft_free(str);
 	*cash_question = ft_itoa(0);
-	*last_command = ft_strdup("U+00A1 U+00A1");
+	*last_command = ft_strdup("\xC2\xA1\xC2\xA1");
+	return (NULL);
 }
+
+
+//	minishell$ user@./pwd :3 $ 
 
 char	*get_prompt(char **prompt, char **env, int cash_question)
 {
-	char	*ret;
+	char	*minishell;
+	char	*user;
 	char	*pwd;
-	//add $USER
+	char	*yay;
+
+	ft_free(*prompt);
+	if (!MS_CUTE)
+		return (ft_strdup("minishell$ "));
+	minishell = ft_strdup("minishell$ ");
+	user = ft_strdup(ft_env_get(env, "USER"));
+	yay = ft_getcwd();
+	if (ft_strchr(yay, '/') == ft_strrchr(yay, '/'))
+		pwd = ft_strdup(yay);
+	else if (!ft_strcmp(yay, ft_env_get(env, "HOME")))
+		pwd = ft_strdup("~");
+	else
+		pwd = ft_strdup(ft_strchr(yay, '/'));
+	ft_free(yay);
+	if (cash_question == 0)
+		yay = ft_strdup(CLR_GRN ":3" CLR_RST);
+	else
+		yay = ft_strdup(CLR_RED ":(" CLR_RST);
+	*prompt = ft_strnjoin(4, minishell, user, pwd, yay);
+	ft_printf("pr:'%s'\n", *prompt);
+	ft_printf("'%s','%s','%s','%s'\n", minishell, user, pwd, yay);
+	ft_free(minishell);
+	ft_free(user);
+	ft_free(pwd);
+	ft_free(yay);
+	return (*prompt);
+}
+
+/*
+
 	ft_free(*prompt);
 	if (!MS_CUTE)
 		return (ft_strdup("minishell$ "));
@@ -95,3 +126,4 @@ char	*get_prompt(char **prompt, char **env, int cash_question)
 	*prompt = pwd;
 	return (pwd);
 }
+*/

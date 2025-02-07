@@ -46,7 +46,7 @@ $(LIBFT):
 	$(RM) libft/.git
 
 $(LIBFT_A): $(LIBFT)
-	@$(MAKE) -C libft
+	@$(MAKE) -C libft | grep -v "Nothing to be done for 'all'." || echo "libft ready"
 
 $(OBJ_DIR):
 	@$(MKD) $(OBJ_DIR)
