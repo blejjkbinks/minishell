@@ -76,7 +76,7 @@ GIT_PUSH_MESSAGE := $(m)
 
 gitpush: gitstat
 	@git add .
-	@git commit -m "pushed from minishell makefile on $(GIT_PUSH_MESSAGE)"
+	@git commit -m "$(GIT_PUSH_MESSAGE)"
 	@git push
 
 print:
