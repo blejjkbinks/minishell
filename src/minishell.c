@@ -32,7 +32,7 @@ int	main(int argc, char **argv, char **envp)
 		//prompt = get_prompt(prompt, env[0], ft_atoi(cash_question));
 		//input = readline(prompt);
 		input = readline(get_prompt(&prompt, env[0], ft_atoi(cash_question)));
-		if (strlen(input))
+		if (ft_strlen(input))
 			letsgo(input, env, &cash_question, &last_command);
 		else
 			cash_question = ft_itoa(0) + *((int *)ft_free(cash_question));
