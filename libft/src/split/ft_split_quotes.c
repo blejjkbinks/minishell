@@ -12,7 +12,7 @@
 
 #include "libft.h"
 
-static char	**ft_split_quotes_word(char *str, char **ret, char d, int i[6])
+char	**ft_split_quotes_word(const char *str, char **ret, char d, int i[6])
 {
 	i[1] = 0;
 	while (str[i[0]] && (str[i[0]] != d || i[3]))
@@ -29,7 +29,7 @@ static char	**ft_split_quotes_word(char *str, char **ret, char d, int i[6])
 	return (ret);
 }
 
-char	**ft_split_quotes(char *str, char d)
+char	**ft_split_quotes(const char *str, char d)
 {
 	char	**ret;
 	int		i[6];

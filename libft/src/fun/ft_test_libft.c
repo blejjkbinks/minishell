@@ -82,5 +82,5 @@ void	ft_test_libft(void)
 		line = get_next_line(0 + (0 * ft_printf("\n> ")));
 	}
 	ft_free(line);
-	ft_printf("done\n");
+	ft_printf("done testing");
 }

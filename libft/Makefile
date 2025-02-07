@@ -116,7 +116,7 @@ gitstat: fclean
 m := pushed from libft makefile on $(shell date +"%d/%m %H:%M")
 GIT_PUSH_MESSAGE := $(m)
 
-gitpush: fclean
+gitpush: gitstat
 	git add .
 	git commit -m "$(GIT_PUSH_MESSAGE)"
 	git push
@@ -135,7 +135,7 @@ $(TEST):
 	@echo '' >> $@
 	@echo 'int	main(void)' >> $@
 	@echo '{' >> $@
-	@echo '	ft_printf(".  %-15.13s.\\n", "new test file;");' >> $@
+	@echo '	ft_printf(".  %-15.13s.\\n", "new test file");' >> $@
 	@echo '	ft_test_libft();' >> $@
 	@echo '}' >> $@
 
@@ -143,6 +143,6 @@ test: all $(TEST)
 	$(CC) $(TEST) $(NAME)
 	@echo "letsgo :)\nvvvvv"
 	@./a.out
-	@echo "\n^^^^^\ndone :)"
+	@printf "\n^^^^^\n done :)\n"
 
 .PHONY: all clean fclean bonus test testclean countfiles gitstat gitpush

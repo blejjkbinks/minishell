@@ -26,9 +26,14 @@ LIBFT_A := libft.a
 L_FT := -Llibft -lft
 L_READLINE := -L/usr/local/opt/readline/lib -lreadline
 
-SRC := $(wildcard $(SRC_DIR)*.c)
+#SRC := $(wildcard $(SRC_DIR)*.c)
 #	was wildcard always allowed?
 #	i could always write them all down haha zzz
+
+SRC := \
+	minishell.c		env_builtin.c		env_help.c \
+
+SRC := $(addprefix src/, $(SRC))
 
 OBJ := $(patsubst $(SRC_DIR)%.c, $(OBJ_DIR)%.o, $(SRC))
 
@@ -68,15 +73,18 @@ re: fclean all
 ##  funny rules  ##
 
 gitstat: fclean
-	@find . -name '.DS_Store' -type f -delete
-	@git status
+	find . -name '.DS_Store' -type f -delete
+	git status
 
 m := pushed from libft makefile on $(shell date +"%d/%m %H:%M")
 GIT_PUSH_MESSAGE := $(m)
 
 gitpush: gitstat
-	@git add .
-	@git commit -m "$(GIT_PUSH_MESSAGE)"
-	@git push
+	git add .
+	git commit -m "$(GIT_PUSH_MESSAGE)"
+	git push
+
+print:
+	@echo $(SRC)
 
 .PHONY: all clean fclean re print gitstat gitpush
