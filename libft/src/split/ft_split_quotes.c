@@ -6,13 +6,13 @@
 /*   By: rdomange <romitdomange@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 06:05:43 by rdomange          #+#    #+#             */
-/*   Updated: 2025/01/03 06:05:44 by rdomange         ###   ########.fr       */
+/*   Updated: 2025/02/07 16:28:50 by rdomange         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	**ft_split_quotes_word(const char *str, char **ret, char d, int i[6])
+static char	**ft_splqt_word(const char *str, char **ret, char d, int i[6])
 {
 	i[1] = 0;
 	while (str[i[0]] && (str[i[0]] != d || i[3]))
@@ -48,7 +48,7 @@ char	**ft_split_quotes(const char *str, char d)
 			ret[i[2]] = (char *)ft_malloc(i[4] * sizeof(char));
 		if (!ret[i[2]])
 			return (ft_split_free(ret));
-		ret = ft_split_quotes_word(str, ret, d, i);
+		ret = ft_splqt_word(str, ret, d, i);
 		if (!ret)
 			return (NULL);
 	}
