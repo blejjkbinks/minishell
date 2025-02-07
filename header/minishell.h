@@ -29,5 +29,25 @@
 # include <sys/wait.h>
 # include <signal.h>
 
+//minishell.c
+//main
+
+//go_builtin.c
+
+//find_builtin.c
+int		is_builtin(char *str);
+char	*ft_which(char *arg, char **env);
+
+//env_help.c
+char	**ft_env_dup(char **env);
+char	*ft_env_name(char *name);
+int		ft_env_namelen(char *name);
+char	*ft_env_get(char **env, char *name);
+int		ft_env_set(char **env, char *name, char *val);
+
+//env_builtin.c
+int		ft_env(char **env);
+char	**ft_export(char **env, char *arg);
+char	**ft_unset(char **env, char *name);
 
 #endif	//minishell.h
