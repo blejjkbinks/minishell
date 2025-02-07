@@ -73,57 +73,29 @@ void	*init_minishell(char **env[3], char **envp_main, char **cash_question, char
 
 char	*get_prompt(char **prompt, char **env, int cash_question)
 {
-	char	*minishell;
-	char	*user;
 	char	*pwd;
 	char	*yay;
+	char	*d[4];
 
-	ft_free(*prompt);
 	if (!MS_CUTE)
-		return (ft_strdup("minishell$ "));
-	minishell = ft_strdup("minishell$ ");
-	user = ft_strdup(ft_env_get(env, "USER"));
+		return ("minishell$ ");
 	yay = ft_getcwd();
 	if (ft_strchr(yay, '/') == ft_strrchr(yay, '/'))
 		pwd = ft_strdup(yay);
 	else if (!ft_strcmp(yay, ft_env_get(env, "HOME")))
 		pwd = ft_strdup("~");
 	else
-		pwd = ft_strdup(ft_strchr(yay, '/'));
-	ft_free(yay);
-	if (cash_question == 0)
+		pwd = ft_strdup(ft_strrchr(yay, '/') + 1);
+	//if (cash_question == (ft_free(yay) != NULL && ft_free(*prompt) != NULL))
+	if (cash_question + 1 == (ft_free(yay) == ft_free(*prompt)))
 		yay = ft_strdup(CLR_GRN ":3" CLR_RST);
 	else
 		yay = ft_strdup(CLR_RED ":(" CLR_RST);
-	*prompt = ft_strnjoin(4, minishell, user, pwd, yay);
-	ft_printf("pr:'%s'\n", *prompt);
-	ft_printf("'%s','%s','%s','%s'\n", minishell, user, pwd, yay);
-	ft_free(minishell);
-	ft_free(user);
-	ft_free(pwd);
-	ft_free(yay);
+	d[0] = "minishell$ ";
+	d[1] = "@ ./";
+	d[2] = " ";
+	d[3] = " $ ";
+	*prompt = ft_strnjoin(7,d[0], ft_env_get(env, "USER"), d[1], pwd, d[2], yay, d[3]);
+	cash_question = ft_free(pwd) == ft_free(yay);
 	return (*prompt);
 }
-
-/*
-
-	ft_free(*prompt);
-	if (!MS_CUTE)
-		return (ft_strdup("minishell$ "));
-	pwd = ft_getcwd();
-	if (ft_strchr(pwd, '/') == ft_strrchr(pwd, '/'))
-		ret = ft_strjoin("minishell$ ", pwd);
-	else if (!ft_strncmp(pwd, ft_env_get(env, "HOME"), ft_strlen(pwd) + 1))
-		ret = ft_strdup("minishell$ ~");
-	else
-		ret = ft_strjoin("minishell$ ./", ft_strrchr(pwd, '/') + 1);
-	free(pwd);
-	if (cash_question == 0)
-		pwd = ft_strjoin(ret, " " CLR_GRN ":3" CLR_RST " $ ");
-	else
-		pwd = ft_strjoin(ret, " " CLR_RED ":(" CLR_RST " $ ");
-	free(ret);
-	*prompt = pwd;
-	return (pwd);
-}
-*/
