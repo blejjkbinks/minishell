@@ -123,3 +123,4 @@ bash-3.2$
 - add `alias` and `unalias`
 - add support for `#comments`
 - add `source`
+- fix readline lib on laptop

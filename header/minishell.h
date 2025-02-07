@@ -50,4 +50,10 @@ int		ft_env(char **env);
 char	**ft_export(char **env, char *arg);
 char	**ft_unset(char **env, char *name);
 
+//cd_pwd.c
+char	*ft_getcwd(void);
+int		ft_pwd(void);
+int		ft_cd_oldpwd(char **arg, char **env, int err);
+int		ft_cd(char **arg, char **env);
+
 #endif	//minishell.h

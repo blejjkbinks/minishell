@@ -31,7 +31,7 @@ L_READLINE := -L/usr/local/opt/readline/lib -lreadline
 #	i could always write them all down haha zzz
 
 SRC := \
-	minishell.c		env_builtin.c		env_help.c \
+	minishell.c		env_builtin.c		env_help.c	cd_pwd.c \
 
 SRC := $(addprefix src/, $(SRC))
 

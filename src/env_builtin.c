@@ -29,7 +29,7 @@ char	**ft_export(char **env, char *arg)
 {
 	char	**ret;
 	int		len;
-
+//check if it works if env is NULL, for env_extra without init
 	len = ft_env_namelen(arg);
 	if (!len || (arg[len] != 0 && arg[len] != '='))
 	{
