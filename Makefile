@@ -26,6 +26,8 @@ LIBFT_A := libft.a
 L_FT := -Llibft -lft
 L_READLINE := -L/usr/local/opt/readline/lib -lreadline
 
+MAKEFLAGS += --no-print-directory
+
 #SRC := $(wildcard $(SRC_DIR)*.c)
 #	was wildcard always allowed?
 #	i could always write them all down haha zzz
