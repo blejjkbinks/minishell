@@ -12,19 +12,20 @@
 
 NAME := minishell
 
-SRC_DIR := src/
-HDR_DIR := header/
-OBJ_DIR := obj/
+SRC_DIR := src
+HDR_DIR := header
+OBJ_DIR := obj
 CFLAGS := -Wall -Wextra -Werror -O3 -I$(HDR_DIR)
 CC := cc $(CFLAGS)
 RM := rm -rf
 MKD := mkdir -p
 
-LIBFT := libft/
-LIBFT_A := libft.a
+LIBFT := libft
+LIBFT_A := $(LIBFT)/libft.a
 
 L_FT := -Llibft -lft
-L_READLINE := -L/usr/local/opt/readline/lib -lreadline
+#L_READLINE := -L/usr/local/opt/readline/lib -lreadline
+L_READLINE := -lreadline
 
 MAKEFLAGS += --no-print-directory
 
@@ -34,8 +35,9 @@ MAKEFLAGS += --no-print-directory
 
 SRC := \
 	minishell.c		env_builtin.c		env_help.c	cd_pwd.c \
+	get_prompt.c \
 
-SRC := $(addprefix src/, $(SRC))
+SRC := $(addprefix $(SRC_DIR)/, $(SRC))
 
 OBJ := $(patsubst $(SRC_DIR)%.c, $(OBJ_DIR)%.o, $(SRC))
 
@@ -48,12 +50,13 @@ $(LIBFT):
 	$(RM) libft/.git
 
 $(LIBFT_A): $(LIBFT)
-	@$(MAKE) -C libft | grep -v "Nothing to be done for 'all'." || echo "libft ready"
+	@$(MAKE) -C libft
+#	| grep -v "Nothing to be done" || echo "libft ready"
 
 $(OBJ_DIR):
 	@$(MKD) $(OBJ_DIR)
 
-$(OBJ_DIR)%.o: $(SRC_DIR)%.c $(OBJ_DIR)
+$(OBJ): $(OBJ_DIR)%.o: $(SRC_DIR)%.c $(OBJ_DIR)
 	@$(CC) -c $< -o $@
 
 $(NAME): $(LIBFT_A) $(OBJ)

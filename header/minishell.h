@@ -32,6 +32,9 @@
 //minishell.c
 //main
 
+//get_prompt.c
+char	*get_prompt(char *prompt, char **env, int cash_question);
+
 //go_builtin.c
 
 //find_builtin.c
