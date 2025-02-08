@@ -24,8 +24,8 @@ LIBFT := libft
 LIBFT_A := $(LIBFT)/libft.a
 
 L_FT := -Llibft -lft
-#L_READLINE := -L/usr/local/opt/readline/lib -lreadline
-L_READLINE := -lreadline
+L_READLINE := -L/usr/local/opt/readline/lib -lreadline
+#L_READLINE := -lreadline
 
 MAKEFLAGS += --no-print-directory
 
@@ -51,7 +51,6 @@ $(LIBFT):
 
 $(LIBFT_A): $(LIBFT)
 	@$(MAKE) -C libft
-#	| grep -v "Nothing to be done" || echo "libft ready"
 
 $(OBJ_DIR):
 	@$(MKD) $(OBJ_DIR)

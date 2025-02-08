@@ -13,6 +13,7 @@
 #include "minishell.h"
 
 static void	ft_prompt_delim(char *d[9]);
+static char	*ft_join_prompt(char *e[9]);
 static char	*ft_get_git_branch(void);
 
 char	*get_prompt(char *p, char **env, int cash_question)
@@ -21,10 +22,10 @@ char	*get_prompt(char *p, char **env, int cash_question)
 	char	*branch;
 	char	*e[9];
 
-	if (!ft_free(p) && !MS_CUTE)
-		return ("minishell$ ");
-	pwd = ft_getcwd();
-	branch = ft_get_git_branch();
+	ft_free(p);
+	if (!MS_CUTE)
+		return (ft_strdup("minishell$ "));
+	pwd = ft_env_get(env, "PWD");
 	e[1] = ft_env_get(env, "USER");
 	if (ft_strchr(pwd, '/') == ft_strrchr(pwd, '/'))
 		e[3] = pwd;
@@ -32,14 +33,15 @@ char	*get_prompt(char *p, char **env, int cash_question)
 		e[3] = "~";
 	else
 		e[3] = ft_strrchr(pwd, '/') + 1;
+	branch = ft_get_git_branch();
 	e[5] = ft_strrchr(branch, '/');
 	if (cash_question == 0)
 		e[7] = CLR_GRN ":3";
 	else
 		e[7] = CLR_RED ":(";
 	ft_prompt_delim(e);
-	p = ft_strnjoin(9, e[0], e[1], e[2], e[3], e[4], e[5], e[6], e[7], e[8]);
-	cash_question = (ft_free(pwd) == ft_free(branch));
+	p = ft_join_prompt(e);
+	ft_free(branch);
 	return (p);
 }
 
@@ -49,13 +51,37 @@ static void	ft_prompt_delim(char *d[9])
 	d[2] = "@" " ./";
 	d[4] = " ";
 	d[6] = " ";
-	d[8] = CLR_RST " $ " CLR_RST;
+	d[8] = CLR_RST " $ ";
 	if (d[5])
 	{
 		d[4] = " (";
 		d[5]++;
 		d[6] = ") ";
 	}
+}
+
+static char	*ft_join_prompt(char *e[9])
+{
+	int		len;
+	int		i;
+	char	*ret;
+
+	len = 0;
+	i = 0;
+	while (i < 9)
+	{
+		len += ft_strlen(e[i]);
+		i++;
+	}
+	ret = (char *)ft_malloc((len + 1) * sizeof(char));
+	ret[0] = 0;
+	i = 0;
+	while (i < 9)
+	{
+		ft_strlcat(ret, e[i], len + 1);
+		i++;
+	}
+	return (ret);
 }
 
 static char	*ft_get_git_branch(void)
