@@ -18,22 +18,23 @@ static char	*ft_which_path(char *arg, char **env, char *pwd, char *ret);
 //s = "echo,cd,pwd,export,unset,env,exit,which,env_extra";
 //s = "echo,pwd,env,which,cd,export,unset,env_extra,alias,unalias,source,exit";
 
-int	is_builtin(char *str)
+int	ft_isbuiltin(char *str)
 {
 	char	**builtin;
 	char	*s;
 	int		i;
 
+	if (ft_strchr(str, '=') && ft_env_namelen(str))
+		return (3);
 	s = "echo,pwd,env,which,cd,export,unset,alias,unalias,source,exit";
-	builtin = ft_split(s, ",");
+	builtin = ft_split(s, ',');
 	i = 0;
 	while (builtin[i])
 	{
 		if (!ft_strcmp(str, builtin[i]))
 		{
 			ft_split_free(builtin);
-			ft_printf("i:%d\n", i);
-			if (i > 3)
+			if (i >= 4)
 				return (2);
 			return (1);
 		}
@@ -50,7 +51,7 @@ char	*ft_which(char *arg, char **env)
 
 	pwd = NULL;
 	ret = NULL;
-	if (is_builtin(arg))
+	if (ft_isbuiltin(arg))
 		return (NULL);
 	if (!ft_strncmp(arg, "./", 2))
 	{
@@ -76,7 +77,7 @@ static char	*ft_which_path(char *arg, char **env, char *pwd, char *ret)
 	char	**path;
 	int		i;
 
-	path = ft_split(ft_env_get(env, "PATH"), ":");
+	path = ft_split(ft_env_get(env, "PATH"), ':');
 	i = 0;
 	while (path && path[i])
 	{
@@ -93,30 +94,4 @@ static char	*ft_which_path(char *arg, char **env, char *pwd, char *ret)
 	}
 	ft_split_free(path);
 	return (NULL);
-}
-
-int	ft_echo(char **arg)
-{
-	int	i;
-	int	nl;
-	int	len;
-
-	i = 1;
-	nl = 1;
-	len = ft_split_len(arg);
-	if (len > 1 && !ft_strncmp(arg[1], "-n", 3))
-	{
-		nl = 0;
-		i++;
-	}
-	while (i < len)
-	{
-		printf("%s", arg[i]);
-		i++;
-		if (i < len)
-			printf(" ");
-	}
-	if (nl)
-		printf("\n");
-	return (0);
 }

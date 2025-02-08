@@ -35,11 +35,17 @@
 //get_prompt.c
 char	*get_prompt(char *prompt, char **env, int cash_question);
 
-//go_builtin.c
-
 //find_builtin.c
-int		is_builtin(char *str);
+int		ft_isbuiltin(char *str);
 char	*ft_which(char *arg, char **env);
+
+//go_builtin.c
+int	ft_exec_builtin(char **comm, char ***env);
+//echo, exit
+
+//ft_exec_pipe.c
+void	ft_exec_pipe(char **comm, char ***env, pid_t *pid);
+//exec_which, exec_bash
 
 //env_help.c
 char	**ft_env_dup(char **env);
