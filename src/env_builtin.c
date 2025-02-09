@@ -27,7 +27,7 @@ int	ft_env(char **env)
 
 char	**ft_export(char **env, char *arg)
 {
-	char	**clean;
+	char	**ret;
 	int		len;
 
 	len = ft_env_namelen(arg);
@@ -44,12 +44,11 @@ char	**ft_export(char **env, char *arg)
 	}
 	if (arg[len] != '=')
 		return (env);
-	clean = env;
-	env = ft_env_dup(env);
-	ft_split_free(clean);
+	ret = ft_env_dup(env);
+	ft_split_free(env);
 	if (arg[len] == '=')
-		env[ft_split_len(env)] = ft_strdup(arg);
-	return (env);
+		ret[ft_split_len(ret)] = ft_strdup(arg);
+	return (ret);
 }
 
 char	**ft_unset(char **env, char *name)

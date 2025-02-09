@@ -15,6 +15,32 @@
 void	*init_minishell(char ****env, char **envp_main, char **cash_question, char **last_command);
 void	letsgo(char *input, char ***env, char **cash_question, char **last_command);
 
+void	ft_stress_test(char ****env, char **cash_question)
+{
+	int	i;
+	int	fd;
+	int	prev_fd;
+
+	fd = open("stress_test.log", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	prev_fd = dup(STDOUT_FILENO);
+	dup2(fd, STDOUT_FILENO);
+	close(fd);
+	i = 0;
+	while (i < 10000)
+	{
+		(*env)[0] = ft_export((*env)[0], "stress=ok");
+		ft_printf("%s", ft_env_get((*env)[0], "stress"));
+		ft_unset((*env)[0], "stress");
+		ft_printf("unset");
+		*cash_question = ft_itoa(0 + (long)ft_free(*cash_question));
+		ft_printf("%d\n", ft_atoi(*cash_question));
+		i++;
+	}
+	dup2(prev_fd, STDOUT_FILENO);
+	close(prev_fd);
+	ft_printf("stress test ok\n");
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	char	*input;
@@ -25,6 +51,7 @@ int	main(int argc, char **argv, char **envp)
 
 	if (argc == 1)
 		prompt = init_minishell(&env, envp, &cash_question, &last_command);
+	//ft_stress_test(&env, &cash_question);
 	while (argc == 1 && argv[0])
 	{
 		prompt = get_prompt(prompt, env[0], ft_atoi(cash_question));

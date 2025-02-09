@@ -15,6 +15,14 @@
 static void	ft_exec_which(char *comm, char **arg, char **env);
 static int	ft_exec_bash(char **arg, char **env);
 
+/*
+redirs and pipes happen here
+int fd_in for redir in, -1 if no redirs happen
+int fd_out for out, same
+int mode_in for read/heredoc
+int mode_out for append/overwrite
+*/
+
 void	ft_exec_pipe(char **comm, char ***env, pid_t *pid)
 {
 	*pid = fork();
@@ -24,6 +32,7 @@ void	ft_exec_pipe(char **comm, char ***env, pid_t *pid)
 		if (ft_isbuiltin(comm[0]))
 			exit(ft_exec_builtin(comm, env));
 		ft_exec_which(comm[0], comm, env[0]);
+		//close pipes and redirs
 	}
 }
 
@@ -33,7 +42,7 @@ static void	ft_exec_which(char *comm, char **arg, char **env)
 
 	path = ft_which(comm, env);
 	if (!path && !access(comm, R_OK))
-	ft_printf("minishell: %s: is a directory\n", comm);
+		ft_printf("minishell: %s: is a directory\n", comm);
 	else if (!path)
 		ft_printf("minishell: %s: command not found\n", comm);
 	else if (execve(path, arg, env) && ft_exec_bash(arg, env))

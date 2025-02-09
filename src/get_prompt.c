@@ -28,7 +28,7 @@ char	*get_prompt(char *p, char **env, int cash_question)
 	pwd = ft_env_get(env, "PWD");
 	e[1] = ft_env_get(env, "USER");
 	if (ft_strchr(pwd, '/') == ft_strrchr(pwd, '/'))
-		e[3] = pwd;
+		e[3] = pwd + 1;
 	else if (!ft_strcmp(pwd, ft_env_get(env, "HOME")))
 		e[3] = "~";
 	else

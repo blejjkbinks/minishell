@@ -112,6 +112,7 @@ static int	ft_which_print(char **arg, char **env)
 	return (ret);
 }
 
+//add negative arg, mod 256
 static	int	ft_exit_builtin(char **arg)
 {
 	int		i;
