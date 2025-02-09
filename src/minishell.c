@@ -51,7 +51,6 @@ int	main(int argc, char **argv, char **envp)
 
 	if (argc == 1)
 		prompt = init_minishell(&env, envp, &cash_question, &last_command);
-	//ft_stress_test(&env, &cash_question);
 	while (argc == 1 && argv[0])
 	{
 		prompt = get_prompt(prompt, env[0], ft_atoi(cash_question));
