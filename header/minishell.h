@@ -41,11 +41,11 @@ char	*ft_which(char *arg, char **env);
 
 //go_builtin.c
 int	ft_exec_builtin(char **comm, char ***env);
-//echo, exit
+//echo, exit, which_print, export_magic
 
 //ft_exec_pipe.c
 void	ft_exec_pipe(char **comm, char ***env, pid_t *pid);
-//exec_which, exec_bash
+//exec_which
 
 //env_help.c
 char	**ft_env_dup(char **env);

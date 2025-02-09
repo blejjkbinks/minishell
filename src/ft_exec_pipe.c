@@ -13,7 +13,6 @@
 #include "minishell.h"
 
 static void	ft_exec_which(char *comm, char **arg, char **env);
-static int	ft_exec_bash(char **arg, char **env);
 
 /*
 redirs and pipes happen here
@@ -39,25 +38,17 @@ void	ft_exec_pipe(char **comm, char ***env, pid_t *pid)
 static void	ft_exec_which(char *comm, char **arg, char **env)
 {
 	char	*path;
+	char	**bash;
 
 	path = ft_which(comm, env);
+	bash = ft_env_dup(arg);
+	ft_memmove(bash + 1, bash, ft_split_len(bash) * sizeof(char *));
+	bash[0] = "/bin/bash";
 	if (!path && !access(comm, R_OK))
 		ft_printf("minishell: %s: is a directory\n", comm);
 	else if (!path)
 		ft_printf("minishell: %s: command not found\n", comm);
-	else if (execve(path, arg, env) && ft_exec_bash(arg, env))
+	else if (execve(path, arg, env) && execve(bash[0], bash, env))
 		ft_printf("minishell: %s: permission denied\n", comm);
 	exit (126 + (path != NULL));
-}
-
-static int	ft_exec_bash(char **arg, char **env)
-{
-	char	**tmp;
-	int		len;
-
-	tmp = ft_env_dup(arg);
-	len = ft_split_len(arg);
-	ft_memmove(tmp + 1, tmp, len * sizeof(char *));
-	tmp[0] = "/bin/bash";
-	return (execve(tmp[0], tmp, env));
 }

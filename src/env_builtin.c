@@ -42,12 +42,12 @@ char	**ft_export(char **env, char *arg)
 			ft_env_set(env, arg, &arg[len + 1]);
 		return (env);
 	}
-	if (arg[len] != '=')
-		return (env);
 	ret = ft_env_dup(env);
 	ft_split_free(env);
 	if (arg[len] == '=')
 		ret[ft_split_len(ret)] = ft_strdup(arg);
+	else 
+		ret[ft_split_len(ret)] = ft_strjoin(arg, "=");
 	return (ret);
 }
 
