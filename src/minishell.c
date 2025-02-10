@@ -49,9 +49,7 @@ int	main(int argc, char **argv, char **envp)
 	char	*last_command;
 	char	***env;
 
-	env = NULL;
-	if (argc == 1)
-		prompt = init_minishell(&env, envp, &cash_question, &last_command);
+	prompt = init_minishell(&env, envp, &cash_question, &last_command);
 	while (argc == 1 && argv[0])
 	{
 		prompt = get_prompt(prompt, env[0], ft_atoi(cash_question));
@@ -113,9 +111,9 @@ void	*init_minishell(char ****env, char **envp_main, char **cash_question, char 
 	if (MS_CUTE)
 		ft_printf("(✿ ◕‿ ◕) hi~~ welcome to minishell (っ＾▿＾)っ\n");
 	*env = (char ***)ft_malloc(3 * sizeof(char **));
-	//(*env)[0] = ft_env_dup(envp_main);
-	(void)envp_main;
-	(*env)[0] = ft_split("USER=user,PWD=/pwd,HOME=home", ',');
+	(*env)[0] = ft_env_dup(envp_main);
+	//(void)envp_main;
+	//(*env)[0] = ft_split("USER=user,PWD=/pwd,HOME=home", ',');
 	(*env)[0] = ft_export((*env)[0], "OLDPWD=");
 	(*env)[1] = NULL;
 	(*env)[2] = NULL;
