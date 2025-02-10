@@ -22,7 +22,7 @@ char	*get_prompt(char *p, char **env, int cash_question)
 	char	*branch;
 	char	*e[9];
 
-	ft_free(p);
+	free(p);
 	if (!MS_CUTE)
 		return (ft_strdup("minishell$ "));
 	pwd = ft_env_get(env, "PWD");
@@ -41,7 +41,7 @@ char	*get_prompt(char *p, char **env, int cash_question)
 		e[7] = CLR_RED ":(";
 	ft_prompt_delim(e);
 	p = ft_join_prompt(e);
-	ft_free(branch);
+	free(branch);
 	return (p);
 }
 
