@@ -57,7 +57,10 @@ int	main(int argc, char **argv, char **envp)
 		if (ft_strlen(input))
 			letsgo(input, env, &cash_question, &last_command);
 		else
-			cash_question = ft_itoa(0 + (long)ft_free(cash_question));
+		{
+			ft_free(cash_question);
+			cash_question = ft_itoa(0);
+		}
 		if (!input && MS_CUTE)
 			return (0 + (0 * ft_printf("ctrl+d message\n")));
 		ft_free(input);
@@ -96,7 +99,8 @@ void	letsgo(char *input, char ***env, char **cash_question, char **last_command)
 			waitpid(pid[i], &s, 0);
 		i++;
 	}
-	*cash_question = ft_itoa(((s & 0xff00) >> 8) + (long)ft_free(*cash_question));
+	ft_free(*cash_question);
+	*cash_question = ft_itoa(((s & 0xff00) >> 8));
 	ft_split_free(pipe);
 	ft_free(pid);
 	return ;
