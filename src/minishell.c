@@ -49,6 +49,7 @@ int	main(int argc, char **argv, char **envp)
 	char	*last_command;
 	char	***env;
 
+	env = NULL;
 	if (argc == 1)
 		prompt = init_minishell(&env, envp, &cash_question, &last_command);
 	while (argc == 1 && argv[0])

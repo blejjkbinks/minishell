@@ -16,7 +16,12 @@ static char	*ft_which_path(char *arg, char **env, char *pwd, char *ret);
 
 //s = "cd,export,unset,exit";
 //s = "echo,pwd,env,which,cd,export,unset,env_extra,alias,unalias,source,exit";
-//s = "echo,pwd,env,which,cd,export,unset,env_extra,alias,unalias,source,exit";
+
+	//
+//	for (int p = 0; builtin[p]; p++)
+//		ft_printf("%s;", builtin[p]);
+//	ft_printf("\n");
+	//
 
 int	ft_isbuiltin(char *str)
 {
@@ -26,8 +31,7 @@ int	ft_isbuiltin(char *str)
 
 	if (ft_strchr(str, '=') && ft_env_namelen(str))
 		return (3);
-//	s = "echo,pwd,env,which,cd,export,unset,alias,unalias,source,exit";
-//s = "echo,pwd,env,which,cd,export,unset,env_extra,alias,unalias,source,exit";
+	s = "echo,pwd,env,which,cd,export,unset,env_extra,alias,unalias,source,exit";
 	builtin = ft_split(s, ',');
 	i = 0;
 	while (builtin[i])
