@@ -129,6 +129,26 @@ bash-3.2$
 ```
 redirection in the first pipe (to file1) snatches it from tr
 
+```
+bash-3.2$ echo asd > file
+bash-3.2$ cat file
+asd
+bash-3.2$ cat file | tr a b > file
+bash-3.2$ cat file
+bash-3.2$ echo asd > file
+bash-3.2$ cat file | tr a b
+bsd
+```
+order for opening "file"??? 
+```
+bash-3.2$ echo asd > file
+bash-3.2$ cat < file | tr a b >> file
+bash-3.2$ cat file
+asd
+bsd
+bash-3.2$ 
+```
+
 ## other stuff
 
 ?

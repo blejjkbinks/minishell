@@ -29,16 +29,17 @@ L_READLINE := -L/usr/local/opt/readline/lib -lreadline
 
 MAKEFLAGS += --no-print-directory
 
-SRC := $(wildcard $(SRC_DIR)/*.c)
-SRC := $(filter-out $(SRC_DIR)/cash_money.c, $(SRC))
+#SRC := $(wildcard $(SRC_DIR)/*.c)
 
 #	was wildcard always allowed?
 #	i could always write them all down haha zzz
-#SRC := \
-	minishell.c		env_builtin.c		env_help.c	cd_pwd.c \
-	get_prompt.c	find_builtin.c	go_builtin.c \
+SRC := \
+	cd_pwd.c	env_builtin.c	env_help.c \
+	exec_pipe.c		find_builtin.c		get_prompt.c	go_builtin.c \
+	minishell.c \
+#cash_money.c	redirection.c \
 
-#SRC := $(addprefix $(SRC_DIR)/, $(SRC))
+SRC := $(addprefix $(SRC_DIR)/, $(SRC))
 
 OBJ := $(patsubst $(SRC_DIR)%.c, $(OBJ_DIR)%.o, $(SRC))
 
