@@ -31,16 +31,22 @@ int	ft_exec_builtin(char **comm, char ***env)
 		return (ft_export_magic(comm[0], env, 1));
 	if (!ft_strcmp(comm[0], "unset"))
 		return (ft_export_magic(comm[1], env, 2));
-	if (!ft_strcmp(comm[0], "env"))
-		return (ft_env(env[0]));
-	if (!ft_strcmp(comm[0], "env_extra"))
-		return (ft_env(env[1]));
+	//
+	if (!ft_strcmp(comm[0], "env") || !ft_strcmp(comm[0], "env_extra"))
+		return (ft_env(env[(!ft_strcmp(comm[0], "env_extra"))]));
+	//if (!ft_strcmp(comm[0], "env"))
+	//	return (ft_env(env[0]));
+	//if (!ft_strcmp(comm[0], "env_extra"))
+	//	return (ft_env(env[1]));
+	//
 	if (!ft_strcmp(comm[0], "alias"))
 		return (ft_export_magic(comm[1], env, 3));
 	if (!ft_strcmp(comm[0], "unalias"))
 		return (ft_export_magic(comm[1], env, 4));
 	if (!ft_strcmp(comm[0], "which"))
 		return (ft_which_print(comm, env[0]));
+	if (!ft_strcmp(comm[0], "source"))
+		return (ft_printf("ft_source\n"));
 	if (!ft_strcmp(comm[0], "exit"))
 		return (ft_exit_builtin(comm));
 	return (-1);
@@ -62,13 +68,13 @@ static int	ft_export_magic(char *arg, char ***env, int x)
 		ft_unset(env[0], arg);
 	if (x == 2)
 		ft_unset(env[1], arg);
-	if (x == 3)
+	if (x == 3 && ft_env_namelen(arg))
 		env[2] = ft_export(env[2], arg);
 	if (x == 4)
 		ft_unset(env[2], arg);
 	if (!ft_env_namelen(arg))
 		return (1);
-//	if (x != 1 && arg + 1)
+//	if (x != 1 && arg + 1)		//need to pass "**comm" not "*comm", recursion with "arg + 1"
 //		return (ft_export_magic(arg + 1, env, x));
 	return (0);
 }

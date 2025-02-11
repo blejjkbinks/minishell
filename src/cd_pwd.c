@@ -44,7 +44,7 @@ int	ft_pwd(void)
 	return (0);
 }
 
-int	ft_cd_oldpwd(char **arg, char **env, int err)
+static int	ft_cd_oldpwd(char **arg, char **env, int err)
 {
 	char	*str;
 

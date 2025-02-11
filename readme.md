@@ -61,13 +61,23 @@ make strnjoin_free? join n strings and specify whichs to free?
 
 - 1: split_quotes by '|'
 
-- 2: split_quotes by ' '
+- ~~2: split_quotes by ' '~~
 
 - 3: redirection first
 
 - 4: cash_money after
 
-- 5: (last) trim quotes
+- 5: split ' '
+
+- ~~5~~ 6: (last) trim quotes
+```
+bash-3.2$ mm=asd
+bash-3.2$ cat << $mm
+> asd
+> $mm
+asd
+bash-3.2$ 
+```
 
 ```
 bash-3.2$ haha=">file1"
@@ -97,17 +107,27 @@ this is super annoying, im gonna take the easy way out and say it only works whe
 bash-3.2$ echo bye >> file1
 bash-3.2$ echo < file1
 
-bash-3.2$ cat << d << f
-> qwe
-> qwe
+bash-3.2$ cat << d << f > file1 | tr a b > file2
+> asd
+> asd
 > d
-> asd
-> asd
+> axc
+> axc
 > f
-asd
-asd
+bash-3.2$ cat file1
+axc
+axc
+bash-3.2$ cat file2
+bash-3.2$ cat << d << f | tr a b > file2
+> asd
+> d
+> axc
+> f
+bash-3.2$ cat file2
+bxc
 bash-3.2$ 
 ```
+redirection in the first pipe (to file1) snatches it from tr
 
 ## other stuff
 

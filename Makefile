@@ -30,6 +30,8 @@ L_READLINE := -L/usr/local/opt/readline/lib -lreadline
 MAKEFLAGS += --no-print-directory
 
 SRC := $(wildcard $(SRC_DIR)/*.c)
+SRC := $(filter-out $(SRC_DIR)/cash_money.c, $(SRC))
+
 #	was wildcard always allowed?
 #	i could always write them all down haha zzz
 #SRC := \

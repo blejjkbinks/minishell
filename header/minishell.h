@@ -43,9 +43,12 @@ char	*ft_which(char *arg, char **env);
 int	ft_exec_builtin(char **comm, char ***env);
 //echo, exit, which_print, export_magic
 
-//ft_exec_pipe.c
+//exec_pipe.c
 void	ft_exec_pipe(char **comm, char ***env, pid_t *pid);
 //exec_which
+
+//cash_money.c
+
 
 //env_help.c
 char	**ft_env_dup(char **env);
@@ -62,7 +65,6 @@ char	**ft_unset(char **env, char *name);
 //cd_pwd.c
 char	*ft_getcwd(void);
 int		ft_pwd(void);
-int		ft_cd_oldpwd(char **arg, char **env, int err);
 int		ft_cd(char **arg, char **env);
 
 #endif	//minishell.h
