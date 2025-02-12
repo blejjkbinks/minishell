@@ -164,3 +164,13 @@ bash-3.2$
 - add support for `#comments`
 - add `source`
 - fix readline lib on laptop
+
+### ugh
+
+- cash_money (with alias and #)
+- find_redir
+- open_redir
+- ready_pipe
+- clean_pipe
+- FIX SPLIT_QUOTES
+- HEAP CORRUPTION LMAO
