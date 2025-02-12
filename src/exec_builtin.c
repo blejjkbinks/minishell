@@ -12,10 +12,10 @@
 
 #include "minishell.h"
 
-static int	ft_export_magic(char *arg, char ***env, int x);
 static int	ft_which_print(char **arg, char **env);
 static int	ft_exit_builtin(char **arg, char ***env);
 static int	ft_echo(char **arg);
+//static int	ft_source()
 
 int	ft_exec_builtin(char **comm, char ***env)
 {
@@ -31,52 +31,19 @@ int	ft_exec_builtin(char **comm, char ***env)
 		return (ft_export_magic(comm[0], env, 1));
 	if (!ft_strcmp(comm[0], "unset"))
 		return (ft_export_magic(comm[1], env, 2));
-	//
 	if (!ft_strcmp(comm[0], "env") || !ft_strcmp(comm[0], "env_extra"))
 		return (ft_env(env[(!ft_strcmp(comm[0], "env_extra"))]));
-	//if (!ft_strcmp(comm[0], "env"))
-	//	return (ft_env(env[0]));
-	//if (!ft_strcmp(comm[0], "env_extra"))
-	//	return (ft_env(env[1]));
-	//
 	if (!ft_strcmp(comm[0], "alias"))
 		return (ft_export_magic(comm[1], env, 3));
 	if (!ft_strcmp(comm[0], "unalias"))
 		return (ft_export_magic(comm[1], env, 4));
 	if (!ft_strcmp(comm[0], "which"))
 		return (ft_which_print(comm, env[0]));
-	if (!ft_strcmp(comm[0], "source"))
+	if (!ft_strcmp(comm[0], "source"))	//TODO
 		return (ft_printf("ft_source\n"));
 	if (!ft_strcmp(comm[0], "exit"))
 		return (ft_exit_builtin(comm, env));
 	return (-1);
-}
-
-static int	ft_export_magic(char *arg, char ***env, int x)
-{
-	if (x == 0 && (ft_env_get(env[1], arg) || ft_strchr(arg, '=')))
-		env[0] = ft_export(env[0], arg);
-	if (x == 0 && (ft_env_get(env[1], arg) && !ft_strchr(arg, '=')))
-		ft_env_set(env[0], arg, ft_env_get(env[1], arg));
-	if (x == 0)
-		ft_unset(env[1], arg);
-	if (x == 1 && ft_env_get(env[0], arg))
-		env[0] = ft_export(env[0], arg);
-	else if (x == 1)
-		env[1] = ft_export(env[1], arg);
-	if (x == 2)
-		ft_unset(env[0], arg);
-	if (x == 2)
-		ft_unset(env[1], arg);
-	if (x == 3 && ft_env_namelen(arg))
-		env[2] = ft_export(env[2], arg);
-	if (x == 4)
-		ft_unset(env[2], arg);
-	if (!ft_env_namelen(arg))
-		return (1);
-//	if (x != 1 && arg + 1)		//need to pass "**comm" not "*comm", recursion with "arg + 1"
-//		return (ft_export_magic(arg + 1, env, x));
-	return (0);
 }
 
 static int	ft_which_print(char **arg, char **env)

@@ -25,7 +25,9 @@ int	ft_isbuiltin(char *str)
 
 	if (ft_strchr(str, '=') && ft_env_namelen(str))
 		return (3);
-	s = "echo,pwd,env,which,cd,export,unset,env_extra,alias,unalias,source,exit";
+	if (!ft_strcmp(str, "env_extra"))
+		return (2);
+	s = "echo,pwd,env,which,cd,export,unset,alias,unalias,source,exit";
 	builtin = ft_split(s, ',');
 	i = 0;
 	while (builtin[i])

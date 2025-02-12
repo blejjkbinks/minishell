@@ -41,7 +41,9 @@ char	*ft_which(char *arg, char **env);
 
 //exec_builtin.c
 int	ft_exec_builtin(char **comm, char ***env);
-//echo, exit, which_print, export_magic
+//echo, exit, which_print
+
+//probably source
 
 //exec_pipe.c
 void	ft_exec_pipe(char **comm, char ***env, pid_t *pid);
@@ -62,6 +64,8 @@ int		ft_env_set(char **env, char *name, char *val);
 int		ft_env(char **env);
 char	**ft_export(char **env, char *arg);
 char	**ft_unset(char **env, char *name);
+int		ft_export_magic(char *arg, char ***env, int x);
+//room for magic_norm
 
 //cd_pwd.c
 char	*ft_getcwd(void);

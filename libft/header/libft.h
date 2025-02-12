@@ -56,7 +56,7 @@ char	*ft_strjoin(const char *s1, const char *s2);
 char	*ft_strjoin_free(char *s1, char *s2, int fr);
 char	*ft_strnjoin(int count, ...);
 char	*ft_strtrim(const char *str, const char *set);
-void	ft_strtrim_quotes(char *str);
+int		ft_strtrim_quotes(char *str);
 
 //split
 char	**ft_split(const char *str, char d);

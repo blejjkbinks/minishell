@@ -151,26 +151,41 @@ bash-3.2$
 
 ## other stuff
 
-?
+
+ctrl+d message in main
+
+unclosed quote message
 
 ## taslkist
 
-- libft
-- rewrite minishell function without stupid norm variable
-- add user@ to prompt
-- review export (for "export var" with no val)
-- add `which builtin`
-- add `alias` and `unalias`
+- ~~libft~~ ^^
+- ~~rewrite minishell function without stupid norm variable~~ yuh
+- ~~add user@ to prompt~~ done
+- ~~review export (for "export var" with no val)~~ done
+- ~~add `which builtin`~~ nvm ugly
+- ~~add `alias` and `unalias`~~ done
 - add support for `#comments`
 - add `source`
 - fix readline lib on laptop
+- check git branch in parents
+- "alias name" shows name=alias or name not found
+
+### flow
+
+> redir first apparently...... !?!?!?!
+- find_redir
+- open_redir
+- cash_money (with alias and #)
+- ready_pipe
+- clean_pipe
 
 ### ugh
 
-- cash_money (with alias and #)
-- find_redir
-- open_redir
-- ready_pipe
-- clean_pipe
 - FIX SPLIT_QUOTES
-- HEAP CORRUPTION LMAO
+- backtrack input line with only whitespaces
+- ALIAS MAGIC NEEDS WORK
+- also add recursion
+- random position in export, with a hash??
+- ~~HEAP CORRUPTION LMAO~~ godbless
+
+# priority-> whitespace, split_quotes, alias_magic

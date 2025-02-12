@@ -25,18 +25,16 @@ LIBFT_A := $(LIBFT)/libft.a
 
 L_FT := -Llibft -lft
 L_READLINE := -L/usr/local/opt/readline/lib -lreadline
-#L_READLINE := -lreadline
 
 MAKEFLAGS += --no-print-directory
 
 #SRC := $(wildcard $(SRC_DIR)/*.c)
-
 #	was wildcard always allowed?
 #	i could always write them all down haha zzz
 SRC := \
 	cd_pwd.c	env_builtin.c	env_help.c \
-	exec_pipe.c		find_builtin.c		get_prompt.c	exec_builtin.c \
-	minishell.c \
+	exec_pipe.c		find_builtin.c	exec_builtin.c \
+	minishell.c		get_prompt.c \
 #cash_money.c	redirection.c \
 
 SRC := $(addprefix $(SRC_DIR)/, $(SRC))
@@ -94,4 +92,16 @@ gitpush: gitstat
 print:
 	@echo $(SRC)
 
-.PHONY: all clean fclean re print gitstat gitpush
+SOURCE_TXT := minishell_source.txt
+source_txt:
+	@> $(SOURCE_TXT)
+	@for file in $(shell echo $(SRC_DIR)/*.c); do \
+		tail -n +14 $$file >> $(SOURCE_TXT); \
+	done
+	@for file in $(shell echo $(LIBFT)/src/*/*.c); do \
+		tail -n +14 $$file >> $(SOURCE_TXT); \
+	done
+	@mv $(SOURCE_TXT) ~/Desktop/$(SOURCE_TXT)
+	@echo ok its on your desktop
+
+.PHONY: all clean fclean re print gitstat gitpush source_txt

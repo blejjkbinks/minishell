@@ -22,7 +22,7 @@ int mode_in for read/heredoc
 int mode_out for append/overwrite
 */
 
-void	ft_exec_pipe(char **comm, char ***env, pid_t *pid)
+void	ft_exec_pipe(char **comm, char ***env, pid_t *pid)	//fdr[4]
 {
 	*pid = fork();
 	if (*pid == 0)

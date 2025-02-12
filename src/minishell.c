@@ -14,33 +14,8 @@
 
 void	*init_minishell(char ****env, char **envp_main, char **cash_question, char **last_command);
 void	letsgo(char *input, char ***env, char **cash_question, char **last_command);
-
-void	ft_stress_test(char ****env, char **cash_question)
-{
-	int	i;
-	int	fd;
-	int	prev_fd;
-
-	fd = open("stress_test.log", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	prev_fd = dup(STDOUT_FILENO);
-	dup2(fd, STDOUT_FILENO);
-	close(fd);
-	i = 0;
-	while (i < 10000)
-	{
-		(*env)[0] = ft_export((*env)[0], "stress=ok");
-		ft_printf("%s", ft_env_get((*env)[0], "stress"));
-		ft_unset((*env)[0], "stress");
-		ft_printf("unset");
-		free(*cash_question);
-		*cash_question = ft_itoa(0);
-		ft_printf("%d\n", ft_atoi(*cash_question));
-		i++;
-	}
-	dup2(prev_fd, STDOUT_FILENO);
-	close(prev_fd);
-	ft_printf("stress test ok\n");
-}
+void	letsgo_pipe(char **pipe, char ***env, char **cash_question, char **last_command);
+void	letsgo_wait(int len, pid_t *pid, int status, char **cash_question);
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -71,43 +46,67 @@ int	main(int argc, char **argv, char **envp)
 void	letsgo(char *input, char ***env, char **cash_question, char **last_command)
 {
 	char	**pipe;
-	char	**comm;
-	pid_t	*pid;	
-	int		i;	//move deeper, 2 functions for pipe loop and wait loop
-	int		s;	//minimum depth: needed in pipe loop, wait loop and cleanup
+	char	*check_closed;
 
 	add_history(input);
+	check_closed = ft_strdup(input);
+	if (ft_strtrim_quotes(check_closed))
+	{
+		if (MS_CUTE)
+			ft_printf("minishell: unclosed quote >:(\n");
+		*cash_question = ft_itoa(1 + (long)ft_free(*cash_question));
+		return ;
+	}
 	//pipe = ft_split_quotes(input, '|');
 	pipe = ft_split(input, '|');
+	letsgo_pipe(pipe, env, cash_question, last_command);
+	ft_split_free(pipe);
+	//update last_command here i think
+}
+
+void	letsgo_pipe(char **pipe, char ***env, char **cash_question, char **last_command)
+{
+	char	**comm;
+	pid_t	*pid;
+	int		i;
+	int		status;
+//	int		fdr[4];		//maybe shared with pid[], redirections are opened before, cf "cat < file | tr a b >> file"
+
 	pid = (pid_t *)ft_calloc(ft_split_len(pipe), sizeof(pid_t));
+	status = 0;
 	i = 0;
 	while (pipe && pipe[i])
 	{
-		//redirection
+		//redirection	//fdr[4]
 		//cash_money
-		//comm = ft_split_quotes(pipe[i], ' ');	//after, bigbrain
+		if (!ft_strcmp(*last_command, "just to compile")) return ;
+		//comm = ft_split_quotes(pipe[i], ' ');
 		comm = ft_split(pipe[i], ' ');
-		ft_split_trim_quotes(comm);	//return -1 if unclosed
+		ft_split_trim_quotes(comm);
 		if (comm && !pipe[1] && ft_isbuiltin(comm[0]) > 1)
-			s = ft_exec_builtin(comm, env);
+			status = ft_exec_builtin(comm, env);
 		else if (comm)
-			ft_exec_pipe(comm, env, &pid[i]);
+			ft_exec_pipe(comm, env, &pid[i]);	//fdr[4]
 		ft_split_free(comm);
 		i++;
 	}
+	letsgo_wait(ft_split_len(pipe), pid, status, cash_question);
+}
+
+void	letsgo_wait(int len, pid_t *pid, int status, char **cash_question)
+{
+	int	i;
+
 	i = 0;
-	while (pipe && pipe[i])
+	while (i < len)
 	{
 		if (pid[i] > 0)
-			waitpid(pid[i], &s, 0);
+			waitpid(pid[i], &status, 0);
 		i++;
 	}
 	free(*cash_question);
-	*cash_question = ft_itoa(((s & 0xff00) >> 8));
-	ft_split_free(pipe);
+	*cash_question = ft_itoa(((status & 0xff00) >> 8));
 	free(pid);
-	return ;
-	ft_printf("%s", *last_command);
 }
 
 //	init_signals();
@@ -119,9 +118,6 @@ void	*init_minishell(char ****env, char **envp_main, char **cash_question, char 
 		ft_printf("(✿ ◕‿ ◕) hi~~ welcome to minishell (っ＾▿＾)っ\n");
 	*env = (char ***)ft_malloc(3 * sizeof(char **));
 	(*env)[0] = ft_env_dup(envp_main);
-//	(*env)[0] = ft_split("USER=user,PWD=/pwd,HOME=home,PATH=path", ',');
-//	(*env)[0] = ft_export((*env)[0], "PATH");
-//	ft_env_set((*env)[0], "PATH", ft_env_get(envp_main, "PATH"));
 	(*env)[0] = ft_export((*env)[0], "OLDPWD=");
 	str = ft_itoa(ft_atoi(ft_env_get((*env)[0], "SHLVL")) + 1);
 	(*env)[0] = ft_export((*env)[0], "SHLVL=");

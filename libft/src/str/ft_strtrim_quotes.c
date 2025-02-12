@@ -12,14 +12,14 @@
 
 #include "libft.h"
 
-void	ft_strtrim_quotes(char *str)
+int	ft_strtrim_quotes(char *str)
 {
 	int	i;
 	int	j;
 	int	q;
 
 	if (!str)
-		return ;
+		return (-1);
 	i = 0;
 	j = 0;
 	q = 0;
@@ -33,4 +33,5 @@ void	ft_strtrim_quotes(char *str)
 		i++;
 	}
 	str[j] = 0;
+	return (q);
 }
