@@ -29,7 +29,7 @@ char	*get_next_line(int fd)
 			return (ret);
 		}
 		ret[++i] = 0;
-		if (i == c)
+		if (i + 1 == c)
 			ret = ft_realloc(ret, i, c * 2, &c);
 	}
 	if (!i)

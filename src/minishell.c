@@ -64,7 +64,7 @@ int	main(int argc, char **argv, char **envp)
 			cash_question = ft_itoa(0);
 		}
 		if (!input && MS_CUTE)
-			return (0 + (0 * ft_printf("ctrl+d message\n")));
+			exit (0 + (0 * ft_printf("ctrl+d message\n")));
 		free(input);
 	}
 	exit(0 * ft_printf("usage: ./minishell [script]\n"));
@@ -81,7 +81,7 @@ void	letsgo(char *input, char ***env, char **cash_question, char **last_command)
 	add_history(input);
 	//pipe = ft_split_quotes(input, '|');
 	pipe = ft_split(input, '|');
-	pid = (pid_t *)ft_malloc(ft_split_len(pipe) * sizeof(pid_t));
+	pid = (pid_t *)ft_calloc(ft_split_len(pipe), sizeof(pid_t));
 	i = 0;
 	while (pipe && pipe[i])
 	{
