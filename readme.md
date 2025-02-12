@@ -156,6 +156,8 @@ ctrl+d message in main
 
 unclosed quote message
 
+handle and show errors:( for too many arguments, like pwd and var=val and env
+
 ## taslkist
 
 - ~~libft~~ ^^
