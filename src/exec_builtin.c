@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   go_builtin.c                                       :+:      :+:    :+:   */
+/*   exec_builtin.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rdomange <romitdomange@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 17:15:14 by rdomange          #+#    #+#             */
-/*   Updated: 2025/02/06 17:15:15 by rdomange         ###   ########.fr       */
+/*   Updated: 2025/02/12 15:21:27 by rdomange         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static int	ft_export_magic(char *arg, char ***env, int x);
 static int	ft_which_print(char **arg, char **env);
-static int	ft_exit_builtin(char **arg);
+static int	ft_exit_builtin(char **arg, char ***env);
 static int	ft_echo(char **arg);
 
 int	ft_exec_builtin(char **comm, char ***env)
@@ -48,7 +48,7 @@ int	ft_exec_builtin(char **comm, char ***env)
 	if (!ft_strcmp(comm[0], "source"))
 		return (ft_printf("ft_source\n"));
 	if (!ft_strcmp(comm[0], "exit"))
-		return (ft_exit_builtin(comm));
+		return (ft_exit_builtin(comm, env));
 	return (-1);
 }
 
@@ -105,7 +105,7 @@ static int	ft_which_print(char **arg, char **env)
 	return (ret);
 }
 
-static	int	ft_exit_builtin(char **arg)
+static	int	ft_exit_builtin(char **arg, char ***env)
 {
 	int		i;
 	char	*s[3];
@@ -126,6 +126,9 @@ static	int	ft_exit_builtin(char **arg)
 		ft_printf("byebye minishell (˶ᵔ ᵕ ᵔ˶)ノ\n");
 	if (MS_CUTE && i)
 		ft_printf("o(*￣○￣)ゝ kill %d bye minishell\n", i);
+	ft_split_free(env[0]);
+	ft_split_free(env[1]);
+	ft_split_free(env[2]);
 	exit (i);
 }
 

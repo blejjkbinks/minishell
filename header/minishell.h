@@ -39,7 +39,7 @@ char	*get_prompt(char *prompt, char **env, int cash_question);
 int		ft_isbuiltin(char *str);
 char	*ft_which(char *arg, char **env);
 
-//go_builtin.c
+//exec_builtin.c
 int	ft_exec_builtin(char **comm, char ***env);
 //echo, exit, which_print, export_magic
 
@@ -47,8 +47,9 @@ int	ft_exec_builtin(char **comm, char ***env);
 void	ft_exec_pipe(char **comm, char ***env, pid_t *pid);
 //exec_which
 
-//cash_money.c
+//redirection.c
 
+//cash_money.c
 
 //env_help.c
 char	**ft_env_dup(char **env);

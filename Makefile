@@ -35,7 +35,7 @@ MAKEFLAGS += --no-print-directory
 #	i could always write them all down haha zzz
 SRC := \
 	cd_pwd.c	env_builtin.c	env_help.c \
-	exec_pipe.c		find_builtin.c		get_prompt.c	go_builtin.c \
+	exec_pipe.c		find_builtin.c		get_prompt.c	exec_builtin.c \
 	minishell.c \
 #cash_money.c	redirection.c \
 
