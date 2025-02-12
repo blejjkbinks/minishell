@@ -81,17 +81,6 @@ void	letsgo(char *input, char ***env, char **cash_question, char **last_command)
 	add_history(input);
 	//pipe = ft_split_quotes(input, '|');
 	pipe = ft_split(input, '|');
-	/*for (int t = 0; pipe[t]; t++)
-	{
-		char	*trim = ft_strtrim(pipe[t], " ");
-		free(pipe[t]);
-		pipe[t] = trim;
-	}*/
-	//
-//	for (int p = 0; pipe[p]; p++)
-//		ft_printf("|%s|", pipe[p]);
-//	ft_printf("\n");
-	//
 	pid = (pid_t *)ft_malloc(ft_split_len(pipe) * sizeof(pid_t));
 	i = 0;
 	while (pipe && pipe[i])
@@ -100,13 +89,7 @@ void	letsgo(char *input, char ***env, char **cash_question, char **last_command)
 		//cash_money
 		//comm = ft_split_quotes(pipe[i], ' ');	//after, bigbrain
 		comm = ft_split(pipe[i], ' ');
-		/*	this is wrong af, doesnt trim spaces??? REVIEW ASAP	*/
 		ft_split_trim_quotes(comm);	//return -1 if unclosed
-		//
-//		for (int p = 0; comm[p]; p++)
-//			ft_printf(".%s.", comm[p]);
-//		ft_printf("\n");
-		//
 		if (comm && !pipe[1] && ft_isbuiltin(comm[0]) > 1)
 			s = ft_exec_builtin(comm, env);
 		else if (comm)
@@ -137,9 +120,10 @@ void	*init_minishell(char ****env, char **envp_main, char **cash_question, char 
 	if (MS_CUTE)
 		ft_printf("(✿ ◕‿ ◕) hi~~ welcome to minishell (っ＾▿＾)っ\n");
 	*env = (char ***)ft_malloc(3 * sizeof(char **));
-	(*env)[0] = ft_env_dup(envp_main);
-	//(void)envp_main;
-	//(*env)[0] = ft_split("USER=user,PWD=/pwd,HOME=home", ',');
+	//(*env)[0] = ft_env_dup(envp_main);
+	(*env)[0] = ft_split("USER=user,PWD=/pwd,HOME=home,PATH=path", ',');
+	(*env)[0] = ft_export((*env)[0], "PATH");
+	ft_env_set((*env)[0], "PATH", ft_env_get(envp_main, "PATH"));
 	(*env)[0] = ft_export((*env)[0], "OLDPWD=");
 	(*env)[1] = NULL;
 	(*env)[2] = NULL;

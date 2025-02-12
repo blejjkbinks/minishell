@@ -57,7 +57,7 @@ static int	ft_cd_oldpwd(char **arg, char **env, int err)
 	str = ft_getcwd();
 	ft_env_set(env, "PWD", str);
 	free(str);
-	if (err == ENOENT)
+	if (err)
 		return (1);
 	return (0);
 }
@@ -69,7 +69,7 @@ int	ft_cd(char **arg, char **env)
 		chdir(ft_env_get(env, "HOME"));
 	else if (ft_split_len(arg) == 2)
 	{
-		if (arg[1][0] == '-' && ft_strlen(arg[1]) == 1)
+		if (arg[1][0] == '-' && arg[1][1] == 0)
 		{
 			if (!ft_strlen(ft_env_get(env, "OLDPWD")))
 				return (1 + 0 * ft_printf("minishell: cd: OLDPWD not set\n"));
