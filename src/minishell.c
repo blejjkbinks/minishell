@@ -52,8 +52,9 @@ void	letsgo(char *input, char ***env, char **cash_question, char **last_command)
 	check_closed = ft_strdup(input);
 	if (ft_strtrim_quotes(check_closed))
 	{
+		//need to free check_closed
 		if (MS_CUTE)
-			ft_printf("minishell: unclosed quote >:(\n");
+			ft_printf("minishell: unclosed quote (┛ಠ益ಠ)┛彡┻━┻\n");
 		*cash_question = ft_itoa(1 + (long)ft_free(*cash_question));
 		return ;
 	}
