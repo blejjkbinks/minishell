@@ -35,7 +35,7 @@ int	main(int argc, char **argv, char **envp)
 		else
 			cash_question = ft_itoa(0 + (long)ft_free(cash_question));
 		if (!input && MS_CUTE)
-			exit(0 + (0 * ft_printf("ctrl+d message\n")));
+			exit(0 + (0 * ft_printf("( •_•) minishell ctrl+d'ed (´･_･`)\n")));
 		free(input);
 	}
 	if (argc == 2)
