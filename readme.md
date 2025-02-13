@@ -187,7 +187,28 @@ handle and show errors:( for too many arguments, like pwd and var=val and env
 - backtrack input line with only whitespaces
 - ALIAS MAGIC NEEDS WORK
 - also add recursion
+```
+bash-3.2$ asd=qwe zxc=ggg
+bash-3.2$ echo $asd $zxc
+qwe ggg
+```
 - random position in export, with a hash??
 - ~~HEAP CORRUPTION LMAO~~ godbless
 
 # priority-> whitespace, split_quotes, alias_magic
+## redir
+go through
+
+if not quoted and '>' or '<'
+
+if next is '>' or '<' change mode, if next is opposite '<' '>' invalid
+
+if next next is also "><" invalid
+
+if valid find next word, ended by unquoted space or next "><"
+
+strdup it, open with mode, memmove (strlen(arg) + skipped + 1(null terminator of string))
+
+## cash_money
+already done, just need to add alias
+
