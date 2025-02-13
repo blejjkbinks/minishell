@@ -12,6 +12,24 @@
 
 #include "libft.h"
 
+static long	ft_atoi_dec(const char *str);
+static long	ft_atoi_hex(const char *s);
+
+long	ft_atoi(const char *str)
+{
+	int	i;
+
+	if (!str)
+		return (0);
+	i = 0;
+	while (ft_isspace(str[i]))
+		i++;
+	if (!ft_strncmp("0x", &str[i], 2) || !ft_strncmp("0X", &str[i], 2))
+		return (ft_atoi_hex(&str[i + 2]));
+	else
+		return (ft_atoi_dec(str));
+}
+
 static long	ft_atoi_dec(const char *str)
 {
 	long	ret;
@@ -60,19 +78,4 @@ static long	ft_atoi_hex(const char *s)
 	}
 	ft_free (str);
 	return (ret);
-}
-
-long	ft_atoi(const char *str)
-{
-	int	i;
-
-	if (!str)
-		return (0);
-	i = 0;
-	while (ft_isspace(str[i]))
-		i++;
-	if (ft_strncmp("0x", &str[i], 2) * ft_strncmp("0X", &str[i], 2) == 0)
-		return (ft_atoi_hex(&str[i + 2]));
-	else
-		return (ft_atoi_dec(str));
 }

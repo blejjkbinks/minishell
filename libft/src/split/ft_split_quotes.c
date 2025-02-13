@@ -12,6 +12,27 @@
 
 #include "libft.h"
 
+static char	**ft_split_realloc(char **split, size_t new_cap, size_t *cap_ptr)
+{
+	char	**ret;
+	int		i;
+
+	if (!split)
+		return (NULL);
+	ret = (char **)ft_malloc(new_cap * sizeof(char *));
+	i = 0;
+	while (split[i])
+	{
+		ret[i] = split[i];
+		i++;
+	}
+	ret[i] = NULL;
+	ft_free(split);
+	if (cap_ptr)
+		*cap_ptr = new_cap;
+	return (ret);
+}
+
 static char	**ft_splqt_word(const char *str, char **ret, char d, int i[6])
 {
 	i[1] = 0;

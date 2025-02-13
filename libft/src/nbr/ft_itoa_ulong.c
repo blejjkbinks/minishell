@@ -12,18 +12,7 @@
 
 #include "libft.h"
 
-static size_t	ft_ulong_length(unsigned long n)
-{
-	size_t	l;
-
-	l = 0;
-	while (n)
-	{
-		l++;
-		n /= 10;
-	}
-	return (l);
-}
+static size_t	ft_ulong_length(unsigned long n);
 
 char	*ft_itoa_ulong(unsigned long nbr)
 {
@@ -42,4 +31,17 @@ char	*ft_itoa_ulong(unsigned long nbr)
 		nbr /= 10;
 	}
 	return (ret);
+}
+
+static size_t	ft_ulong_length(unsigned long n)
+{
+	size_t	l;
+
+	l = 0;
+	while (n)
+	{
+		l++;
+		n /= 10;
+	}
+	return (l);
 }

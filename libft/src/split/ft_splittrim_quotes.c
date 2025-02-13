@@ -1,31 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strisdigit.c                                    :+:      :+:    :+:   */
+/*   ft_splittrim_quotes.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rdomange <romitdomange@gmail.com>          +#+  +:+       +#+        */
+/*   By: rdomange <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/05 16:51:31 by rdomange          #+#    #+#             */
-/*   Updated: 2025/02/05 16:53:00 by rdomange         ###   ########.fr       */
+/*   Created: 2025/02/07 15:09:14 by rdomange          #+#    #+#             */
+/*   Updated: 2025/02/13 13:20:42 by rdomange         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	ft_strisdigit(char *str)
+void	ft_splittrim_quotes(char **split)
 {
 	int	i;
 
-	if (!str || !str[0])
-		return (0);
 	i = 0;
-	if (str[0] == '-')
-		i++;
-	while (str[i])
+	while (split && split[i])
 	{
-		if (!ft_isdigit(str[i]))
-			return (0);
+		ft_strtrim_quotes(split[i]);
 		i++;
 	}
-	return (1);
 }

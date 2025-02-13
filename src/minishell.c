@@ -32,8 +32,8 @@ int	main(int argc, char **argv, char **envp)
 		input = readline(prompt);
 		if (ft_strlen(input))
 			letsgo(input, env, &cash_question, &last_command);
-		else
-			cash_question = ft_itoa(0 + (long)ft_free(cash_question));
+	//	else
+	//		cash_question = ft_itoa(0 + (long)ft_free(cash_question));
 		if (!input && MS_CUTE)
 			exit(0 + (0 * ft_printf("( •_•) minishell ctrl+d'ed (´･_･`)\n")));
 		free(input);
@@ -46,13 +46,10 @@ int	main(int argc, char **argv, char **envp)
 void	letsgo(char *input, char ***env, char **cash_question, char **last_command)
 {
 	char	**pipe;
-	char	*check_closed;
 
 	add_history(input);
-	check_closed = ft_strdup(input);
-	if (ft_strtrim_quotes(check_closed))
+	if (ft_isquoted_closed(input))
 	{
-		//need to free check_closed
 		if (MS_CUTE)
 			ft_printf("minishell: unclosed quote (┛ಠ益ಠ)┛彡┻━┻\n");
 		*cash_question = ft_itoa(1 + (long)ft_free(*cash_question));
@@ -83,7 +80,7 @@ void	letsgo_pipe(char **pipe, char ***env, char **cash_question, char **last_com
 		if (!ft_strcmp(*last_command, "just to compile")) return ;
 		//comm = ft_split_quotes(pipe[i], ' ');
 		comm = ft_split(pipe[i], ' ');
-		ft_split_trim_quotes(comm);
+		ft_splittrim_quotes(comm);
 		if (comm && !pipe[1] && ft_isbuiltin(comm[0]) > 1)
 			status = ft_exec_builtin(comm, env);
 		else if (comm)

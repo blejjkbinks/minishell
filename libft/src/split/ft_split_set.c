@@ -12,6 +12,36 @@
 
 #include "libft.h"
 
+static char		**ft_split_alloc(const char *str, const char *d);
+static	size_t	ft_split_wordlen(const char *str, const char *d);
+
+char	**ft_split_set(const char *str, const char *d)
+{
+	char	**ret;
+	size_t	i;
+	size_t	len;
+
+	ret = ft_split_alloc(str, d);
+	if (!ret)
+		return (NULL);
+	i = 0;
+	while (*str)
+	{
+		while (*str && ft_strchr(d, *str))
+			str++;
+		if (!*str)
+			break ;
+		len = ft_split_wordlen(str, d);
+		ret[i] = ft_substr(str, 0, len);
+		ret[i + 1] = NULL;
+		if (!ret[i])
+			return (ft_split_free(ret));
+		str += len;
+		i++;
+	}
+	return (ret);
+}
+
 static char	**ft_split_alloc(const char *str, const char *d)
 {
 	size_t	i;
@@ -45,31 +75,4 @@ static	size_t	ft_split_wordlen(const char *str, const char *d)
 	while (str[i] && !ft_strchr(d, str[i]))
 		i++;
 	return (i);
-}
-
-char	**ft_split_set(const char *str, const char *d)
-{
-	char	**ret;
-	size_t	i;
-	size_t	len;
-
-	ret = ft_split_alloc(str, d);
-	if (!ret)
-		return (NULL);
-	i = 0;
-	while (*str)
-	{
-		while (*str && ft_strchr(d, *str))
-			str++;
-		if (!*str)
-			break ;
-		len = ft_split_wordlen(str, d);
-		ret[i] = ft_substr(str, 0, len);
-		ret[i + 1] = NULL;
-		if (!ret[i])
-			return (ft_split_free(ret));
-		str += len;
-		i++;
-	}
-	return (ret);
 }

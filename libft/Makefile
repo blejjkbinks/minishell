@@ -1,12 +1,12 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
+#    makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
 #    By: rdomange <romitdomange@gmail.com>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/24 14:35:21 by rdomange          #+#    #+#              #
-#    Updated: 2025/02/07 15:19:34 by rdomange         ###   ########.fr        #
+#    Updated: 2025/02/13 20:50:54 by rdomange         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,6 +27,8 @@ RM := rm -rf
 MKD := mkdir -p
 CATS := CHR FUN LIST MEM NBR SPLIT STR WRT
 
+#when changing: CATS, SRC_CATS, libft.h, filename, stdheader
+
 MAKEFLAGS += --no-print-directory
 
 SRC_CHR := \
@@ -37,7 +39,7 @@ SRC_CHR := \
 
 SRC_FUN := \
 	printmemory		bit		free	malloc	sort \
-	test_libft \
+	random		test_libft \
 
 SRC_LIST := \
 	lstadd_back		lstadd_front	lstclear	lstdelone \
@@ -52,17 +54,17 @@ SRC_MEM := \
 
 SRC_NBR := \
 	atoabase	atoi	itoa	itoa_ulong	nbrlen \
-	min		max		abs		numcmp \
+	min		max		abs		mod_range	numcmp \
 
 SRC_SPLIT := \
-	split	split_set	split_free	split_len	split_realloc	split_remove \
-	split_quotes	isquoted	split_trim_quotes \
+	split	split_set	split_free	split_len \
+	isquoted	split_quotes	splittrim_quotes	strtrim_quotes \
+	isquoted_closed \
 
 SRC_STR := \
 	strchr	strrchr	strjoin	strjoin_free	strnjoin \
 	strlcat	strlcpy	strlen strnlen \
 	strncmp	strcmp	strnstr	strtrim	substr \
-	strtrim_quotes \
 
 SRC_WRT := \
 	putchar_fd	putendl_fd \
@@ -121,28 +123,29 @@ gitpush: gitstat
 	git commit -m "$(GIT_PUSH_MESSAGE)"
 	git push
 
-TEST := test.c
+TEST_A := test
+TEST_C := test.c
 
 testclean:
-	@$(RM) $(TEST)
-	@$(RM) a.out
-	@$(RM) a.out.dSYM
+	@$(RM) $(TEST_C)
+	@$(RM) $(TEST_A)
+	@$(RM) $(TEST_A).dSYM
 
-$(TEST):
+$(TEST_C):
 	@touch $@
 	@echo '#include "libft.h"' > $@
 	@echo '#include <stdio.h>' >> $@
 	@echo '' >> $@
 	@echo 'int	main(void)' >> $@
 	@echo '{' >> $@
-	@echo '	ft_printf(".  %-15.13s.\\n", "new test file");' >> $@
-	@echo '	ft_test_libft();' >> $@
+	@echo '	ft_printf(".%-15.13s.\\n", "new test file");' >> $@
+	@echo '	//ft_test_libft();' >> $@
 	@echo '}' >> $@
 
-test: all $(TEST)
-	$(CC) $(TEST) $(NAME)
+test: all $(TEST_C)
+	$(CC) $(TEST_C) $(NAME) -o $(TEST_A)
 	@echo "letsgo :)\nvvvvv"
-	@./a.out
-	@printf "\n^^^^^\n done :)\n"
+	@./$(TEST_A)
+	@printf "###\n^^^^^\ndone :)\n"
 
 .PHONY: all clean fclean bonus test testclean countfiles gitstat gitpush

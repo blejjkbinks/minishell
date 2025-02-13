@@ -1,34 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_split_realloc.c                                 :+:      :+:    :+:   */
+/*   ft_strtrim_quotes.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rdomange <romitdomange@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/30 15:55:48 by rdomange          #+#    #+#             */
-/*   Updated: 2024/09/30 15:55:50 by rdomange         ###   ########.fr       */
+/*   Created: 2025/02/05 23:09:33 by rdomange          #+#    #+#             */
+/*   Updated: 2025/02/05 23:09:44 by rdomange         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	**ft_split_realloc(char **split, size_t new_cap, size_t *cap_ptr)
+void	ft_strtrim_quotes(char *str)
 {
-	char	**ret;
-	int		i;
+	int	i;
+	int	j;
+	int	q;
 
-	if (!split)
-		return (NULL);
-	ret = (char **)ft_malloc(new_cap * sizeof(char *));
+	if (!str)
+		return ;
 	i = 0;
-	while (split[i])
+	j = 0;
+	q = 0;
+	while (str && str[i])
 	{
-		ret[i] = split[i];
+		if (!ft_isquoted(str[i], &q))
+		{
+			str[j] = str[i];
+			j++;
+		}
 		i++;
 	}
-	ret[i] = NULL;
-	ft_free(split);
-	if (cap_ptr)
-		*cap_ptr = new_cap;
-	return (ret);
+	str[j] = 0;
 }

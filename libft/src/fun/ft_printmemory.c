@@ -12,6 +12,29 @@
 
 #include "libft.h"
 
+static void	ft_printmemory_topaddress(void *p);
+static void	ft_printmemory_putptr(void *p);
+static void	ft_printmemory_hexcontent(void *p, size_t len, size_t start);
+static void	ft_printmemory_chrcontent(void *p, size_t len, size_t start);
+
+void	*ft_printmemory(void *ptr, size_t len)
+{
+	size_t	i;
+
+	ft_printmemory_topaddress(ptr);
+	i = 0;
+	while (i < len)
+	{
+		ft_printmemory_putptr(ptr + i);
+		ft_putstr_fd(": ", 1);
+		ft_printmemory_hexcontent(ptr, len, i);
+		ft_printmemory_chrcontent(ptr, len, i);
+		ft_putstr_fd("\n", 1);
+		i += 16;
+	}
+	return (ptr);
+}
+
 static void	ft_printmemory_topaddress(void *p)
 {
 	unsigned long	ptr;
@@ -35,7 +58,7 @@ static void	ft_printmemory_topaddress(void *p)
 	ft_putstr_fd("                \n", 1);
 }
 
-static void	ft_putptr(void *p)
+static void	ft_printmemory_putptr(void *p)
 {
 	unsigned long	ptr;
 	char			*dict;
@@ -103,22 +126,4 @@ static void	ft_printmemory_chrcontent(void *p, size_t len, size_t start)
 		}
 		i++;
 	}
-}
-
-void	*ft_printmemory(void *ptr, size_t len)
-{
-	size_t	i;
-
-	ft_printmemory_topaddress(ptr);
-	i = 0;
-	while (i < len)
-	{
-		ft_putptr(ptr + i);
-		ft_putstr_fd(": ", 1);
-		ft_printmemory_hexcontent(ptr, len, i);
-		ft_printmemory_chrcontent(ptr, len, i);
-		ft_putstr_fd("\n", 1);
-		i += 16;
-	}
-	return (ptr);
 }

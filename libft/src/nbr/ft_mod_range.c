@@ -1,25 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_split_trim_quotes.c                             :+:      :+:    :+:   */
+/*   ft_mod_range.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rdomange <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: rdomange <romitdomange@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/07 15:09:14 by rdomange          #+#    #+#             */
-/*   Updated: 2025/02/07 15:13:21 by rdomange         ###   ########.fr       */
+/*   Created: 2025/02/13 15:20:21 by rdomange          #+#    #+#             */
+/*   Updated: 2025/02/13 15:21:16 by rdomange         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_split_trim_quotes(char **split)
+int	ft_mod_range(int val, int range)
 {
-	int	i;
-
-	i = 0;
-	while (split && split[i])
-	{
-		ft_strtrim_quotes(split[i]);
-		i++;
-	}
+	if (range < 0)
+		return (0);
+	range++;
+	return (((val % range) + range) % range);
 }

@@ -1,36 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_split_remove.c                                  :+:      :+:    :+:   */
+/*   ft_isquoted_closed.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rdomange <romitdomange@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/02 16:58:37 by rdomange          #+#    #+#             */
-/*   Updated: 2024/10/02 16:59:04 by rdomange         ###   ########.fr       */
+/*   Created: 2025/02/13 14:47:59 by rdomange          #+#    #+#             */
+/*   Updated: 2025/02/13 14:49:32 by rdomange         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	**ft_split_remove(char **split, int r)
+int	ft_isquoted_closed(const char *str)
 {
 	int	i;
+	int	q;
 
 	i = 0;
-	while (split[i])
+	q = 0;
+	while (str && str[i])
 	{
-		if (i == r)
-		{
-			ft_free(split[r]);
-			while (split[i + 1])
-			{
-				split[i] = split[i + 1];
-				i++;
-			}
-			split[i] = NULL;
-			return (split);
-		}
+		ft_isquoted(str[i], &q);
 		i++;
 	}
-	return (split);
+	return (q);
 }

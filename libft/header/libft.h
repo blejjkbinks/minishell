@@ -15,7 +15,6 @@
 
 # include <stdlib.h>		//malloc and free
 # include <unistd.h>		//write and read
-# include <fcntl.h>			//open and close
 # include <stddef.h>		//size_t
 # include <limits.h>		//INT_MAX
 # include <stdarg.h>		//va_arg
@@ -56,18 +55,17 @@ char	*ft_strjoin(const char *s1, const char *s2);
 char	*ft_strjoin_free(char *s1, char *s2, int fr);
 char	*ft_strnjoin(int count, ...);
 char	*ft_strtrim(const char *str, const char *set);
-int		ft_strtrim_quotes(char *str);
 
 //split
 char	**ft_split(const char *str, char d);
 char	**ft_split_set(const char *str, const char *d);
 char	**ft_split_free(char **split);
-char	**ft_split_realloc(char **split, size_t new_cap, size_t *cap_ptr);
 int		ft_split_len(char **split);
-char	**ft_split_remove(char **split, int r);
 int		ft_isquoted(char c, int *q);
 char	**ft_split_quotes(const char *str, char d);
-void	ft_split_trim_quotes(char **split);
+void	ft_splittrim_quotes(char **split);
+void	ft_strtrim_quotes(char *str);
+int		ft_isquoted_closed(const char *str);
 
 //chr
 int		ft_isspace(int c);
@@ -94,6 +92,7 @@ int		ft_nbrlen(long nbr);
 int		ft_min(int a, int b);
 int		ft_max(int a, int b);
 int		ft_abs(int x);
+int		ft_mod_range(int val, int range);
 int		ft_numcmp(int a, int b);
 
 //wrt
@@ -114,5 +113,6 @@ void	*ft_malloc(size_t size);
 void	*ft_printmemory(void *ptr, size_t len);
 int		ft_bit(void *ptr, int i, int val);
 void	ft_sort(int *arr, int n);
+int		ft_random(void);
 
 #endif	//libft.h
