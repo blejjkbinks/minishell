@@ -191,6 +191,8 @@ handle and show errors:( for too many arguments, like pwd and var=val and env
 bash-3.2$ asd=qwe zxc=ggg
 bash-3.2$ echo $asd $zxc
 qwe ggg
+bash-3.2$ asd=qwe qwe#=ggg
+bash: qwe#=ggg: command not found
 ```
 - random position in export, with a hash?? (maybe combine env_name and env_namelen, need room for 1 function to do this)
   not as simple as swap(last, random), need to move+1 all starting from rand
