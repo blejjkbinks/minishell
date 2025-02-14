@@ -13,7 +13,7 @@
 #include "libft.h"
 
 static void	ft_test_split(char *line, char **pipe, char **comm, char *s);
-static void	ft_test_showsplit(char **split, char *d, char n, int i);
+static void	ft_test_showsplit(char **split, char *d, int n, int i);
 
 void	ft_test_libft(void)
 {
@@ -59,23 +59,24 @@ static void	ft_test_split(char *line, char **pipe, char **comm, char *s)
 	ft_printf("done testing %s", s, ft_free(line));
 }
 
-static void	ft_test_showsplit(char **split, char *d, char n, int i)
+static void	ft_test_showsplit(char **split, char *d, int n, int i)
 {
-	if (!split && n >= 0)
+	if (!split && n == -1)
+		ft_printf("null straight up");
+	if (!split && n != -1)
 		ft_printf("null from %c", n + 'a');
-	if (split && n >= 0)
+	if (split && n != -1)
 		ft_printf("%c", n + 'a');
+	if (n == -1)
+		n = 'a';
+	else
+		n = '0';
 	while (split && split[i])
 	{
-		if (!ft_strcmp(d, "[]"))
-			n = i + 'a';
-		else
-			n = i + '0';
-		ft_printf("%c%c%s%c", n, d[0], split[i], d[1]);
+		ft_printf("%c%c%s%c", i + n, d[0], split[i], d[1]);
 		i++;
 	}
-	if (split)
-		ft_printf("\n");
+	ft_printf("\n");
 }
 
 /*

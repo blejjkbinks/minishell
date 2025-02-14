@@ -27,7 +27,7 @@ int	ft_exec_builtin(char **comm, char ***env)
 		return (ft_pwd());
 	if (!ft_strcmp(comm[0], "export"))
 		return (ft_export_magic(comm[1], env, 0));
-	if (ft_strchr(comm[0], '='))
+	if (ft_isbuiltin(comm[0]) == 3)
 		return (ft_export_magic(comm[0], env, 1));
 	if (!ft_strcmp(comm[0], "unset"))
 		return (ft_export_magic(comm[1], env, 2));

@@ -29,6 +29,7 @@ char	**ft_env_dup(char **env)
 	return (ret);
 }
 
+/*
 char	*ft_env_name(char *name)
 {
 	char	*ret;
@@ -54,16 +55,38 @@ int	ft_env_namelen(char *name)
 		free(name);
 	return (len);
 }
+*/
 
-char	*ft_env_get(char **env, char *name)
+int	ft_env_name(char *name, char **ret)
 {
-	int	i;
-	int	len;
+	char	*str;
+	int		len;
+	int		i;
 
-	name = ft_env_name(name);
+	if (!name || (!ft_isalpha(name[0]) && name[0] != '_'))
+		return (0);
+	i = 0;
+	str = ft_strdup(name);
+	while (ft_isalnum(name[i]) || name[i] == '_')
+		i++;
+	str[i] = 0;
+	len = ft_strlen(str);
+	if (ret)
+		*ret = str;
+	else
+		free(str);
+	return (len);
+}
+
+char	*ft_env_get(char **env, char *name_src)
+{
+	char	*name;
+	int		i;
+	int		len;
+
+	len = ft_env_name(name_src, &name);
 	if (!name)
 		return (NULL);
-	len = ft_strlen(name);
 	i = 0;
 	while (env && env[i])
 	{
@@ -78,16 +101,16 @@ char	*ft_env_get(char **env, char *name)
 	return (NULL);
 }
 
-int	ft_env_set(char **env, char *name, char *val)
+int	ft_env_set(char **env, char *name_src, char *val)
 {
+	char	*name;
+	char	*str;
 	int		i;
 	int		len;
-	char	*str;
 
-	name = ft_env_name(name);
+	len = ft_env_name(name_src, &name);
 	if (!name)
 		return (-1);
-	len = ft_strlen(name);
 	i = 0;
 	while (env && env[i])
 	{

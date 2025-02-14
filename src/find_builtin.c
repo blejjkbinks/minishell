@@ -23,7 +23,7 @@ int	ft_isbuiltin(char *str)
 	char	*s;
 	int		i;
 
-	if (ft_strchr(str, '=') && ft_env_namelen(str))
+	if (ft_env_name(str, NULL) && str[ft_env_name(str, NULL)] == '=')
 		return (3);
 	if (!ft_strcmp(str, "env_extra"))
 		return (2);

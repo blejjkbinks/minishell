@@ -56,8 +56,9 @@ void	ft_exec_pipe(char **comm, char ***env, pid_t *pid);
 
 //env_help.c
 char	**ft_env_dup(char **env);
-char	*ft_env_name(char *name);
-int		ft_env_namelen(char *name);
+//char	*ft_env_name(char *name);
+//int		ft_env_namelen(char *name);
+int		ft_env_name(char *name, char **ret);
 char	*ft_env_get(char **env, char *name);
 int		ft_env_set(char **env, char *name, char *val);
 
