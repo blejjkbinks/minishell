@@ -41,7 +41,7 @@ int		ft_isbuiltin(char *str);
 char	*ft_which(char *arg, char **env);
 
 //exec_builtin.c
-int	ft_exec_builtin(char **comm, char ***env);
+int		ft_exec_builtin(char **comm, char ***env);
 //echo, exit, which_print
 
 //probably source

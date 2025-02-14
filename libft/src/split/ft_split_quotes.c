@@ -12,66 +12,100 @@
 
 #include "libft.h"
 
-static char	**ft_split_realloc(char **split, size_t new_cap, size_t *cap_ptr)
-{
-	char	**ret;
-	int		i;
-
-	if (!split)
-		return (NULL);
-	ret = (char **)ft_malloc(new_cap * sizeof(char *));
-	i = 0;
-	while (split[i])
-	{
-		ret[i] = split[i];
-		i++;
-	}
-	ret[i] = NULL;
-	ft_free(split);
-	if (cap_ptr)
-		*cap_ptr = new_cap;
-	return (ret);
-}
-
-static char	**ft_splqt_word(const char *str, char **ret, char d, int i[6])
-{
-	i[1] = 0;
-	while (str[i[0]] && (str[i[0]] != d || i[3]))
-	{
-		ft_isquoted(str[i[0]], &i[3]);
-		ret[i[2]][i[1]++] = str[i[0]++];
-		ret[i[2]][i[1]] = 0;
-		if (i[1] + 1 == i[4])
-			ret[i[2]] = ft_realloc(ret[i[2]], i[1], i[4] * 2, (size_t *)&i[4]);
-	}
-	ret[++i[2]] = NULL;
-	if (i[2] + 1 == i[5])
-		ret = ft_split_realloc(ret, i[5] * 2, (size_t *)&i[5]);
-	return (ret);
-}
+static int	ft_split_quotes_count(const char *str, char d);
+static char	*ft_split_quotes_word(const char *str, int *i, char d);
+static int	ft_split_quotes_wordlen(const char *str, int start, char d);
 
 char	**ft_split_quotes(const char *str, char d)
 {
 	char	**ret;
-	int		i[6];
+	int		count;
+	int		i;
+	int		k;
 
-	ft_bzero(i, sizeof(i));
-	i[5] = DEFAULT_CAP;
-	ret = (char **)ft_malloc(i[5] * sizeof(char *));
-	if (!ret)
+	count = ft_split_quotes_count(str, d);
+	if (!count)
 		return (NULL);
-	while (str && str[i[0]])
+	ret = (char **)ft_calloc(count + 1, sizeof(char *));
+	i = 0;
+	k = 0;
+	while (k < count)
 	{
-		while (str[i[0]] == ' ' || str[i[0]] == d)
-			i[0]++;
-		i[4] = DEFAULT_CAP;
-		if (str[i[0]])
-			ret[i[2]] = (char *)ft_malloc(i[4] * sizeof(char));
-		if (!ret[i[2]])
+		while (str[i] == d)
+			i++;
+		ret[k] = ft_split_quotes_word(str, &i, d);
+		if (!ret[k])
 			return (ft_split_free(ret));
-		ret = ft_splqt_word(str, ret, d, i);
-		if (!ret)
-			return (NULL);
+		k++;
 	}
+	ret[k] = NULL;
 	return (ret);
+}
+
+static int	ft_split_quotes_count(const char *str, char d)
+{
+	int	i;
+	int	count;
+	int	in;
+	int	q;
+
+	if (!str)
+		return (0);
+	i = 0;
+	count = 0;
+	in = 0;
+	q = 0;
+	while (str[i])
+	{
+		ft_isquoted(str[i], &q);
+		if ((str[i] != d || q) && !in)
+		{
+			count++;
+			in = 1;
+		}
+		else if (str[i] == d && !q)
+			in = 0;
+		i++;
+	}
+	return (count);
+}
+
+static char	*ft_split_quotes_word(const char *str, int *i, char d)
+{
+	char	*word;
+	int		len;
+	int		j;
+	int		q;
+
+	len = ft_split_quotes_wordlen(str, *i, d);
+	if (!len)
+		return (NULL);
+	q = 0;
+	j = 0;
+	word = (char *)ft_malloc((len + 1) * sizeof(char));
+	if (!word)
+		return (NULL);
+	while (str[*i] && (str[*i] != d || q))
+	{
+		ft_isquoted(str[*i], &q);
+		word[j++] = str[(*i)++];
+	}
+	word[j] = 0;
+	return (word);
+}
+
+static int	ft_split_quotes_wordlen(const char *str, int start, char d)
+{
+	int	len;
+	int	q;
+
+	len = 0;
+	q = 0;
+	while (str[start] && (str[start] != d || q))
+	{
+		ft_isquoted(str[start], &q);
+		len++;
+		start++;
+	}
+	return (len);
 }
