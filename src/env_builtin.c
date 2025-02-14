@@ -31,7 +31,6 @@ char	**ft_export(char **env, char *arg)
 	int		len;
 
 	len = ft_env_name(arg, NULL);
-	//ft_printf("in ft_export, len=%d.\n", len);
 	if (!len || (arg[len] != 0 && arg[len] != '='))
 	{
 		ft_printf("minishell: export: \'%s\': not a valid identifier\n", arg);
@@ -47,7 +46,7 @@ char	**ft_export(char **env, char *arg)
 	ft_split_free(env);
 	if (arg[len] == '=')
 		ret[ft_split_len(ret)] = ft_strdup(arg);
-	else 
+	else
 		ret[ft_split_len(ret)] = ft_strjoin(arg, "=");
 	return (ret);
 }
@@ -60,10 +59,8 @@ char	**ft_unset(char **env, char *name_src)
 	int		len;
 
 	len = ft_env_name(name_src, &name);
-	//name = ft_env_name(name);
 	if (!name)
 		return (NULL);
-	//len = ft_strlen(name);
 	i = 0;
 	while (env && env[i])
 	{
@@ -87,15 +84,13 @@ int	ft_export_magic(char *arg, char ***env, int x)
 		env[0] = ft_export(env[0], arg);
 	if (x == 0 && (ft_env_get(env[1], arg) && !ft_strchr(arg, '=')))
 		ft_env_set(env[0], arg, ft_env_get(env[1], arg));
-	if (x == 0)
-		ft_unset(env[1], arg);
 	if (x == 1 && ft_env_get(env[0], arg))
 		env[0] = ft_export(env[0], arg);
 	else if (x == 1)
 		env[1] = ft_export(env[1], arg);
-	if (x == 2)
-		ft_unset(env[0], arg);
-	if (x == 2)
+	if (x == 2 || x == 4)
+		ft_unset(env[(2 * (x == 4))], arg);
+	if (x == 2 || x == 0)
 		ft_unset(env[1], arg);
 	if (x == 3 && !ft_strchr(arg, '=') && ft_env_get(env[2], arg))
 		ft_printf("alias: %s=%s\n", arg, ft_env_get(env[2], arg));
@@ -105,9 +100,7 @@ int	ft_export_magic(char *arg, char ***env, int x)
 		env[2] = ft_export(env[2], arg);
 	if (x == 3 && !arg)
 		ft_env(env[2]);
-	if (x == 4)
-		ft_unset(env[2], arg);
-	if (!ft_env_name(arg, NULL) || (arg[ft_env_name(arg, NULL)] != '=' && arg[ft_env_name(arg, NULL)] != 0))
+	if (arg[ft_env_name(arg, NULL)] != '=' && arg[ft_env_name(arg, NULL)] != 0)
 		return (1);
-	return (0);
+	return (!ft_env_name(arg, NULL));
 }
