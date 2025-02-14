@@ -32,8 +32,6 @@ int	main(int argc, char **argv, char **envp)
 		input = readline(prompt);
 		if (ft_strlen(input))
 			letsgo(input, env, &cash_question, &last_command);
-	//	else
-	//		cash_question = ft_itoa(0 + (long)ft_free(cash_question));
 		if (!input && MS_CUTE)
 			exit(0 + (0 * ft_printf("( •_•) minishell ctrl+d'ed (´･_･`)\n")));
 		free(input);
