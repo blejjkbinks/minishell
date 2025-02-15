@@ -78,10 +78,8 @@ char	**ft_unset(char **env, char *name_src)
 	return (env);
 }
 
-int	ft_export_magic(char *arg, char ***env, int x)
+int	ft_export_magic(char *arg, char ***env, int x, int len)
 {
-	int	len = ft_env_name(arg, NULL);
-
 	if (x == 0)
 		env[0] = ft_export(env[0], arg);
 	if (x == 0 && !ft_env_get(env[1], arg) && arg && arg[len] != '=')
@@ -106,8 +104,5 @@ int	ft_export_magic(char *arg, char ***env, int x)
 		ft_env(env[2]);
 	if (arg && arg[len] != '=' && arg[len] != 0)
 		return (1);
-	//return (arg == NULL || !ft_env_name(arg, NULL));	//this is wrong
-	//1 if wrong arg
-	//0 if no arg or valid arg
 	return (!(!arg || len));
 }

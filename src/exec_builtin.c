@@ -26,17 +26,17 @@ int	ft_exec_builtin(char **comm, char ***env)
 	if (!ft_strcmp(comm[0], "pwd"))
 		return (ft_pwd());
 	if (!ft_strcmp(comm[0], "export") && comm[1])
-		return (ft_export_magic(comm[1], env, 0));
+		return (ft_export_magic(comm[1], env, 0, ft_env_name(comm[1], NULL)));
 	if (ft_isbuiltin(comm[0]) == 3)
-		return (ft_export_magic(comm[0], env, 1));
+		return (ft_export_magic(comm[0], env, 1, ft_env_name(comm[0], NULL)));
 	if (!ft_strcmp(comm[0], "unset") && comm[1])
-		return (ft_export_magic(comm[1], env, 2));
+		return (ft_export_magic(comm[1], env, 2, ft_env_name(comm[1], NULL)));
 	if (!ft_strcmp(comm[0], "env") || !ft_strcmp(comm[0], "env_extra"))
 		return (ft_env(env[(!ft_strcmp(comm[0], "env_extra"))]));
 	if (!ft_strcmp(comm[0], "alias"))
-		return (ft_export_magic(comm[1], env, 3));
+		return (ft_export_magic(comm[1], env, 3, ft_env_name(comm[1], NULL)));
 	if (!ft_strcmp(comm[0], "unalias"))
-		return (ft_export_magic(comm[1], env, 4));
+		return (ft_export_magic(comm[1], env, 4, ft_env_name(comm[1], NULL)));
 	if (!ft_strcmp(comm[0], "which"))
 		return (ft_which_print(comm, env[0]));
 	if (!ft_strcmp(comm[0], "source"))	//TODO
