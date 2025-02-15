@@ -12,8 +12,14 @@
 
 #include "minishell.h"
 
-char	*cash_money(char *comm, char ***env)
+char	*cash_money(char *comm, char ***env, char *cash_q, char *last_c)
 {
+	char	*ret;
+	int		i;
+
+}
+//split and trim quotes here? and then return "char **comm"
+/*{
 	char	**ret;
 	char	**alias;
 	char	*str;
@@ -39,4 +45,4 @@ char	*cash_money(char *comm, char ***env)
 	ret[i] = NULL;
 	ft_split_free(comm);
 	return (ret);
-}
+}*/

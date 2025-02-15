@@ -80,7 +80,7 @@ char	**ft_unset(char **env, char *name_src)
 
 int	ft_export_magic(char *arg, char ***env, int x)
 {
-	if (x == 0)
+	if (x == 0 && (ft_env_get(env[1], arg) || ft_strchr(arg, '=')))
 		env[0] = ft_export(env[0], arg);
 	if (x == 0 && (ft_env_get(env[1], arg) && !ft_strchr(arg, '=')))
 		ft_env_set(env[0], arg, ft_env_get(env[1], arg));
@@ -96,11 +96,11 @@ int	ft_export_magic(char *arg, char ***env, int x)
 		ft_printf("alias: %s=%s\n", arg, ft_env_get(env[2], arg));
 	if (x == 3 && !ft_strchr(arg, '=') && !ft_env_get(env[2], arg) && arg)
 		ft_printf("minishell: alias: %s: not found\n", arg);
-	if (x == 3 && arg[ft_env_name(arg, NULL)] == '=')
+	if (x == 3 && arg && arg[ft_env_name(arg, NULL)] == '=')
 		env[2] = ft_export(env[2], arg);
 	if (x == 3 && !arg)
 		ft_env(env[2]);
-	if (arg[ft_env_name(arg, NULL)] != '=' && arg[ft_env_name(arg, NULL)] != 0)
-		return (1);
-	return (!ft_env_name(arg, NULL));
+	if (arg && arg[ft_env_name(arg, NULL)] != '=' && arg[ft_env_name(arg, NULL)] != 0)
+		return (1);		//line too long
+	return (arg == NULL || !ft_env_name(arg, NULL));	//this is wrong
 }

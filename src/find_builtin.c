@@ -20,14 +20,14 @@ int	ft_isbuiltin(char *str)
 	char	*s;
 	int		i;
 
-	if (ft_env_name(str, NULL) && str[ft_env_name(str, NULL)] == '=')
+	if (str && ft_env_name(str, NULL) && str[ft_env_name(str, NULL)] == '=')
 		return (3);
-	if (!ft_strcmp(str, "env_extra"))
+	if (str && !ft_strcmp(str, "env_extra"))
 		return (2);
 	s = "echo,pwd,env,which,cd,export,unset,alias,unalias,source,exit";
 	builtin = ft_split(s, ',');
 	i = 0;
-	while (builtin[i])
+	while (str && builtin && builtin[i])
 	{
 		if (!ft_strcmp(str, builtin[i]))
 		{

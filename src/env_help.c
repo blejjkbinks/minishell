@@ -63,6 +63,8 @@ int	ft_env_name(char *name, char **ret)
 	int		len;
 	int		i;
 
+	if (ret)
+		*ret = NULL;
 	if (!name || (!ft_isalpha(name[0]) && name[0] != '_'))
 		return (0);
 	i = 0;

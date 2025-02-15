@@ -73,7 +73,7 @@ void	letsgo_pipe(char **pipe, char ***env, char **cash_question, char **last_com
 	while (pipe && pipe[i])
 	{
 		//redirection	//fdr[4]
-		//cash_money
+		//char	*extended = cash_money(pipe[i], env, cash_question, last_command)
 		if (!ft_strcmp(*last_command, "just to compile")) return ;
 		comm = ft_split_quotes(pipe[i], ' ');
 		ft_splittrim_quotes(comm);

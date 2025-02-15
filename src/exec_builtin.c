@@ -25,11 +25,11 @@ int	ft_exec_builtin(char **comm, char ***env)
 		return (ft_cd(comm, env[0]));
 	if (!ft_strcmp(comm[0], "pwd"))
 		return (ft_pwd());
-	if (!ft_strcmp(comm[0], "export"))
+	if (!ft_strcmp(comm[0], "export") && comm[1])
 		return (ft_export_magic(comm[1], env, 0));
 	if (ft_isbuiltin(comm[0]) == 3)
 		return (ft_export_magic(comm[0], env, 1));
-	if (!ft_strcmp(comm[0], "unset"))
+	if (!ft_strcmp(comm[0], "unset") && comm[1])
 		return (ft_export_magic(comm[1], env, 2));
 	if (!ft_strcmp(comm[0], "env") || !ft_strcmp(comm[0], "env_extra"))
 		return (ft_env(env[(!ft_strcmp(comm[0], "env_extra"))]));
@@ -43,7 +43,7 @@ int	ft_exec_builtin(char **comm, char ***env)
 		return (ft_printf("ft_source\n"));
 	if (!ft_strcmp(comm[0], "exit"))
 		return (ft_exit_builtin(comm, env));
-	return (-1);
+	return (0);
 }
 
 static int	ft_which_print(char **arg, char **env)
