@@ -100,7 +100,10 @@ int	ft_export_magic(char *arg, char ***env, int x)
 		env[2] = ft_export(env[2], arg);
 	if (x == 3 && !arg)
 		ft_env(env[2]);
-	if (arg && arg[ft_env_name(arg, NULL)] != '=' && arg[ft_env_name(arg, NULL)] != 0)
-		return (1);		//line too long
+	x = ft_env_name(arg, NULL);
+	if (arg && arg[x] != '=' && arg[x] != 0)
+		return (1);
 	return (arg == NULL || !ft_env_name(arg, NULL));	//this is wrong
+	//1 if wrong arg
+	//0 if no arg or valid arg
 }
