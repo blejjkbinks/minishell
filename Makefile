@@ -35,6 +35,7 @@ SRC := \
 	cd_pwd.c	env_builtin.c	env_help.c \
 	exec_pipe.c		find_builtin.c	exec_builtin.c \
 	minishell.c		get_prompt.c \
+	cash_money.c \
 #cash_money.c	redirection.c \
 
 SRC := $(addprefix $(SRC_DIR)/, $(SRC))

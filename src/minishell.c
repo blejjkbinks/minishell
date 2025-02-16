@@ -55,7 +55,6 @@ void	letsgo(char *input, char ***env, char **cash_question, char **last_command)
 	}
 	pipe = ft_split_quotes(input, '|');
 	letsgo_pipe(pipe, env, cash_question, last_command);
-	letsgo_wait(ft_split_len(pipe), pid, status, cash_question);
 	ft_split_free(pipe);
 	//update last_command here i think
 }
@@ -76,10 +75,10 @@ void	letsgo_pipe(char **pipe, char ***env, char **cash_question, char **last_com
 		//redirection	//fdr[4]
 		//char	*extended = cash_money(pipe[i], env, cash_question, last_command)
 		//or
-		//comm = cash_money(pipe[i], env, cash_question, last_command);
+		comm = cash_money(pipe[i], env, *cash_question, *last_command);
 		if (!ft_strcmp(*last_command, "just to compile")) return ;
-		comm = ft_split_quotes(pipe[i], ' ');
-		ft_splittrim_quotes(comm);
+		//comm = ft_split_quotes(pipe[i], ' ');
+		//ft_splittrim_quotes(comm);
 		//
 		if (comm && !pipe[1] && ft_isbuiltin(comm[0]) > 1)
 			status = (ft_exec_builtin(comm, env) << 8);
@@ -88,6 +87,7 @@ void	letsgo_pipe(char **pipe, char ***env, char **cash_question, char **last_com
 		ft_split_free(comm);
 		i++;
 	}
+	letsgo_wait(ft_split_len(pipe), pid, status, cash_question);
 }
 
 void	letsgo_wait(int len, pid_t *pid, int status, char **cash_question)
