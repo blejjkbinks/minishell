@@ -21,6 +21,10 @@
 #  define MS_CUTE 1
 # endif
 
+# ifndef MS_HEREDOC_PATH
+#  define MS_HEREDOC_PATH "/tmp/minishell_heredoc.txt"
+# endif
+
 # include "../libft/header/libft.h"
 # include <fcntl.h>
 # include <stdio.h>
@@ -51,6 +55,7 @@ void	ft_exec_pipe(char **comm, char ***env, pid_t *pid);
 //exec_which
 
 //redirection.c
+void	find_redirection(char *str, int fdr[2]);
 
 //cash_money.c
 char	**cash_money(char *str, char ***env, char *cash_q);

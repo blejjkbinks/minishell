@@ -64,14 +64,14 @@ def main():
 			result = f"Test case {test_case}: FAILED\n"
 			result += "Minishell Output:\n" + minishell_output + "\n"
 			result += "Bash Output:\n" + bash_output + "\n"
-			result += "Diff:\n" + diff + "\n"
+			#result += "Diff:\n" + diff + "\n"
 
 		with open(RESULTS_FILE, "a") as f:
 			f.write(result)
 
 	print(f"\nResults saved to {RESULTS_FILE}")
-	#print(f"{Colors.RED}THINK ABOUT:{Colors.RESET}")
-	#print("-cute exit status+prompt\n-debugging info\n-manually test redirs and cat|cat|ls")
+	print(f"{Colors.RED}THINK ABOUT:{Colors.RESET}")
+	print("-cute exit status+prompt\n-debugging info\n-manually test redirs and cat|cat|ls")
 
 if __name__ == "__main__":
 	main()

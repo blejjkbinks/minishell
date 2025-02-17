@@ -76,6 +76,7 @@ void	letsgo_pipe(char **pipe, char ***env, char **cash_question)
 	pid_t	*pid;
 	int		i;
 	int		status;
+	int		fdr[2];
 //	int		fdr[4];		//maybe shared with pid[], redirections are opened before, cf "cat < file | tr a b >> file"
 
 	pid = (pid_t *)ft_calloc(ft_split_len(pipe), sizeof(pid_t));
@@ -84,6 +85,7 @@ void	letsgo_pipe(char **pipe, char ***env, char **cash_question)
 	while (pipe && pipe[i])
 	{
 		//redirection	//fdr[4]
+		find_redirection(pipe[i], fdr);
 		comm = cash_money(pipe[i], env, *cash_question);
 		if (comm && !pipe[1] && ft_isbuiltin(comm[0]) > 1)
 			status = (ft_exec_builtin(comm, env) << 8);

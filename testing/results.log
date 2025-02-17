@@ -1,0 +1,21 @@
+Test Results - 
+Test case 1: FAILED
+Minishell Output:
+(✿ ◕‿ ◕) hi~~ welcome to minishell (っ＾▿＾)っ
+asd
+pwd
+/Users/blejj/minishell
+byebye minishell (˶ᵔ ᵕ ᵔ˶)ノ
+
+Bash Output:
+asd
+pwd
+/Users/blejj/minishell
+
+Test case 2: FAILED
+Minishell Output:
+(✿ ◕‿ ◕) hi~~ welcome to minishell (っ＾▿＾)っ
+byebye minishell (˶ᵔ ᵕ ᵔ˶)ノ
+
+Bash Output:
+
