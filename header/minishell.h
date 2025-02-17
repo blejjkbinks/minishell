@@ -53,7 +53,10 @@ void	ft_exec_pipe(char **comm, char ***env, pid_t *pid);
 //redirection.c
 
 //cash_money.c
-char	**cash_money(char *str, char ***env, char *cash_q, char *last_c);
+char	**cash_money(char *str, char ***env, char *cash_q);
+
+//double_exclam.c
+char	*double_exclam(char *str, char *last_c);
 
 //env_help.c
 char	**ft_env_dup(char **env);

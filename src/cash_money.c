@@ -12,14 +12,10 @@
 
 #include "minishell.h"
 
-//char **cash_money(pipe[i], env, cash_question, last_command);
-//also does split and trim_quotes at the end
+static char	*cash_get_var(char *str, int *i, char ***env, char *cash_q);
+static char	*cash_malloc(char *str, char ***env, char *cash_q);
 
-char	*cash_get_var(char *str, int *i, char ***env);
-char	*cash_get_other(char *str, int *i, char *cash_q, char *last_c);
-char	*cash_malloc(char *str, char ***env, char *cash_q, char *last_c);
-
-char	**cash_money(char *str, char ***env, char *cash_q, char *last_c)
+char	**cash_money(char *str, char ***env, char *cash_q)
 {
 	char	*ret;
 	char	*var;
@@ -28,6 +24,9 @@ char	**cash_money(char *str, char ***env, char *cash_q, char *last_c)
 	int		q;
 	char	**split;
 
+	//
+	//ft_printf("before cash_money:'%s'\n", str);
+	//
 	var = NULL;
 	i = 0;
 	j = 0;
@@ -35,30 +34,31 @@ char	**cash_money(char *str, char ***env, char *cash_q, char *last_c)
 	while (str[i] == ' ')
 		i++;
 	if (str[i] == '#')
-		return (ft_free(str));
-	ret = cash_malloc(str, env, cash_q, last_c);
+		return (NULL);
+	ret = cash_malloc(str, env, cash_q);
 	while (str && str[i])
 	{
 		ft_isquoted(str[i], &q);
 		if (q != '\'')
-			var = cash_get_var(str, &i, env);
-		if (q != '\'' && !var)
-			var = cash_get_other(str, &i, cash_q, last_c);
+			var = cash_get_var(str, &i, env, cash_q);
 		if (var)
-			j += ft_strlcat(ret, var, ft_strlen(ret) + ft_strlen(var) + 1);
-		else
+		{
+			ft_strlcat(ret, var, ft_strlen(ret) + ft_strlen(var) + 1);
+			j += ft_strlen(var);
+		}
+		if (!var)
 			ret[j++] = str[i++];
 		var = ft_free(var);
 	}
 	//
-	ft_printf("after cash_money:'%s'\n", ret);
+	//ft_printf("after cash_money:'%s'\n", ret);
 	//
 	split = ft_split_quotes(ret, ' ') + (long)ft_free(ret);
 	ft_splittrim_quotes(split);
 	return (split);
 }
 
-char	*cash_get_var(char *str, int *i, char ***env)
+static char	*cash_get_var(char *str, int *i, char ***env, char *cash_q)
 {
 	char	*ret;
 	int		len;
@@ -80,32 +80,21 @@ char	*cash_get_var(char *str, int *i, char ***env)
 		*i += ft_env_name(&str[*i], NULL);
 		return ft_strdup(ret);
 	}
-	if (str[*i] == '~' && (*i == 0 || str[*i - 1] == ' '))
-		if (str[*i + 1] == 0 || str[*i + 1] == ' ' || str[*i + 1] == '/')
-		{
-			*i += 1;
-			return (ft_strdup(ft_env_get(env[0], "HOME")));
-		}
-	return (NULL);
-}
-
-char	*cash_get_other(char *str, int *i, char *cash_q, char *last_c)
-{
+	if ((str[*i] == '~' && (*i == 0 || str[*i - 1] == ' ')) && \
+		(str[*i + 1] == 0 || str[*i + 1] == ' ' || str[*i + 1] == '/'))
+	{
+		*i += 1;
+		return (ft_strdup(ft_env_get(env[0], "HOME")));
+	}
 	if (!ft_strncmp(&str[*i], "$?", 2))
 	{
 		*i += 2;
 		return (ft_strdup(cash_q));
 	}
-	if (str[*i] == '!' && str[*i + 1] == '!' && str[*i + 2] != '!')
-		if (*i == 0 || str[*i - 1] != '!')
-		{
-			i += 2;
-			return (ft_strdup(last_c));
-		}
 	return (NULL);
 }
 
-char	*cash_malloc(char *str, char ***env, char *cash_q, char *last_c)
+static char	*cash_malloc(char *str, char ***env, char *cash_q)
 {
 	int		i;
 	int		j;
@@ -120,9 +109,7 @@ char	*cash_malloc(char *str, char ***env, char *cash_q, char *last_c)
 	{
 		ft_isquoted(str[i], &q);
 		if (q != '\'')
-			var = cash_get_var(str, &i, env);
-		if (q != '\'' && !var)
-			var = cash_get_other(str, &i, cash_q, last_c);
+			var = cash_get_var(str, &i, env, cash_q);
 		if (var)
 			j += ft_strlen(var);
 		else
@@ -132,5 +119,5 @@ char	*cash_malloc(char *str, char ***env, char *cash_q, char *last_c)
 		}
 		var = ft_free(var);
 	}
-	return ((char *)ft_malloc((j + 1) * sizeof(char)));
+	return ((char *)ft_calloc(j + 1, sizeof(char)));
 }

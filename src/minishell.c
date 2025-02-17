@@ -14,7 +14,7 @@
 
 void	*init_minishell(char ****env, char **envp_main, char **cash_question, char **last_command);
 void	letsgo(char *input, char ***env, char **cash_question, char **last_command);
-void	letsgo_pipe(char **pipe, char ***env, char **cash_question, char **last_command);
+void	letsgo_pipe(char **pipe, char ***env, char **cash_question);
 void	letsgo_wait(int len, pid_t *pid, int status, char **cash_question);
 
 int	main(int argc, char **argv, char **envp)
@@ -38,14 +38,15 @@ int	main(int argc, char **argv, char **envp)
 	}
 	if (argc == 2)
 		exit(0 + (0 * ft_printf("go %s\n", argv[1])));
-	exit(1 + (0 * ft_printf("usage: ./minishell [script]\n")));
+	exit(1 + (0 * ft_printf("usage: ./minishell\n")));
 }
 
 void	letsgo(char *input, char ***env, char **cash_question, char **last_command)
 {
+	char	**semicol;
 	char	**pipe;
+	int		i;
 
-	add_history(input);
 	if (ft_isquoted_closed(input))
 	{
 		if (MS_CUTE)
@@ -53,13 +54,23 @@ void	letsgo(char *input, char ***env, char **cash_question, char **last_command)
 		*cash_question = ft_itoa(1 + (long)ft_free(*cash_question));
 		return ;
 	}
-	pipe = ft_split_quotes(input, '|');
-	letsgo_pipe(pipe, env, cash_question, last_command);
-	ft_split_free(pipe);
-	//update last_command here i think
+	input = double_exclam(input, *last_command);
+	add_history(input);
+	ft_free(*last_command);
+	*last_command = input;
+	semicol = ft_split_quotes(input, ';');
+	i = 0;
+	while (semicol && semicol[i])
+	{
+		pipe = ft_split_quotes(semicol[i], '|');
+		letsgo_pipe(pipe, env, cash_question);
+		ft_split_free(pipe);
+		i++;
+	}
+	ft_split_free(semicol);
 }
 
-void	letsgo_pipe(char **pipe, char ***env, char **cash_question, char **last_command)
+void	letsgo_pipe(char **pipe, char ***env, char **cash_question)
 {
 	char	**comm;
 	pid_t	*pid;
@@ -73,13 +84,7 @@ void	letsgo_pipe(char **pipe, char ***env, char **cash_question, char **last_com
 	while (pipe && pipe[i])
 	{
 		//redirection	//fdr[4]
-		//char	*extended = cash_money(pipe[i], env, cash_question, last_command)
-		//or
-		comm = cash_money(pipe[i], env, *cash_question, *last_command);
-		if (!ft_strcmp(*last_command, "just to compile")) return ;
-		//comm = ft_split_quotes(pipe[i], ' ');
-		//ft_splittrim_quotes(comm);
-		//
+		comm = cash_money(pipe[i], env, *cash_question);
 		if (comm && !pipe[1] && ft_isbuiltin(comm[0]) > 1)
 			status = (ft_exec_builtin(comm, env) << 8);
 		else if (comm)
