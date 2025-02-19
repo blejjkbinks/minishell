@@ -46,14 +46,14 @@ void	letsgo(char *input, char ***env, char **cash_question, char **last_command)
 	char	**pipe;
 
 	add_history(input);
-	if (ft_isquoted_closed(input))
+	if (ft_isquoted_closed(input)) //THIS DOESN'T EXIST??
 	{
 		if (MS_CUTE)
 			ft_printf("minishell: unclosed quote (┛ಠ益ಠ)┛彡┻━┻\n");
 		*cash_question = ft_itoa(1 + (long)ft_free(*cash_question));
 		return ;
 	}
-	pipe = ft_split_quotes(input, '|');
+	pipe = ft_split_quotes(input, '|'); //THIS IS GRABBING FROM V1
 	letsgo_pipe(pipe, env, cash_question, last_command);
 	ft_split_free(pipe);
 	//update last_command here i think
@@ -80,7 +80,7 @@ void	letsgo_pipe(char **pipe, char ***env, char **cash_question, char **last_com
 		if (comm && !pipe[1] && ft_isbuiltin(comm[0]) > 1)
 			status = (ft_exec_builtin(comm, env) << 8);
 		else if (comm)
-			ft_exec_pipe(comm, env, &pid[i]);	//fdr[4]
+			ft_exec_pipe(comm, env, pid);	//fdr[4]
 		ft_split_free(comm);
 		i++;
 	}
