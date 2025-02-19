@@ -29,34 +29,6 @@ char	**ft_env_dup(char **env)
 	return (ret);
 }
 
-/*
-char	*ft_env_name(char *name)
-{
-	char	*ret;
-	int		i;
-
-	if (!name || (!ft_isalpha(name[0]) && name[0] != '_'))
-		return (NULL);
-	i = 0;
-	ret = ft_strdup(name);
-	while (ft_isalnum(name[i]) || name[i] == '_')
-		i++;
-	ret[i] = 0;
-	return (ret);
-}
-
-int	ft_env_namelen(char *name)
-{
-	int	len;
-
-	name = ft_env_name(name);
-	len = ft_strlen(name);
-	if (name)
-		free(name);
-	return (len);
-}
-*/
-
 int	ft_env_name(char *name, char **ret)
 {
 	char	*str;

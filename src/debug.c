@@ -20,7 +20,7 @@ void	ft_split_debug(char **split, char *msg)
 		return ;
 	ft_printf("MS_DEBUG: %s: ", msg);
 	if (!split)
-		ft_printf("null:(");
+		ft_printf("split is null");
 	i = 0;
 	while (split && split[i])
 	{
@@ -34,7 +34,7 @@ void	ft_pidfd_debug(char **split, int *pidfd)
 {
 	int	i;
 
-	if (!MS_DEBUG)
+	if (!MS_DEBUG || !split)
 		return ;
 	ft_printf("MS_DEBUG: PIDFD: ");
 	i = 0;

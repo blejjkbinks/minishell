@@ -16,8 +16,7 @@ void	letsgo(char *input, char ***env, char **cash_question, char **last_command)
 void	letsgo_pipe(char **pipe, char ***env, char **cash_question, int *pidfd);
 char	**ready_pipe(char *input, char ***env, char **cash_question, char **last_command);
 //void	ready_comm()
-void	letsgo_wait(char **pipe, int *pidfd, char **cash_question);
-
+void	letsgo_wait(char **pipe, int *pidfd, char **cash_question, int status);
 
 void	letsgo(char *input, char ***env, char **cash_question, char **last_command)
 {
@@ -41,7 +40,9 @@ void	letsgo(char *input, char ***env, char **cash_question, char **last_command)
 		pidfd = (int *)ft_calloc(ft_split_len(pipe) * 3, sizeof(int));
 		if (redirection(pipe, pidfd))
 		{
-			*cash_question = ft_itoa(1 + (long)ft_free(*cash_question));
+			*cash_question = ft_itoa(1 + (long)ft_free(*cash_question) \
+			+ (long)ft_split_free(pipe) + (long)ft_split_free(semicol) \
+			+ (long)ft_free(pidfd));
 			return ;
 		}
 		ft_pidfd_debug(pipe, pidfd);
@@ -71,7 +72,9 @@ void	letsgo_pipe(char **pipe, char ***env, char **cash_question, int *pidfd)
 {
 	char	**comm;
 	int		i;
+	int		status;
 
+	status = 0;
 	i = 0;
 	while (pipe && pipe[i])
 	{
@@ -81,24 +84,22 @@ void	letsgo_pipe(char **pipe, char ***env, char **cash_question, int *pidfd)
 		ft_split_debug(comm, "COMM");
 		ft_strtolower(comm[0]);
 		if (comm && !pipe[1] && ft_isbuiltin(comm[0]) > 1)
-			pidfd[3 * i] = (ft_exec_builtin(comm, env) << 8);	//<< 8 is wrong, what of 0xff00 ??
+			status = (ft_exec_builtin(comm, env) << 8);
 		else if (comm)
 			ft_exec_pipe(pipe, env, pidfd, i);
 		ft_split_free(comm);
 		i++;
 	}
-	letsgo_wait(pipe, pidfd, cash_question);
+	letsgo_wait(pipe, pidfd, cash_question, status);
 }
 
 //void	ready_comm()
 
-void	letsgo_wait(char **pipe, int *pidfd, char **cash_question)
+void	letsgo_wait(char **pipe, int *pidfd, char **cash_question, int status)
 {
 	int	i;
-	int	status;
 
 	ft_pidfd_debug(pipe, pidfd);
-	status = 0;
 	i = 0;
 	while (pipe && pipe[i])
 	{

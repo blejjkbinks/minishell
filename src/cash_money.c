@@ -23,9 +23,6 @@ char	*cash_money(char *str, char ***env, char *cash_q)
 	int		j;
 	int		q;
 
-	//
-	//ft_printf("before cash_money:'%s'\n", str);
-	//
 	var = NULL;
 	i = 0;
 	j = 0;
@@ -49,9 +46,6 @@ char	*cash_money(char *str, char ***env, char *cash_q)
 			ret[j++] = str[i++];
 		var = ft_free(var);
 	}
-	//
-	//ft_printf("after cash_money:'%s'\n", ret);
-	//
 	return (ret);
 }
 
