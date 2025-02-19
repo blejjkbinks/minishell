@@ -22,15 +22,23 @@ int mode_in for read/heredoc
 int mode_out for append/overwrite
 */
 
-void	ft_exec_pipe(char **comm, char ***env, pid_t *pid)	//fdr[4]
+//void	ft_exec_pipe(char **comm, char ***env, pid_t *pid)	//fdr[4]
+void	ft_exec_pipe(char **comm, char ***env, int *pidfd, int i)
 {
-	*pid = fork();
-	if (*pid == 0)
+	char	**arg;
+
+	arg = ft_split_quotes(comm[i], ' ');
+	ft_splittrim_quotes(arg);
+	//ft_strtolower(arg[0]);
+	pidfd[3 * i] = fork();
+	if (pidfd[3 * i] == 0)
 	{
 		//ready pipes and redirs
-		if (ft_isbuiltin(comm[0]))
-			exit(ft_exec_builtin(comm, env));
-		ft_exec_which(comm[0], comm, env[0]);
+		//redir_in_fd = pidfd[(3 * i) + 1];
+		//redir_out_fd = pidfd[(3 * i) + 1];
+		if (ft_isbuiltin(arg[0]))
+			exit(ft_exec_builtin(arg, env));
+		ft_exec_which(arg[0], arg, env[0]);
 		//close pipes and redirs
 	}
 }

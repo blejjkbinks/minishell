@@ -14,7 +14,7 @@
 # define MINISHELL_H
 
 # ifndef MS_DEBUG
-#  define MS_DEBUG 0
+#  define MS_DEBUG 1
 # endif
 
 # ifndef MS_CUTE
@@ -35,10 +35,18 @@
 # include <signal.h>
 
 //minishell.c
-//main
+//main, init
+
+//debug.c
+void	ft_split_debug(char **split, char *msg);
+void	ft_pidfd_debug(char **split, int *pidfd);
 
 //get_prompt.c
 char	*get_prompt(char *prompt, char **env, int cash_question);
+
+//letsgo.c
+void	letsgo(char *input, char ***env, char **cash_question, char **last_command);
+//letsgo_pipe, ready_pipe, ready_comm, letsgo_wait
 
 //find_builtin.c
 int		ft_isbuiltin(char *str);
@@ -51,14 +59,14 @@ int		ft_exec_builtin(char **comm, char ***env);
 //probably source
 
 //exec_pipe.c
-void	ft_exec_pipe(char **comm, char ***env, pid_t *pid);
+void	ft_exec_pipe(char **comm, char ***env, int *pidfd, int i);
 //exec_which
 
 //redirection.c
-void	find_redirection(char *str, int fdr[2]);
+int		redirection(char **pipe, int *pidfd);
 
 //cash_money.c
-char	**cash_money(char *str, char ***env, char *cash_q);
+char	*cash_money(char *str, char ***env, char *cash_q);
 
 //double_exclam.c
 char	*double_exclam(char *str, char *last_c);

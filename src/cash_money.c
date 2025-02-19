@@ -15,14 +15,13 @@
 static char	*cash_get_var(char *str, int *i, char ***env, char *cash_q);
 static char	*cash_malloc(char *str, char ***env, char *cash_q);
 
-char	**cash_money(char *str, char ***env, char *cash_q)
+char	*cash_money(char *str, char ***env, char *cash_q)
 {
 	char	*ret;
 	char	*var;
 	int		i;
 	int		j;
 	int		q;
-	char	**split;
 
 	//
 	//ft_printf("before cash_money:'%s'\n", str);
@@ -53,9 +52,7 @@ char	**cash_money(char *str, char ***env, char *cash_q)
 	//
 	//ft_printf("after cash_money:'%s'\n", ret);
 	//
-	split = ft_split_quotes(ret, ' ') + (long)ft_free(ret);
-	ft_splittrim_quotes(split);
-	return (split);
+	return (ret);
 }
 
 static char	*cash_get_var(char *str, int *i, char ***env, char *cash_q)

@@ -12,9 +12,26 @@
 
 #include "minishell.h"
 
-static void	open_redirection(char *str, int mode, int fdr[2]);
+static int	find_redirection(char *str, int *rin, int *rout);
+static int	trim_redirection(char *str, int mode, int *rin, int *rout);
+static int	open_redirection(char *str, int mode, int *rin, int *rout);
+static int	open_heredoc(char *str);
 
-void	find_redirection(char *str, int fdr[2])
+int	redirection(char **pipe, int *pidfd)
+{
+	int	i;
+
+	i = 0;
+	while (pipe && pipe[i])
+	{
+		if (find_redirection(pipe[i], &pidfd[(3 * i) + 1], &pidfd[(3 * i) + 2]))
+			return (ft_printf("minishell: invalid token ><\n"));
+		i++;
+	}
+	return (0);
+}
+
+static int	find_redirection(char *str, int *rin, int *rout)
 {
 	int		mode;
 	int		i;
@@ -30,22 +47,26 @@ void	find_redirection(char *str, int fdr[2])
 			mode = str[i];
 			i++;
 			if ((!str[i] || str[i] == '<' || str[i] == '>') && str[i] != mode)
-				ft_printf("invalid token ><\n");
+				return (1);
 			if (str[i] == mode)
 			{
 				mode++;
 				i++;
 				if (!str[i] || str[i] == '<' || str[i] == '>')
-					ft_printf("invalid token ><\n");
+					return (2);
 			}
-			open_redirection(str + i, mode, fdr);
-			i -= 2;
+			if (trim_redirection(str + i, mode, rin, rout))
+				return (3);
+			i = 0;
+			q = 0;
 		}
-		i++;
+		else
+			i++;
 	}
+	return (0);
 }
 
-static void	open_redirection(char *str, int mode, int fdr[2])
+static int	trim_redirection(char *str, int mode, int *rin, int *rout)
 {
 	char	*dup;
 	int		j;
@@ -60,7 +81,7 @@ static void	open_redirection(char *str, int mode, int fdr[2])
 		k++;
 	dup = ft_strdup(&str[k]);
 	j = 0;
-	while (dup[j] && (!ft_strchr("> <", dup[j]) || !q))
+	while (dup[j] && (!ft_strchr("> <", dup[j]) || q))
 	{
 		ft_isquoted(dup[j], &q);
 		j++;
@@ -70,15 +91,56 @@ static void	open_redirection(char *str, int mode, int fdr[2])
 	//
 	//ft_printf("from '%s' moving %d back\n", str, len);
 	//
-	ft_memmove(str, &str[len], len + 1);
+	ft_memmove(str, &str[len], ft_strlen(&str[len]) + 1);
 	//
 	//ft_printf("after moving:'%s'\n", str);
 	//
 	dup[j] = 0;
 	ft_strtrim_quotes(dup);
-	ft_printf("redir: mode:'%c', file:'%s'\n", mode, dup);
-	free(dup);
-	fdr[0] = 0;
+	return (open_redirection(dup, mode, rin, rout));
+	//
+	//ft_printf("redir: mode:'%c', file:'%s'\n", mode, dup);
+	//
+}
+
+static int	open_redirection(char *str, int mode, int *rin, int *rout)
+{
+	if (mode == '>')
+		*rout = open(str, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+	if (mode == '>' + 1)
+		*rout = open(str, O_WRONLY | O_CREAT | O_APPEND, 0666);
+	if (mode == '<')
+		*rin = open(str, O_RDONLY);
+	if (mode == '<' + 1)
+		*rin = open_heredoc(str);
+	if (MS_DEBUG)
+		ft_printf("OPEN '%s' in %c mode, in:%d, out:%d\n", str, mode, *rin, *rout);
+	free(str);
+	if (*rin < 0 || *rout < 0)
+		return (1 + (0 * ft_printf("failed to open %s\n", str)));
+	return (0);
+}
+
+static int	open_heredoc(char *str)
+{
+	int		fd;
+	char	*line;
+
+	fd = open(MS_HEREDOC_PATH, O_CREAT | O_WRONLY | O_TRUNC, 0666);
+	while (1)
+	{
+		ft_printf("heredoc minishell> ");
+		line = get_next_line(fd);
+		if (!line || !ft_strcmp(line, str))
+			break ;
+		write(fd, line, ft_strlen(line));
+		write(fd, "\n", 1);
+		free(line);
+	}
+	ft_free(line);
+	close(fd);
+	fd = open(MS_HEREDOC_PATH, O_RDONLY);
+	return (fd);
 }
 
 	/*
