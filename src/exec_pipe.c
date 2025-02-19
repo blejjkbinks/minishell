@@ -35,7 +35,7 @@ void	ft_exec_pipe(char **comm, char ***env, int *pidfd, int i)
 	{
 		//ready pipes and redirs
 		//redir_in_fd = pidfd[(3 * i) + 1];
-		//redir_out_fd = pidfd[(3 * i) + 1];
+		//redir_out_fd = pidfd[(3 * i) + 2];
 		if (ft_isbuiltin(arg[0]))
 			exit(ft_exec_builtin(arg, env));
 		ft_exec_which(arg[0], arg, env[0]);
