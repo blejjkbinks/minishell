@@ -20,12 +20,17 @@ static int	open_heredoc(char *str);
 int	redirection(char **pipe, int *pidfd)
 {
 	int	i;
+	int	e;
 
 	i = 0;
 	while (pipe && pipe[i])
 	{
-		if (find_redirection(pipe[i], &pidfd[(3 * i) + 1], &pidfd[(3 * i) + 2]))
-			return (ft_printf("minishell: invalid token ><\n"));
+		e = find_redirection(pipe[i], &pidfd[(3 * i) + 1], &pidfd[(3 * i) + 2]);
+		if (e)
+		{
+			ft_printf("minishell: invalid token ><\n");
+			return (e);	//1 for no file, 258 for invalid token;
+		}
 		i++;
 	}
 	return (0);
@@ -106,9 +111,9 @@ static int	open_redirection(char *str, int mode, int *rin, int *rout)
 		*rin = open_heredoc(str);
 	if (MS_DEBUG)
 		ft_printf("OPEN: '%s' m:%c, in:%d, out:%d\n", str, mode, *rin, *rout);
-	free(str);
 	if (*rin < 0 || *rout < 0)
-		return (1 + (0 * ft_printf("failed to open %s\n", str)));
+		return (4 + (0 * ft_printf("failed to open %s\n", str)));
+	free(str);
 	return (0);
 }
 

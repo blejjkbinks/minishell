@@ -15,7 +15,7 @@
 static int	ft_which_print(char **arg, char **env);
 static int	ft_exit_builtin(char **arg, char ***env);
 static int	ft_echo(char **arg);
-//static int	ft_source()
+int			ft_source(char *arg, char ***env);
 
 int	ft_exec_builtin(char **comm, char ***env)
 {
@@ -39,8 +39,8 @@ int	ft_exec_builtin(char **comm, char ***env)
 		return (ft_export_magic(comm[1], env, 4, ft_env_name(comm[1], NULL)));
 	if (!ft_strcmp(comm[0], "which"))
 		return (ft_which_print(comm, env[0]));
-	if (!ft_strcmp(comm[0], "source"))	//TODO
-		return (ft_printf("ft_source\n"));
+	if (!ft_strcmp(comm[0], "source"))
+		return (ft_source(comm[1], env));
 	if (!ft_strcmp(comm[0], "exit"))
 		return (ft_exit_builtin(comm, env));
 	return (0);
@@ -122,5 +122,33 @@ static int	ft_echo(char **arg)
 	}
 	if (nl)
 		printf("\n");
+	return (0);
+}
+
+int	ft_source(char *arg, char ***env)
+{
+	int		fd;
+	char	*line;
+	char	**comm;
+
+	if (!arg)
+		return (2 + (0 * ft_printf("source: give filename please\n")));
+	fd = open(arg, O_RDONLY);
+	if (fd < 0 && ft_strcmp(arg, "minishellrc"))
+		return (1 + (0 * ft_printf("minishell: %s: no such file\n", arg)));
+	line = get_next_line(fd);
+	while (line)
+	{
+		comm = ft_split_quotes(line, ' ');
+		ft_splittrim_quotes(comm);
+		if (comm && !ft_strcmp(comm[0], "alias"))
+			ft_export_magic(comm[1], env, 3, ft_env_name(comm[1], NULL));
+		if (comm && !ft_strcmp(comm[0], "export"))
+			ft_export_magic(comm[1], env, 0, ft_env_name(comm[1], NULL));
+		ft_split_free(comm);
+		ft_free(line);
+		line = get_next_line(fd);
+	}
+	close(fd);
 	return (0);
 }

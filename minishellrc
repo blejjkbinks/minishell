@@ -1,0 +1,8 @@
+#minishellrc, called at every launch
+
+export jani=cute
+export JANI='hello i am jani'
+alias jani='echo this is janis command'
+
+export romain=':3'
+alias romain='echo i am da best'

@@ -46,6 +46,7 @@ char	*ft_which(char *arg, char **env);
 
 //exec_builtin.c
 int		ft_exec_builtin(char **comm, char ***env);
+int		ft_source(char *arg, char ***env);
 //echo, exit, which_print
 
 //probably source

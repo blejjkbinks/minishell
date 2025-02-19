@@ -53,6 +53,7 @@ void	*init_minishell(char ****env, char **envp_main, char **cash_question, char 
 	free(str);
 	(*env)[1] = NULL;
 	(*env)[2] = NULL;
+	ft_source("minishellrc", *env);
 	*cash_question = ft_itoa(0);
 	*last_command = ft_strdup("??");
 	return (NULL);
