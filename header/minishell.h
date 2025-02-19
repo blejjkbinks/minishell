@@ -14,7 +14,7 @@
 # define MINISHELL_H
 
 # ifndef MS_DEBUG
-#  define MS_DEBUG 1
+#  define MS_DEBUG 0
 # endif
 
 # ifndef MS_CUTE

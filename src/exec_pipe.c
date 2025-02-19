@@ -27,12 +27,12 @@ void	ft_exec_pipe(char **comm, char ***env, int *pidfd, int i)
 {
 	char	**arg;
 
-	arg = ft_split_quotes(comm[i], ' ');
-	ft_splittrim_quotes(arg);
-	//ft_strtolower(arg[0]);
 	pidfd[3 * i] = fork();
 	if (pidfd[3 * i] == 0)
 	{
+		arg = ft_split_quotes(comm[i], ' ');
+		ft_splittrim_quotes(arg);
+		ft_strtolower(arg[0]);
 		//ready pipes and redirs
 		//redir_in_fd = pidfd[(3 * i) + 1];
 		//redir_out_fd = pidfd[(3 * i) + 2];
