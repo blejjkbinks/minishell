@@ -13,14 +13,6 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# ifndef MS_DEBUG
-#  define MS_DEBUG 0
-# endif
-
-# ifndef MS_CUTE
-#  define MS_CUTE 1
-# endif
-
 # ifndef MS_HEREDOC_PATH
 #  define MS_HEREDOC_PATH "/tmp/minishell_heredoc.txt"
 # endif

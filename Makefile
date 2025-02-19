@@ -16,6 +16,9 @@ SRC_DIR := src
 HDR_DIR := header
 OBJ_DIR := obj
 CFLAGS := -Wall -Wextra -Werror -g -I$(HDR_DIR)
+MS_CUTE := 1
+MS_DEBUG := 0
+CFLAGS += -D MS_CUTE=$(MS_CUTE) -D MS_DEBUG=$(MS_DEBUG)
 CC := cc $(CFLAGS)
 RM := rm -rf
 MKD := mkdir -p
@@ -66,6 +69,7 @@ $(NAME): $(LIBFT_A) $(OBJ)
 clean:
 	@echo cleaning $(NAME)
 	@$(RM) $(OBJ_DIR)
+	@$(RM) testing/results.log
 
 fclean: clean
 	@$(RM) $(NAME)

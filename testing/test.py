@@ -42,7 +42,8 @@ def generate_diff(output1, output2):
 	return "\n".join(diff)
 
 def main():
-	subprocess.run(["make"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+#	subprocess.run(["make"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+	os.system(f"make re MS_CUTE=0 MS_DEBUG=0")
 	with open(RESULTS_FILE, "w") as f:
 		f.write(f"Test Results - {os.linesep}")
 	test_cases = sorted(file for file in Path(TEST_DIR).iterdir()
