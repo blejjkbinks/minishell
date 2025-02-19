@@ -47,16 +47,16 @@ char	*get_prompt(char *p, char **env, int cash_question)
 
 static void	ft_prompt_delim(char *d[9])
 {
-	d[0] = "minishell$ ";
-	d[2] = "@" " ./";
+	d[0] = CLR_BLK "minishell$ " CLR_CYN;
+	d[2] = CLR_BRIGHT_BLK "@" CLR_BLU " ./" CLR_BRIGHT_BLU;
 	d[4] = " ";
-	d[6] = " ";
+	d[6] = "";
 	d[8] = CLR_RST " $ ";
 	if (d[5])
 	{
-		d[4] = " (";
+		d[4] = CLR_MAG " (";
 		d[5]++;
-		d[6] = ") ";
+		d[6] = ") " CLR_RST;
 	}
 }
 

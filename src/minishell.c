@@ -27,6 +27,7 @@ int	main(int argc, char **argv, char **envp)
 	{
 		prompt = get_prompt(prompt, env[0], ft_atoi(cash_question));
 		input = readline(prompt);
+		//input = get_next_line(0 * ft_printf("%s", prompt));
 		if (ft_strlen(input))
 			letsgo(input, env, &cash_question, &last_command);
 		if (!input && MS_CUTE)

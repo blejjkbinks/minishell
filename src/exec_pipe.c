@@ -52,7 +52,7 @@ static void	ft_exec_which(char *comm, char **arg, char **env)
 	bash = ft_env_dup(arg);
 	ft_memmove(bash + 1, bash, ft_split_len(bash) * sizeof(char *));
 	bash[0] = "/bin/bash";
-	if (!path && !access(comm, R_OK))
+	if (!path && !access(comm, R_OK))		//this is wrong, script with no permission
 		ft_printf("minishell: %s: is a directory\n", comm);
 	else if (!path)
 		ft_printf("minishell: %s: command not found\n", comm);
