@@ -38,7 +38,7 @@ void	ft_pidfd_debug(char **split, int *pidfd)
 		return ;
 	ft_printf("MS_DEBUG: PIDFD: ");
 	i = 0;
-	while(split && split[i])
+	while (split && split[i])
 	{
 		ft_printf("[%d=pid:'%d',", i, pidfd[3 * i]);
 		ft_printf("%d:'%d'", 3 * i + 1, pidfd[3 * i + 1]);

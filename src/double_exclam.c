@@ -14,6 +14,7 @@
 
 static char	*double_exclam_get(char *str, int *i, char *last_c);
 static char	*double_exclam_alloc(char *str, char *last_c);
+static void	double_exclam_print(char *str, int p);
 
 char	*double_exclam(char *str, char *last_c)
 {
@@ -40,9 +41,14 @@ char	*double_exclam(char *str, char *last_c)
 		else
 			ret[j++] = str[i++];
 	}
-	if (p)
-		ft_printf("!!:%s\n", ret);
+	double_exclam_print(ret, p);
 	return (ret);
+}
+
+static void	double_exclam_print(char *str, int p)
+{
+	if (p)
+		ft_printf("!!:%s\n", str);
 }
 
 static char	*double_exclam_get(char *str, int *i, char *last_c)

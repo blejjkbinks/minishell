@@ -12,7 +12,8 @@
 
 #include "minishell.h"
 
-void	*init_minishell(char ****env, char **envp_main, char **cash_question, char **last_command);
+void	*init_minishell(char ****env, char **envp_main, \
+	char **cash_question, char **last_command);
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -27,7 +28,6 @@ int	main(int argc, char **argv, char **envp)
 	{
 		prompt = get_prompt(prompt, env[0], ft_atoi(cash_question));
 		input = readline(prompt);
-		//input = get_next_line(0 * ft_printf("%s", prompt));
 		if (ft_strlen(input))
 			letsgo(input, env, &cash_question, &last_command);
 		if (!input && MS_CUTE)
@@ -36,9 +36,11 @@ int	main(int argc, char **argv, char **envp)
 	}
 	exit(1 + (0 * ft_printf("usage: %s\n", argv[0])));
 }
+//input = get_next_line(0 * ft_printf("%s", prompt));
 
 //	init_signals();
-void	*init_minishell(char ****env, char **envp_main, char **cash_question, char **last_command)
+void	*init_minishell(char ****env, char **envp_main, \
+	char **cash_question, char **last_command)
 {
 	char	*str;
 

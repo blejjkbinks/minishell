@@ -37,7 +37,7 @@ void	ft_pidfd_debug(char **split, int *pidfd);
 char	*get_prompt(char *prompt, char **env, int cash_question);
 
 //letsgo.c
-void	letsgo(char *input, char ***env, char **cash_q, char **last_c);
+void	*letsgo(char *input, char ***env, char **cash_q, char **last_c);
 //letsgo_pipe, ready_pipe, ready_comm, letsgo_wait
 
 //find_builtin.c

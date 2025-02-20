@@ -17,6 +17,8 @@ static int	trim_redirection(char *str, int mode, int *rin, int *rout);
 static int	open_redirection(char *str, int mode, int *rin, int *rout);
 static int	open_heredoc(char *str);
 
+static int	find_mode(char *str, int *i, int *mode);
+
 int	redirection(char **pipe, int *pidfd)
 {
 	int	i;
@@ -28,13 +30,16 @@ int	redirection(char **pipe, int *pidfd)
 		e = find_redirection(pipe[i], &pidfd[(3 * i) + 1], &pidfd[(3 * i) + 2]);
 		if (e)
 		{
-			ft_printf("minishell: invalid token ><\n");
-			return (e);	//1 for no file, 258 for invalid token;
+			if (e == 258)
+				ft_printf("minishell: invalid token ><\n");
+			*pidfd = e;
+			return (e);
 		}
 		i++;
 	}
 	return (0);
 }
+//1 for no file, 258 for invalid token;
 
 static int	find_redirection(char *str, int *rin, int *rout)
 {
@@ -49,17 +54,8 @@ static int	find_redirection(char *str, int *rin, int *rout)
 		ft_isquoted(str[i], &q);
 		if (!q && (str[i] == '<' || str[i] == '>'))
 		{
-			mode = str[i];
-			i++;
-			if ((!str[i] || str[i] == '<' || str[i] == '>') && str[i] != mode)
-				return (1);
-			if (str[i] == mode)
-			{
-				mode++;
-				i++;
-				if (!str[i] || str[i] == '<' || str[i] == '>')
-					return (2);
-			}
+			if (find_mode(str, &i, &mode))
+				return (258);
 			if (trim_redirection(str + i, mode, rin, rout))
 				return (3);
 			i = 0;
@@ -67,6 +63,22 @@ static int	find_redirection(char *str, int *rin, int *rout)
 		}
 		else
 			i++;
+	}
+	return (0);
+}
+
+static int	find_mode(char *str, int *i, int *mode)
+{
+	*mode = str[*i];
+	(*i)++;
+	if ((!str[*i] || str[*i] == '<' || str[*i] == '>') && str[*i] != *mode)
+		return (1);
+	if (str[*i] == *mode)
+	{
+		(*mode)++;
+		(*i)++;
+		if (!str[*i] || str[*i] == '<' || str[*i] == '>')
+			return (2);
 	}
 	return (0);
 }
@@ -109,10 +121,14 @@ static int	open_redirection(char *str, int mode, int *rin, int *rout)
 		*rin = open(str, O_RDONLY);
 	if (mode == '<' + 1)
 		*rin = open_heredoc(str);
-	if (MS_DEBUG)
-		ft_printf("OPEN: '%s' m:%c, in:%d, out:%d\n", str, mode, *rin, *rout);
+	if (MS_DEBUG && ft_printf("MS_DEBUG: OPEN: "))
+		ft_printf("'%s' m:%c, in:%d, out:%d\n", str, mode, *rin, *rout);
 	if (*rin < 0 || *rout < 0)
-		return (4 + (0 * ft_printf("failed to open %s\n", str)));
+	{
+		ft_printf("failed to open %s\n", str);
+		free(str);
+		return (4);
+	}
 	free(str);
 	return (0);
 }

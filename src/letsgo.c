@@ -12,13 +12,12 @@
 
 #include "minishell.h"
 
-void	letsgo(char *input, char ***env, char **cash_question, char **last_command);
-void	letsgo_pipe(char **pipe, char ***env, char **cash_question, int *pidfd);
-char	**ready_pipe(char *input, char ***env, char **cash_question, char **last_command);
-//void	ready_comm()
-void	letsgo_wait(char **pipe, int *pidfd, char **cash_question, int status);
+void	letsgo_pipe(char **pipe, char ***env, char **cash_q, int *pidfd);
+char	**ready_pipe(char *input, char ***env, char **cash_q, char **last_c);
+void	*letsnot(char **cash_q, char **pipe, char **semicol, int *pidfd);
+void	letsgo_wait(char **pipe, int *pidfd, char **cash_q, int status);
 
-void	letsgo(char *input, char ***env, char **cash_question, char **last_command)
+void	*letsgo(char *input, char ***env, char **cash_q, char **last_c)
 {
 	char	**semicol;
 	char	**pipe;
@@ -26,49 +25,56 @@ void	letsgo(char *input, char ***env, char **cash_question, char **last_command)
 	int		i;
 
 	if (ft_isquoted_closed(input))
-	{
-		if (MS_CUTE)
-			ft_printf("minishell: unclosed quote (┛ಠ益ಠ)┛彡┻━┻\n");
-		*cash_question = ft_itoa(1 + (long)ft_free(*cash_question));
-		return ;
-	}
-	semicol = ready_pipe(input, env, cash_question, last_command);
+		return (letsnot(cash_q, NULL, NULL, NULL));
+	semicol = ready_pipe(input, env, cash_q, last_c);
 	i = 0;
 	while (semicol && semicol[i])
 	{
 		pipe = ft_split_quotes(semicol[i], '|');
 		pidfd = (int *)ft_calloc(ft_split_len(pipe) * 3, sizeof(int));
 		if (redirection(pipe, pidfd))
-		{
-			*cash_question = ft_itoa(1 + (long)ft_free(*cash_question) \
-			+ (long)ft_split_free(pipe) + (long)ft_split_free(semicol) \
-			+ (long)ft_free(pidfd));
-			return ;
-		}
+			return (letsnot(cash_q, pipe, semicol, pidfd));
 		ft_pidfd_debug(pipe, pidfd);
 		ft_split_debug(pipe, "PIPE");
-		letsgo_pipe(pipe, env, cash_question, pidfd);
+		letsgo_pipe(pipe, env, cash_q, pidfd);
 		i++;
 	}
-	ft_split_free(semicol);
+	return (ft_split_free(semicol));
 }
 
-char	**ready_pipe(char *input, char ***env, char **cash_question, char **last_command)
+void	*letsnot(char **cash_q, char **pipe, char **semicol, int *pidfd)
+{
+	ft_free(*cash_q);
+	if (pidfd && *pidfd == 258)
+		*cash_q = ft_itoa(258);
+	else
+		*cash_q = ft_itoa(1);
+	if (!pidfd && MS_CUTE)
+		ft_printf("minishell: unclosed quote (┛ಠ益ಠ)┛彡┻━┻\n");
+	if (!pidfd && !MS_CUTE)
+		ft_printf("minishell: unclosed quote\n");
+	ft_free(pidfd);
+	ft_split_free(pipe);
+	ft_split_free(semicol);
+	return (NULL);
+}
+
+char	**ready_pipe(char *input, char ***env, char **cash_q, char **last_c)
 {
 	char	**semicol;
 
-	input = double_exclam(input, *last_command);
+	input = double_exclam(input, *last_c);
 	add_history(input);
-	ft_free(*last_command);
-	*last_command = input;
-	input = cash_money(input, env, *cash_question);
+	ft_free(*last_c);
+	*last_c = input;
+	input = cash_money(input, env, *cash_q);
 	semicol = ft_split_quotes(input, ';');
 	ft_split_debug(semicol, "SCOL");
 	ft_free(input);
 	return (semicol);
 }
 
-void	letsgo_pipe(char **pipe, char ***env, char **cash_question, int *pidfd)
+void	letsgo_pipe(char **pipe, char ***env, char **cash_q, int *pidfd)
 {
 	char	**comm;
 	int		i;
@@ -94,12 +100,12 @@ void	letsgo_pipe(char **pipe, char ***env, char **cash_question, int *pidfd)
 			ft_exec_pipe(pipe, env, pidfd, i);
 		i++;
 	}
-	letsgo_wait(pipe, pidfd, cash_question, status);
+	letsgo_wait(pipe, pidfd, cash_q, status);
 }
 
 //void	ready_comm()
 
-void	letsgo_wait(char **pipe, int *pidfd, char **cash_question, int status)
+void	letsgo_wait(char **pipe, int *pidfd, char **cash_q, int status)
 {
 	int	i;
 
@@ -111,8 +117,8 @@ void	letsgo_wait(char **pipe, int *pidfd, char **cash_question, int status)
 			waitpid(pidfd[3 * i], &status, 0);
 		i++;
 	}
-	free(*cash_question);
-	*cash_question = ft_itoa(((status & 0xff00) >> 8));
+	free(*cash_q);
+	*cash_q = ft_itoa(((status & 0xff00) >> 8));
 	free(pidfd);
 	ft_split_free(pipe);
 }
