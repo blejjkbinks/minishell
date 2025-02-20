@@ -17,7 +17,7 @@ HDR_DIR := header
 OBJ_DIR := obj
 CFLAGS := -Wall -Wextra -Werror -g -I$(HDR_DIR)
 MS_CUTE := 1
-MS_DEBUG := 0
+MS_DEBUG := 1
 CFLAGS += -D MS_CUTE=$(MS_CUTE) -D MS_DEBUG=$(MS_DEBUG)
 CC := cc $(CFLAGS)
 RM := rm -rf

@@ -78,16 +78,20 @@ void	letsgo_pipe(char **pipe, char ***env, char **cash_question, int *pidfd)
 	i = 0;
 	while (pipe && pipe[i])
 	{
-		comm = NULL;
-		comm = ft_split_quotes(pipe[i], ' ');
-		ft_splittrim_quotes(comm);
-		ft_split_debug(comm, "COMM");
-		ft_strtolower(comm[0]);
-		if (comm && !pipe[1] && ft_isbuiltin(comm[0]) > 1)
-			status = (ft_exec_builtin(comm, env) << 8);
-		else if (comm)
+		if (!pipe[1])
+		{
+			comm = ft_split_quotes(pipe[i], ' ');
+			ft_strtolower(comm[0]);
+			ft_splittrim_quotes(comm);
+			ft_split_debug(comm, "COMM");
+			if (comm && ft_isbuiltin(comm[0]) > 1)
+				status = (ft_exec_builtin(comm, env) << 8);
+			else
+				ft_exec_pipe(pipe, env, pidfd, i);
+			ft_split_free(comm);
+		}
+		else
 			ft_exec_pipe(pipe, env, pidfd, i);
-		ft_split_free(comm);
 		i++;
 	}
 	letsgo_wait(pipe, pidfd, cash_question, status);

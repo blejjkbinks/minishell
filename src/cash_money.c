@@ -12,26 +12,34 @@
 
 #include "minishell.h"
 
+static char	*cash_money_loop(char *str, char ***env, char *cash_q, int i);
 static char	*cash_get_var(char *str, int *i, char ***env, char *cash_q);
+static char	*cash_get_var_dollar(char *str, int *i, char ***env);
 static char	*cash_malloc(char *str, char ***env, char *cash_q);
 
 char	*cash_money(char *str, char ***env, char *cash_q)
 {
-	char	*ret;
-	char	*var;
 	int		i;
-	int		j;
-	int		q;
 
-	var = NULL;
 	i = 0;
-	j = 0;
-	q = 0;
 	while (str[i] == ' ')
 		i++;
 	if (str[i] == '#')
 		return (NULL);
+	return (cash_money_loop(str, env, cash_q, i));
+}
+
+static char	*cash_money_loop(char *str, char ***env, char *cash_q, int i)
+{
+	char	*ret;
+	char	*var;
+	int		j;
+	int		q;
+
+	j = 0;
+	q = 0;
 	ret = cash_malloc(str, env, cash_q);
+	var = NULL;
 	while (str && str[i])
 	{
 		ft_isquoted(str[i], &q);
@@ -51,7 +59,6 @@ char	*cash_money(char *str, char ***env, char *cash_q)
 
 static char	*cash_get_var(char *str, int *i, char ***env, char *cash_q)
 {
-	char	*ret;
 	int		len;
 
 	len = ft_env_name(str, NULL);
@@ -61,16 +68,7 @@ static char	*cash_get_var(char *str, int *i, char ***env, char *cash_q)
 		return (ft_strdup(ft_env_get(env[2], str)));
 	}
 	if (str[*i] == '$' && ft_env_name(&str[*i + 1], NULL))
-	{
-		*i += 1;
-		ret = ft_env_get(env[0], &str[*i]);
-		if (!ret)
-			ret = ft_env_get(env[1], &str[*i]);
-		if (!ret)
-			ret = "";
-		*i += ft_env_name(&str[*i], NULL);
-		return ft_strdup(ret);
-	}
+		return (cash_get_var_dollar(str, i, env));
 	if ((str[*i] == '~' && (*i == 0 || str[*i - 1] == ' ')) && \
 		(str[*i + 1] == 0 || str[*i + 1] == ' ' || str[*i + 1] == '/'))
 	{
@@ -83,6 +81,20 @@ static char	*cash_get_var(char *str, int *i, char ***env, char *cash_q)
 		return (ft_strdup(cash_q));
 	}
 	return (NULL);
+}
+
+static char	*cash_get_var_dollar(char *str, int *i, char ***env)
+{
+	char	*ret;
+
+	*i += 1;
+	ret = ft_env_get(env[0], &str[*i]);
+	if (!ret)
+		ret = ft_env_get(env[1], &str[*i]);
+	if (!ret)
+		ret = "";
+	*i += ft_env_name(&str[*i], NULL);
+	return (ft_strdup(ret));
 }
 
 static char	*cash_malloc(char *str, char ***env, char *cash_q)

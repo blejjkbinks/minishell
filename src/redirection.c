@@ -125,7 +125,7 @@ static int	open_heredoc(char *str)
 	fd = open(MS_HEREDOC_PATH, O_CREAT | O_WRONLY | O_TRUNC, 0666);
 	while (1)
 	{
-		ft_printf("heredoc minishell> ");
+		ft_printf("'%s'> ", str);
 		line = get_next_line(fd);
 		if (!line || !ft_strcmp(line, str))
 			break ;

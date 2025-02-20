@@ -40,9 +40,9 @@ void	ft_pidfd_debug(char **split, int *pidfd)
 	i = 0;
 	while(split && split[i])
 	{
-		ft_printf("[%d:pid'%d',", i, pidfd[3 * i]);
-		ft_printf("%d,'%d'", 3 * i + 1, pidfd[3 * i + 1]);
-		ft_printf("%d,'%d'", 3 * i + 2, pidfd[3 * i + 2]);
+		ft_printf("[%d=pid:'%d',", i, pidfd[3 * i]);
+		ft_printf("%d:'%d'", 3 * i + 1, pidfd[3 * i + 1]);
+		ft_printf("%d:'%d']", 3 * i + 2, pidfd[3 * i + 2]);
 		i++;
 	}
 	ft_printf("\n");
