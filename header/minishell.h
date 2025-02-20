@@ -49,14 +49,19 @@ int		ft_exec_builtin(char **comm, char ***env);
 int		ft_source(char *arg, char ***env);
 //echo, exit, which_print
 
-//probably source
-
 //exec_pipe.c
 void	ft_exec_pipe(char **comm, char ***env, int *pidfd, int i);
 //exec_which
 
 //redirection.c
 int		redirection(char **pipe, int *pidfd);
+
+//redir_help.c
+int		find_redirection(char *str, int *rin, int *rout);
+int		find_mode(char *str, int *i, int *mode);
+int		trim_redirection(char *str, int mode, int *rin, int *rout);
+int		open_redirection(char *str, int mode, int *rin, int *rout);
+int		open_heredoc(char *str);
 
 //cash_money.c
 char	*cash_money(char *str, char ***env, char *cash_q);
