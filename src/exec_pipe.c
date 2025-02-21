@@ -12,85 +12,77 @@
 
 #include "minishell.h"
 
-static void	ft_exec_which(char *comm, char **arg, char **env);
+//static void	ft_exec_which(char *comm, char **arg, char **env);
 
-/*void execute_pipes(char ***commands, char ***env)
+void ft_exec_pipe(char **pipes, char ***env, int *pidfd, int i)
 {
-	int		i;
-	int		num_cmd;
-	int		pipefd[2];
-	int		in_fd;
-	pid_t	pid;
+    static int prev_fd = -1;  // holds the read end of the previous pipe
+    int fds[2];
+    pid_t pid;
+    int is_last = (pipes[i + 1] == NULL);  // determine if this is the last command
 
-	num_cmd = ft_count_cmds(commands); //make command
-	i = 0;
-	in_fd = 0;
-	while (i < num_cmd)
+
+    if (!is_last) 
 	{
-		if (i < num_cmd - 1)
-			pipe(pipefd);
-		pid = fork();
-		if (pid == 0)
+        if (pipe(fds) == -1) 
 		{
-			if (i != 0)
-			{
-				dup2(in_fd, STDIN_FILENO);
-				close(in_fd);
-			}
-			if (i < num_cmd - 1)
-			{
-				dup2(pipefd[1], STDOUT_FILENO);
-				close(pipefd[1]);
-				close(pipefd[2]);
-			}
-			if (ft_isbuiltin(commands[i][0]))
-				exit(ft_exec_builtin(commands[i]));
-			ft_exec_which(commands[i][0], commands[i], env[0]);
-			exit(EXIT_FAILURE);
-		}
-		if (i != 0)
-			close(in_fd);
-		if (i < num_cmd - 1)
-		{
-			close(pipefd[1]);
-			in_fd = pipefd[0];
-		}
-	}
-	i = 0;
-	while (i < num_cmd)
+            perror("pipe");
+            exit(EXIT_FAILURE);
+        }
+    }
+    pid = fork();
+    if (pid < 0) 
 	{
-		wait(NULL);
-		i++;
-	}
+        perror("fork");
+        exit(EXIT_FAILURE);
+    }
+    if (pid == 0) 
+	{
+        if (prev_fd != -1) 
+		{
+            if (dup2(prev_fd, STDIN_FILENO) == -1) 
+			{
+                perror("dup2 prev_fd");
+                exit(EXIT_FAILURE);
+            }
+            close(prev_fd);
+        }
+        if (!is_last) 
+		{
+            close(fds[0]);  // Close the read end in the child.
+            if (dup2(fds[1], STDOUT_FILENO) == -1) 
+			{
+                perror("dup2 fds[1]");
+                exit(EXIT_FAILURE);
+            }
+            close(fds[1]);
+        }
+        char **args = ft_split_quotes(pipes[i], ' ');
+		if (ft_isbuiltin(args[0]))
+			ft_exec_builtin(args, env);
+		else
+		{
+        	execve(args[0], args, *env);
+        	perror("execve");
+        	exit(EXIT_FAILURE);
+		}
+    }
+	else 
+	{
+        pidfd[i] = pid;
+        if (prev_fd != -1)
+            close(prev_fd);
+        if (!is_last) 
+		{
+            close(fds[1]);  // Parent doesn't write to this pipe.
+            prev_fd = fds[0];
+        } 
+		else
+            prev_fd = -1;
+    }
 }
 
-static void	ft_exec_which(char *comm, char **arg, char **env)
-{
-	char	*path;
-	char	**bash;
-
-	path = ft_which(comm, env);
-	bash = ft_env_dup(arg);
-	ft_memmove(bash + 1, bash, ft_split_len(bash) * sizeof(char *));
-	bash[0] = "/bin/bash";
-	if (!path && !access(comm, R_OK))
-	{
-		ft_printf("minishell: %s: is a directory\n", comm);
-		exit(126);
-	}
-	else if (!path)
-	{
-		ft_printf("minishell: %s: command not found\n", comm);
-		exit(127);
-	}
-	else if (execve(path, arg, env) == -1)
-	{
-		ft_printf("minishell: %s: permission denied\n", comm);
-		exit(126);
-	}
-}*/
-
-void	ft_exec_pipe(char **comm, char ***env, pid_t *pid)	//fdr[4]
+/*void	ft_exec_pipe(char **comm, char ***env, pid_t *pid)	//fdr[4]
 {
 	*pid = fork();
 	if (*pid == 0)
@@ -119,4 +111,4 @@ static void	ft_exec_which(char *comm, char **arg, char **env)
 	else if (execve(path, arg, env) && execve(bash[0], bash, env))
 		ft_printf("minishell: %s: permission denied\n", comm);
 	exit (126 + (path != NULL));
-}
+}*/
