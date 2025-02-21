@@ -12,103 +12,112 @@
 
 #include "minishell.h"
 
-//static void	ft_exec_which(char *comm, char **arg, char **env);
-
-void ft_exec_pipe(char **pipes, char ***env, int *pidfd, int i)
+static void	setup_redirection(int is_last, int prev_fd, int *fds)
 {
-    static int prev_fd = -1;  // holds the read end of the previous pipe
-    int fds[2];
-    pid_t pid;
-    int is_last = (pipes[i + 1] == NULL);  // determine if this is the last command
-
-
-    if (!is_last) 
+	if (prev_fd != -1)
 	{
-        if (pipe(fds) == -1) 
+		if (dup2(prev_fd, STDIN_FILENO) == -1)
 		{
-            perror("pipe");
-            exit(EXIT_FAILURE);
-        }
-    }
-    pid = fork();
-    if (pid < 0) 
-	{
-        perror("fork");
-        exit(EXIT_FAILURE);
-    }
-    if (pid == 0) 
-	{
-        if (prev_fd != -1) 
-		{
-            if (dup2(prev_fd, STDIN_FILENO) == -1) 
-			{
-                perror("dup2 prev_fd");
-                exit(EXIT_FAILURE);
-            }
-            close(prev_fd);
-        }
-        if (!is_last) 
-		{
-            close(fds[0]);  // Close the read end in the child.
-            if (dup2(fds[1], STDOUT_FILENO) == -1) 
-			{
-                perror("dup2 fds[1]");
-                exit(EXIT_FAILURE);
-            }
-            close(fds[1]);
-        }
-        char **args = ft_split_quotes(pipes[i], ' ');
-		if (ft_isbuiltin(args[0]))
-			ft_exec_builtin(args, env);
-		else
-		{
-        	execve(args[0], args, *env);
-        	perror("execve");
-        	exit(EXIT_FAILURE);
+			perror("dup2 prev_fd");
+			exit(EXIT_FAILURE);
 		}
-    }
-	else 
+		close(prev_fd);
+	}
+	if (!is_last)
 	{
-        pidfd[i] = pid;
-        if (prev_fd != -1)
-            close(prev_fd);
-        if (!is_last) 
+		close(fds[0]);
+		if (dup2(fds[1], STDOUT_FILENO) == -1)
 		{
-            close(fds[1]);  // Parent doesn't write to this pipe.
-            prev_fd = fds[0];
-        } 
-		else
-            prev_fd = -1;
-    }
-}
-
-/*void	ft_exec_pipe(char **comm, char ***env, pid_t *pid)	//fdr[4]
-{
-	*pid = fork();
-	if (*pid == 0)
-	{
-		//ready pipes and redirs
-		if (ft_isbuiltin(comm[0]))
-			exit(ft_exec_builtin(comm, env));
-		ft_exec_which(comm[0], comm, env[0]);
-		//close pipes and redirs
+			perror("dup2 fds[1]");
+			exit(EXIT_FAILURE);
+		}
+		close(fds[1]);
 	}
 }
 
-static void	ft_exec_which(char *comm, char **arg, char **env)
+static void	child_process(char *cmd, char ***env)
 {
+	char	**args;
 	char	*path;
-	char	**bash;
 
-	path = ft_which(comm, env);
-	bash = ft_env_dup(arg);
-	ft_memmove(bash + 1, bash, ft_split_len(bash) * sizeof(char *));
-	bash[0] = "/bin/bash";
-	if (!path && !access(comm, R_OK))
-		ft_printf("minishell: %s: is a directory\n", comm);
-	else if (!path)
-		ft_printf("minishell: %s: command not found\n", comm);
-	else if (execve(path, arg, env) && execve(bash[0], bash, env))
-		ft_printf("minishell: %s: permission denied\n", comm);
-	exit (126 + (path != NULL));
-}*/
+	args = ft_split_quotes(cmd, ' ');
+	if (ft_isbuiltin(args[0]))
+	{
+		ft_exec_builtin(args, env);
+		ft_split_free(args);
+	}
+	else
+	{
+		path = ft_which(args[0], *env);
+		if (!path)
+		{
+			printf("%s: command not found\n", args[0]);
+			return ;
+		}
+		execve(path, args, *env);
+		free(path);
+		ft_split_free(args);
+		exit(EXIT_FAILURE);
+	}
+}
+
+static pid_t	create_child(char **pipes, int i, int *fds, int *is_last)
+{
+	pid_t	pid;
+
+	*is_last = (pipes[i + 1] == NULL);
+	if (!(*is_last))
+	{
+		if (pipe(fds) == -1)
+		{
+			perror("pipe");
+			exit(EXIT_FAILURE);
+		}
+	}
+	pid = fork();
+	if (pid < 0)
+	{
+		perror("fork");
+		exit(EXIT_FAILURE);
+	}
+	return (pid);
+}
+
+static void	parent_process(int *fds, int is_last, int *prev_fd)
+{
+	if (*prev_fd != -1)
+		close(*prev_fd);
+	if (! is_last)
+	{
+		close(fds[1]);
+		*prev_fd = fds[0];
+	}
+	else
+		*prev_fd = -1;
+}
+
+void	ft_exec_pipe(char **pipe, char ***env, int *pidfd, int i)
+{
+	static int	prev_fd;
+	static int	first_time;
+	int			fds[2];
+	int			is_last;
+	pid_t		pid;
+
+	if (first_time != 1)
+	{
+		prev_fd = -1;
+		first_time = 1;
+	}
+	pid = create_child(pipe, i, fds, &is_last);
+	if (pid == 0)
+	{
+		setup_redirection(is_last, prev_fd, fds);
+		child_process(pipe[i], env);
+	}
+	else
+	{
+		pidfd[i] = pid;
+		parent_process(fds, is_last, &prev_fd);
+	}
+}
