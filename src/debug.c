@@ -18,7 +18,7 @@ void	ft_split_debug(char **split, char *msg)
 
 	if (!MS_DEBUG)
 		return ;
-	ft_printf("MS_DEBUG: %s: ", msg);
+	ft_printf("MS_DEBUG: SPLIT_%s: ", msg);
 	if (!split)
 		ft_printf("split is null");
 	i = 0;

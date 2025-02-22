@@ -34,7 +34,7 @@ int	find_redirection(char *str, int *rin, int *rout)
 			if (find_mode(str, &i, &mode))
 				return (258);
 			if (trim_redirection(str + i, mode, rin, rout))
-				return (3);
+				return (1);
 			i = 0;
 			q = 0;
 		}
@@ -90,6 +90,10 @@ int	trim_redirection(char *str, int mode, int *rin, int *rout)
 
 int	open_redirection(char *str, int mode, int *rin, int *rout)
 {
+	if ((mode == '>' || mode == '>' + 1) && *rout)
+		close(*rout);
+	if ((mode == '<' || mode == '<' + 1) && *rin)
+		close(*rin);
 	if (mode == '>')
 		*rout = open(str, O_WRONLY | O_CREAT | O_TRUNC, 0666);
 	if (mode == '>' + 1)
@@ -102,7 +106,7 @@ int	open_redirection(char *str, int mode, int *rin, int *rout)
 		ft_printf("'%s' m:%c, in:%d, out:%d\n", str, mode, *rin, *rout);
 	if (*rin < 0 || *rout < 0)
 	{
-		ft_printf("failed to open %s\n", str);
+		ft_printf("minishell: %s: no such file or directory\n", str);
 		free(str);
 		return (4);
 	}

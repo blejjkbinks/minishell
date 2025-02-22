@@ -20,13 +20,17 @@ static char	*cash_malloc(char *str, char ***env, char *cash_q);
 char	*cash_money(char *str, char ***env, char *cash_q)
 {
 	int		i;
+	char	*ret;
 
 	i = 0;
 	while (str[i] == ' ')
 		i++;
 	if (str[i] == '#')
 		return (NULL);
-	return (cash_money_loop(str, env, cash_q, i));
+	ret = cash_money_loop(str, env, cash_q, i);
+	if (MS_DEBUG && ft_printf("DEBUG: CASH: "))
+		ft_printf("'%s'->>'%s'\n", str, ret);
+	return (ret);
 }
 
 static char	*cash_money_loop(char *str, char ***env, char *cash_q, int i)

@@ -42,6 +42,7 @@ void	*letsgo(char *input, char ***env, char **cash_q, char **last_c)
 	return (ft_split_free(semicol));
 }
 
+//need to close opened fds here
 void	*letsnot(char **cash_q, char **pipe, char **semicol, int *pidfd)
 {
 	ft_free(*cash_q);
@@ -81,23 +82,23 @@ void	letsgo_pipe(char **pipe, char ***env, char **cash_q, int *pidfd)
 	int		status;
 
 	status = 0;
-	i = 0;
-	while (pipe && pipe[i])
+	if (pipe && !pipe[1])
 	{
-		if (!pipe[1])
-		{
-			comm = ft_split_quotes(pipe[i], ' ');
-			ft_strtolower(comm[0]);
-			ft_splittrim_quotes(comm);
-			ft_split_debug(comm, "COMM");
-			if (comm && ft_isbuiltin(comm[0]) > 1)
-				status = (ft_exec_builtin(comm, env) << 8);
-			else
-				ft_exec_pipe(pipe, env, pidfd, i);
-			ft_split_free(comm);
-		}
+		comm = ft_split_quotes(pipe[0], ' ');
+		ft_splittrim_quotes(comm);
+		ft_strtolower(comm[0]);
+		if (comm && ft_isbuiltin(comm[0]) > 1)
+			ft_split_debug(comm, "SINGLE");
+		if (comm && ft_isbuiltin(comm[0]) > 1)
+			status = (ft_exec_builtin(comm, env) << 8);
 		else
-			ft_exec_pipe(pipe, env, pidfd, i);
+			ft_exec_pipe(pipe, env, pidfd, 0);
+		ft_split_free(comm);
+	}
+	i = 0;
+	while (pipe && pipe[i] && pipe[1])
+	{
+		ft_exec_pipe(pipe, env, pidfd, i);
 		i++;
 	}
 	letsgo_wait(pipe, pidfd, cash_q, status);

@@ -24,7 +24,7 @@ int	redirection(char **pipe, int *pidfd)
 		if (e)
 		{
 			if (e == 258)
-				ft_printf("minishell: invalid token ><\n");
+				ft_printf("minishell: invalid token >< >:(\n");
 			*pidfd = e;
 			return (e);
 		}
