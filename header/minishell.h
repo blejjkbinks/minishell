@@ -17,6 +17,10 @@
 #  define MS_HEREDOC_PATH "/tmp/minishell_heredoc.txt"
 # endif
 
+# ifndef N
+#  define N 4
+# endif
+
 # include "../libft/header/libft.h"
 # include <fcntl.h>
 # include <stdio.h>

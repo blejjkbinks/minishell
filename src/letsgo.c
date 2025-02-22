@@ -31,7 +31,7 @@ void	*letsgo(char *input, char ***env, char **cash_q, char **last_c)
 	while (semicol && semicol[i])
 	{
 		pipe = ft_split_quotes(semicol[i], '|');
-		pidfd = (int *)ft_calloc(ft_split_len(pipe) * 3, sizeof(int));
+		pidfd = (int *)ft_calloc(ft_split_len(pipe) * N, sizeof(int));
 		if (redirection(pipe, pidfd))
 			return (letsnot(cash_q, pipe, semicol, pidfd));
 		ft_pidfd_debug(pipe, pidfd);
@@ -117,8 +117,8 @@ void	letsgo_wait(char **pipe, int *pidfd, char **cash_q, int status)
 	i = 0;
 	while (pipe && pipe[i])
 	{
-		if (pidfd[3 * i] > 0)
-			waitpid(pidfd[3 * i], &status, 0);
+		if (pidfd[N * i] > 0)
+			waitpid(pidfd[N * i], &status, 0);
 		i++;
 	}
 	free(*cash_q);

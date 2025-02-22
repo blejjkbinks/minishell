@@ -20,7 +20,7 @@ int	redirection(char **pipe, int *pidfd)
 	i = 0;
 	while (pipe && pipe[i])
 	{
-		e = find_redirection(pipe[i], &pidfd[(3 * i) + 1], &pidfd[(3 * i) + 2]);
+		e = find_redirection(pipe[i], &pidfd[(N * i) + 1], &pidfd[(N * i) + 2]);
 		if (e)
 		{
 			if (e == 258)

@@ -18,16 +18,16 @@ void	ft_split_debug(char **split, char *msg)
 
 	if (!MS_DEBUG)
 		return ;
-	ft_printf("MS_DEBUG: SPLIT_%s: ", msg);
+	printf("MS_DEBUG: SPLIT_%s: ", msg);
 	if (!split)
-		ft_printf("split is null");
+		printf("split is null");
 	i = 0;
 	while (split && split[i])
 	{
-		ft_printf("[%s]", split[i]);
+		printf("[%s]", split[i]);
 		i++;
 	}
-	ft_printf(":)\n");
+	printf(":)\n");
 }
 
 void	ft_pidfd_debug(char **split, int *pidfd)
@@ -40,9 +40,9 @@ void	ft_pidfd_debug(char **split, int *pidfd)
 	i = 0;
 	while (split && split[i])
 	{
-		printf("[%d={pid:'%d'},", i, pidfd[3 * i]);
-		printf("{%d:'%d'}", 3 * i + 1, pidfd[3 * i + 1]);
-		printf("{%d:'%d'}]", 3 * i + 2, pidfd[3 * i + 2]);
+		printf("[%d={pid:'%d'},", i, pidfd[N * i]);
+		printf("{%d:'%d'}", N * i + 1, pidfd[N * i + 1]);
+		printf("{%d:'%d'}]", N * i + 2, pidfd[N * i + 2]);
 		i++;
 	}
 	printf("\n");
@@ -52,5 +52,5 @@ void	ft_str_debug(char *str, char *msg)
 {
 	if (!MS_DEBUG)
 		return ;
-	ft_printf("MS_DEBUG: STR: %s: '%s'\n", msg, str);
+	printf("MS_DEBUG: STR: %s: '(%s)'\n", msg, str);
 }

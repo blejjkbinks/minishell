@@ -13,6 +13,8 @@
 #include "minishell.h"
 
 static void	ft_exec_which(char *comm, char **arg, char **env);
+static void	ready_pipe(int *pidfd, int *fdp, int i);
+static void	close_pipe(int *pidfd, int *fdp, int i);
 
 /*
 redirs and pipes happen here
@@ -23,6 +25,7 @@ int mode_out for append/overwrite
 */
 
 //void	ft_exec_pipe(char **comm, char ***env, pid_t *pid)	//fdr[4]
+/*
 void	ft_exec_pipe(char **comm, char ***env, int *pidfd, int i)
 {
 	char	**arg;
@@ -42,6 +45,59 @@ void	ft_exec_pipe(char **comm, char ***env, int *pidfd, int i)
 		ft_exec_which(arg[0], arg, env[0]);
 		//close pipes and redirs
 	}
+}
+*/
+
+void	ft_exec_pipe(char **comm, char ***env, int *pidfd, int i)
+{
+	char	**arg;
+	int		fdp[2];
+
+	if (comm[i + 1])
+	{
+		pipe(fdp);
+		pidfd[(N * i) + 3] = fdp[0];
+		if (MS_DEBUG && ft_printf("MS_DEBUG: FD: PIPE: "))
+			ft_printf("fdp[0]:'%d', fdp[1]:'%d'\n", fdp[0], fdp[1]);
+	}
+	pidfd[N * i] = fork();
+	if (pidfd[N * i] == 0)
+	{
+		arg = ft_split_quotes(comm[i], ' ');
+		ft_splittrim_quotes(arg);
+		ft_strtolower(arg[0]);
+		ft_split_debug(arg, "EXEC");
+//
+		ready_pipe(pidfd, fdp, i);
+//
+		if (ft_isbuiltin(arg[0]))
+			exit(ft_exec_builtin(arg, env));
+		ft_exec_which(arg[0], arg, env[0]);
+	}
+	//close_pipe(pidfd, fdp, i);
+}
+
+static void	ready_pipe(int *pidfd, int *fdp, int i)
+{
+	if (pidfd[(N * i) + 1])
+		dup2(pidfd[(N * i) +1], STDIN_FILENO);
+	else if (i && pidfd[(N * (i - 1)) + 3] != -1)
+		dup2(pidfd[(N * (i - 1)) + 3], STDIN_FILENO);
+	if (pidfd[(N * i) + 2])
+		dup2(pidfd[(N * i) + 2], STDOUT_FILENO);
+	else if (fdp[1] != -1)
+		dup2(fdp[1], STDOUT_FILENO);
+	if (MS_DEBUG && ft_printf("MS_DEBUG: FD: AFTER: "))
+		ft_printf("STD_IN:'%d', STD_OUT:'%d'\n", STDIN_FILENO, STDOUT_FILENO);
+	close_pipe(pidfd, fdp, i);
+}
+
+static void	close_pipe(int *pidfd, int *fdp, int i)
+{
+	if (i && pidfd[(N * (i - 1)) + 3])
+		close(pidfd[(N * (i - 1)) + 3]);
+	if (fdp[1] != -1)
+		close(fdp[1]);
 }
 
 static void	ft_exec_which(char *comm, char **arg, char **env)
@@ -69,7 +125,9 @@ static void	ft_exec_which(char *comm, char **arg, char **env)
 //
 //
 //
+
 /*
+
 void ft_ready_pipe(t_mshl *m)
 {
 	m->comm = m->triple[m->i];
