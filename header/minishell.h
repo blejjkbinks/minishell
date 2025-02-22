@@ -32,6 +32,7 @@
 //debug.c
 void	ft_split_debug(char **split, char *msg);
 void	ft_pidfd_debug(char **split, int *pidfd);
+void	ft_str_debug(char *str, char *msg);
 
 //get_prompt.c
 char	*get_prompt(char *prompt, char **env, int cash_question);

@@ -65,10 +65,13 @@ char	**ready_pipe(char *input, char ***env, char **cash_q, char **last_c)
 	char	**semicol;
 
 	input = double_exclam(input, *last_c);
+	ft_str_debug(*last_c, "LASTC_C");
+	ft_str_debug(input, "D_EXC");
 	add_history(input);
 	ft_free(*last_c);
 	*last_c = input;
 	input = cash_money(input, env, *cash_q);
+	ft_str_debug(input, "CASH");
 	semicol = ft_split_quotes(input, ';');
 	ft_split_debug(semicol, "SCOL");
 	ft_free(input);

@@ -82,5 +82,5 @@ static char	*double_exclam_alloc(char *str, char *last_c)
 			j++;
 		}
 	}
-	return ((char *)ft_malloc((j + 1) * sizeof(char)));
+	return ((char *)ft_calloc((j + 1), sizeof(char)));
 }

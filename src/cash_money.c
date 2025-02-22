@@ -28,8 +28,6 @@ char	*cash_money(char *str, char ***env, char *cash_q)
 	if (str[i] == '#')
 		return (NULL);
 	ret = cash_money_loop(str, env, cash_q, i);
-	if (MS_DEBUG && ft_printf("DEBUG: CASH: "))
-		ft_printf("'%s'->>'%s'\n", str, ret);
 	return (ret);
 }
 
@@ -58,6 +56,7 @@ static char	*cash_money_loop(char *str, char ***env, char *cash_q, int i)
 			ret[j++] = str[i++];
 		var = ft_free(var);
 	}
+	ret[j] = 0;
 	return (ret);
 }
 
