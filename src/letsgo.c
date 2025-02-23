@@ -54,6 +54,7 @@ void	*letsnot(char **cash_q, char **pipe, char **semicol, int *pidfd)
 		ft_printf("minishell: unclosed quote (┛ಠ益ಠ)┛彡┻━┻\n");
 	if (!pidfd && !MS_CUTE)
 		ft_printf("minishell: unclosed quote\n");
+	redirection_close(pipe, pidfd);
 	ft_free(pidfd);
 	ft_split_free(pipe);
 	ft_split_free(semicol);
@@ -123,6 +124,7 @@ void	letsgo_wait(char **pipe, int *pidfd, char **cash_q, int status)
 	}
 	free(*cash_q);
 	*cash_q = ft_itoa(((status & 0xff00) >> 8));
+	redirection_close(pipe, pidfd);
 	free(pidfd);
 	ft_split_free(pipe);
 }

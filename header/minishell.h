@@ -37,6 +37,7 @@
 void	ft_split_debug(char **split, char *msg);
 void	ft_pidfd_debug(char **split, int *pidfd);
 void	ft_str_debug(char *str, char *msg);
+void	ft_dup_debug(int a, int b, char *msg);
 
 //get_prompt.c
 char	*get_prompt(char *prompt, char **env, int cash_question);
@@ -60,6 +61,7 @@ void	ft_exec_pipe(char **comm, char ***env, int *pidfd, int i);
 
 //redirection.c
 int		redirection(char **pipe, int *pidfd);
+void	redirection_close(char **pipe, int *pidfd);
 
 //redir_help.c
 int		find_redirection(char *str, int *rin, int *rout);

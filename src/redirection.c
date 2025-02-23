@@ -32,3 +32,18 @@ int	redirection(char **pipe, int *pidfd)
 	}
 	return (0);
 }
+
+void	redirection_close(char **pipe, int *pidfd)
+{
+	int	i;
+
+	i = 0;
+	while (pipe && pipe[i])
+	{
+		if (pidfd[(N * i) + 1])
+			close(pidfd[(N * i) + 1]);
+		if (pidfd[(N * i) + 2])
+			close(pidfd[(N * i) + 2]);
+		i++;
+	}
+}

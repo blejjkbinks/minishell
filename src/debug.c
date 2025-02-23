@@ -54,3 +54,10 @@ void	ft_str_debug(char *str, char *msg)
 		return ;
 	printf("MS_DEBUG: STR: %s: '(%s)'\n", msg, str);
 }
+
+void	ft_dup_debug(int a, int b, char *msg)
+{
+	if (!MS_DEBUG)
+		return ;
+	printf("MS_DEBUG: DUP2: %s, '%d'->'%d'\n", msg, a, b);
+}

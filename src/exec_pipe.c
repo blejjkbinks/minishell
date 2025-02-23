@@ -57,8 +57,13 @@ void	ft_exec_pipe(char **comm, char ***env, int *pidfd, int i)
 	{
 		pipe(fdp);
 		pidfd[(N * i) + 3] = fdp[0];
-		if (MS_DEBUG && ft_printf("MS_DEBUG: FD: PIPE: "))
+		if (MS_DEBUG && ft_printf("MS_DEBUG: PIPE(): "))
 			ft_printf("fdp[0]:'%d', fdp[1]:'%d'\n", fdp[0], fdp[1]);
+	}
+	else
+	{
+		fdp[0] = -1;
+		fdp[1] = -1;
 	}
 	pidfd[N * i] = fork();
 	if (pidfd[N * i] == 0)
@@ -74,30 +79,50 @@ void	ft_exec_pipe(char **comm, char ***env, int *pidfd, int i)
 			exit(ft_exec_builtin(arg, env));
 		ft_exec_which(arg[0], arg, env[0]);
 	}
-	//close_pipe(pidfd, fdp, i);
+	close_pipe(pidfd, fdp, i);
 }
 
 static void	ready_pipe(int *pidfd, int *fdp, int i)
 {
 	if (pidfd[(N * i) + 1])
-		dup2(pidfd[(N * i) +1], STDIN_FILENO);
+	{
+		ft_dup_debug(pidfd[(N * i) + 1], STDIN_FILENO, "INPUT");
+		dup2(pidfd[(N * i) + 1], STDIN_FILENO);
+		close(pidfd[(N * i) + 1]);
+	}
 	else if (i && pidfd[(N * (i - 1)) + 3] != -1)
+	{
+		ft_dup_debug(pidfd[(N * (i - 1)) + 3], STDIN_FILENO, "PREV PIPE");
 		dup2(pidfd[(N * (i - 1)) + 3], STDIN_FILENO);
+		close(pidfd[(N * (i - 1)) + 3]);
+	}
 	if (pidfd[(N * i) + 2])
+	{
+		ft_dup_debug(pidfd[(N * i) + 2], STDOUT_FILENO, "OUTPUT");
 		dup2(pidfd[(N * i) + 2], STDOUT_FILENO);
+		close(pidfd[(N * i) + 2]);
+	}
 	else if (fdp[1] != -1)
+	{
+		ft_dup_debug(fdp[1], STDOUT_FILENO, "NEXT PIPE");
 		dup2(fdp[1], STDOUT_FILENO);
-	if (MS_DEBUG && ft_printf("MS_DEBUG: FD: AFTER: "))
-		ft_printf("STD_IN:'%d', STD_OUT:'%d'\n", STDIN_FILENO, STDOUT_FILENO);
+		close(fdp[1]);
+	}
 	close_pipe(pidfd, fdp, i);
 }
 
 static void	close_pipe(int *pidfd, int *fdp, int i)
 {
-	if (i && pidfd[(N * (i - 1)) + 3])
+	if (i && pidfd[(N * (i - 1)) + 3] != -1)
+	{
 		close(pidfd[(N * (i - 1)) + 3]);
+		pidfd[(N * (i - 1)) + 3] = -1;
+	}
 	if (fdp[1] != -1)
+	{
 		close(fdp[1]);
+		fdp[1] = -1;
+	}
 }
 
 static void	ft_exec_which(char *comm, char **arg, char **env)
