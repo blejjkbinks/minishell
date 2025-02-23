@@ -32,7 +32,7 @@ void	*letsgo(char *input, char ***env, char **cash_q, char **last_c)
 	{
 		pipe = ft_split_quotes(semicol[i], '|');
 		pidfd = (int *)ft_calloc(ft_split_len(pipe) * N, sizeof(int));
-		if (redirection(pipe, pidfd))
+		if (redirection(pipe, pidfd) || invalid_pipe(input))
 			return (letsnot(cash_q, pipe, semicol, pidfd));
 		ft_pidfd_debug(pipe, pidfd);
 		ft_split_debug(pipe, "PIPE");
