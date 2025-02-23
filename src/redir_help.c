@@ -123,7 +123,7 @@ int	open_heredoc(char *str)
 	while (1)
 	{
 		ft_printf("'%s'> ", str);
-		line = get_next_line(fd);
+		line = get_next_line(0);
 		if (!line || !ft_strcmp(line, str))
 			break ;
 		write(fd, line, ft_strlen(line));
