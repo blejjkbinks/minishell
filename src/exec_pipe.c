@@ -115,23 +115,3 @@ static void	ft_exec_which(char *comm, char **arg, char **env)
 	exit (126 + (path != NULL));
 }
 
-int	invalid_pipe(char *input)
-{
-	while (*input)
-	{
-		if (*input == '|')
-		{
-			input++;
-			while (*input && ft_isspace(*input))
-				input++;
-			if (*input == '\0')
-			{
-				printf("Pipe '|' must be followed by a command\n");
-				return (1);
-			}
-		}
-		else
-			input++;
-	}
-	return (0);
-}
