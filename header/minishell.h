@@ -21,6 +21,14 @@
 #  define N 4
 # endif
 
+# ifndef MS_DEBUG
+#  define MS_DEBUG 0
+# endif
+
+# ifndef MS_CUTE
+#  define MS_CUTE 1
+# endif
+
 # include "../libft/header/libft.h"
 # include <fcntl.h>
 # include <stdio.h>
