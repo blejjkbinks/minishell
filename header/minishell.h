@@ -67,6 +67,9 @@ int		ft_source(char *arg, char ***env);
 void	ft_exec_pipe(char **comm, char ***env, int *pidfd, int i);
 //exec_which
 
+//pipe_help.c
+int		invalid_pipe(char *input);
+
 //redirection.c
 int		redirection(char **pipe, int *pidfd);
 void	redirection_close(char **pipe, int *pidfd);
