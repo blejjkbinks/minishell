@@ -114,5 +114,5 @@ static void	ft_exec_which(char *comm, char **arg, char **env)
 		ft_printf("minishell: %s: command not found\n", comm);
 	else if (execve(path, arg, env))
 		ft_printf("minishell: %s: permission denied\n", comm);
-	exit (126 + (path != NULL));
+	exit (126 + (access(comm, F_OK) != NULL));
 }
