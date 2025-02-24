@@ -23,6 +23,7 @@ void	ms_sig_interupt(int signo)
 
 void	ms_sig_interupt_alt(int signo)
 {
+	g_signal = signo;
 	if (signo == SIGINT)
 		printf("\n");
 	else if (signo == SIGQUIT)

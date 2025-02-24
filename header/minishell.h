@@ -38,6 +38,8 @@
 # include <sys/wait.h>
 # include <signal.h>
 
+extern int	g_signal;
+
 //minishell.c
 //main, init
 

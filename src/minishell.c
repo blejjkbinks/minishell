@@ -15,6 +15,8 @@
 void	*init_minishell(char ****env, char **envp_main, \
 	char **cash_question, char **last_command);
 
+int	g_signal = 0;
+
 int	main(int argc, char **argv, char **envp)
 {
 	char	*input;
