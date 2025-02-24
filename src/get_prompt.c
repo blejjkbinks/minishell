@@ -97,7 +97,7 @@ static char	*ft_get_git_branch(void)
 		fd = open(branch, O_RDONLY);
 		free(branch);
 		if (fd > 0)
-			break;
+			break ;
 		*ft_strrchr(pwd, '/') = 0;
 	}
 	free(pwd);
