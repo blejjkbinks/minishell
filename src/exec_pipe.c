@@ -108,7 +108,8 @@ static void	ready_pipe(int *pidfd, int *fdp, int i)
 		dup2(fdp[1], STDOUT_FILENO);
 		close(fdp[1]);
 	}
-	close_pipe(pidfd, fdp, i);
+	if (fdp[0] != -1)
+		close(fdp[0]);
 }
 
 static void	close_pipe(int *pidfd, int *fdp, int i)
