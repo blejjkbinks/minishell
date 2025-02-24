@@ -47,6 +47,10 @@ void	ft_pidfd_debug(char **split, int *pidfd);
 void	ft_str_debug(char *str, char *msg);
 void	ft_dup_debug(int a, int b, char *msg);
 
+//signal.c
+void	init_signals(void);
+void	swap_signal_for_execute(void);
+
 //get_prompt.c
 char	*get_prompt(char *prompt, char **env, int cash_question);
 

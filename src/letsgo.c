@@ -112,6 +112,7 @@ void	letsgo_wait(char **pipe, int *pidfd, char **cash_q, int status)
 	int	i;
 
 	ft_pidfd_debug(pipe, pidfd);
+	swap_signal_for_execute();
 	i = 0;
 	while (pipe && pipe[i])
 	{
@@ -119,6 +120,7 @@ void	letsgo_wait(char **pipe, int *pidfd, char **cash_q, int status)
 			waitpid(pidfd[N * i], &status, 0);
 		i++;
 	}
+	swap_signal_for_execute();
 	free(*cash_q);
 	*cash_q = ft_itoa(((status & 0xff00) >> 8));
 	redirection_close(pipe, pidfd);

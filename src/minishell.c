@@ -37,14 +37,13 @@ int	main(int argc, char **argv, char **envp)
 	}
 	exit(1 + (0 * ft_printf("usage: %s\n", argv[0])));
 }
-//input = get_next_line(0 * ft_printf("%s", prompt));
 
-//	init_signals();
 void	*init_minishell(char ****env, char **envp_main, \
 	char **cash_question, char **last_command)
 {
 	char	*str;
 
+	init_signals();
 	if (MS_CUTE)
 		ft_printf("(✿ ◕‿ ◕) hi~~ welcome to minishell (っ＾▿＾)っ\n");
 	*env = (char ***)ft_malloc(3 * sizeof(char **));
