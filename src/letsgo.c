@@ -107,8 +107,6 @@ void	letsgo_pipe(char **pipe, char ***env, char **cash_q, int *pidfd)
 	letsgo_wait(pipe, pidfd, cash_q, status);
 }
 
-//void	ready_comm()
-
 void	letsgo_wait(char **pipe, int *pidfd, char **cash_q, int status)
 {
 	int	i;

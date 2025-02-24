@@ -87,9 +87,20 @@ static char	*ft_join_prompt(char *e[9])
 static char	*ft_get_git_branch(void)
 {
 	char	*branch;
+	char	*pwd;
 	int		fd;
 
-	fd = open(".git/HEAD", O_RDONLY);
+	pwd = ft_getcwd();
+	while (ft_strchr(pwd, '/'))
+	{
+		branch = ft_strjoin(pwd, "/.git/HEAD");
+		fd = open(branch, O_RDONLY);
+		free(branch);
+		if (fd > 0)
+			break;
+		*ft_strrchr(pwd, '/') = 0;
+	}
+	free(pwd);
 	if (fd < 0)
 		return (NULL);
 	branch = get_next_line(fd);
