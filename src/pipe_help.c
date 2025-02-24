@@ -12,23 +12,7 @@
 
 #include "minishell.h"
 
-int	check_pipe_content(char *input, int i, int has_command)
-{
-	if (!has_command)
-	{
-		printf("Pipe '|' must be preceded by a command\n");
-		return (1);
-	}
-	i++;
-	while (input[i] && ft_isspace(input[i]))
-		i++;
-	if (input[i] == '\0')
-	{
-		printf("Pipe '|' must be followed by a command\n");
-		return (1);
-	}
-	return (0);
-}
+static int	check_pipe_content(char *input, int i, int has_command);
 
 int	invalid_pipe(char *input)
 {
@@ -51,3 +35,23 @@ int	invalid_pipe(char *input)
 	}
 	return (0);
 }
+
+static int	check_pipe_content(char *input, int i, int has_command)
+{
+	if (!has_command)
+	{
+		printf("minishell: invalid token '|'\n");
+		return (1);
+	}
+	i++;
+	while (input[i] && ft_isspace(input[i]))
+		i++;
+	if (input[i] == '\0')
+	{
+		printf("minishell: invalid token '|'\n");
+		return (1);
+	}
+	return (0);
+}
+//printf("Pipe '|' must be followed by a command\n");
+//printf("Pipe '|' must be preceded by a command\n");
