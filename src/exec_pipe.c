@@ -106,7 +106,9 @@ static void	ft_exec_which(char *comm, char **arg, char **env)
 	bash = ft_env_dup(arg);
 	ft_memmove(bash + 1, bash, ft_split_len(bash) * sizeof(char *));
 	bash[0] = "/bin/bash";
-	if (!path && opendir(comm))
+	if (!ft_strlen(comm))
+		ft_printf("minishell: %s: command not found\n", comm);
+	else if (!path && opendir(comm))
 		ft_printf("minishell: %s: is a directory\n", comm);
 	else if (!path && ft_strchr(comm, '/') && access(comm, F_OK))
 		ft_printf("minishell: %s: no such file or directory\n", comm);
