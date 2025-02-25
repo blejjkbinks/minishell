@@ -22,7 +22,7 @@ char	*get_prompt(char *p, char **env, int cash_question)
 	char	*branch;
 	char	*e[9];
 
-	free(p);
+	ft_free(p);
 	if (!MS_CUTE)
 		return (ft_strdup("minishell$ "));
 	pwd = ft_env_get(env, "PWD");
