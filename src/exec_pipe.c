@@ -108,7 +108,7 @@ static void	ft_exec_which(char *comm, char **arg, char **env)
 	bash[0] = "/bin/bash";
 	if (!ft_strlen(comm))
 		ft_printf("minishell: %s: command not found\n", comm);
-	else if (!path && opendir(comm))
+	else if (opendir(comm))
 		ft_printf("minishell: %s: is a directory\n", comm);
 	else if (!path && ft_strchr(comm, '/') && access(comm, F_OK))
 		ft_printf("minishell: %s: no such file or directory\n", comm);
