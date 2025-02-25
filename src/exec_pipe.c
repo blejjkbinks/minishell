@@ -15,23 +15,21 @@
 static void	ft_exec_which(char *comm, char **arg, char **env);
 static void	ready_pipe(int *pidfd, int *fdp, int i);
 static void	close_pipe(int *pidfd, int *fdp, int i);
+static void	twenty_five_lines_norminette(int norminette);
 
 void	ft_exec_pipe(char **comm, char ***env, int *pidfd, int i)
 {
 	char	**arg;
 	int		fdp[2];
 
+	fdp[0] = -1;
+	fdp[1] = -1;
 	if (comm[i + 1])
 	{
 		pipe(fdp);
 		pidfd[(N * i) + 3] = fdp[0];
 		if (MS_DEBUG && ft_printf("MS_DEBUG: PIPE(): "))
 			ft_printf("fdp[0]:'%d', fdp[1]:'%d'\n", fdp[0], fdp[1]);
-	}
-	else
-	{
-		fdp[0] = -1;
-		fdp[1] = -1;
 	}
 	pidfd[N * i] = fork();
 	if (pidfd[N * i] == 0)
@@ -40,9 +38,7 @@ void	ft_exec_pipe(char **comm, char ***env, int *pidfd, int i)
 		ft_splittrim_quotes(arg);
 		ft_strtolower(arg[0]);
 		ft_split_debug(arg, "EXEC");
-//
 		ready_pipe(pidfd, fdp, i);
-//
 		if (ft_isbuiltin(arg[0]))
 			exit(ft_exec_builtin(arg, env));
 		ft_exec_which(arg[0], arg, env[0]);
@@ -76,7 +72,13 @@ static void	ready_pipe(int *pidfd, int *fdp, int i)
 		dup2(fdp[1], STDOUT_FILENO);
 		close(fdp[1]);
 	}
-	close_pipe(pidfd, fdp, i);
+	twenty_five_lines_norminette(fdp[0]);
+}
+
+static void	twenty_five_lines_norminette(int norminette)
+{
+	if (norminette != -1)
+		close(norminette);
 }
 
 static void	close_pipe(int *pidfd, int *fdp, int i)
@@ -110,8 +112,7 @@ static void	ft_exec_which(char *comm, char **arg, char **env)
 		ft_printf("minishell: %s: no such file or directory\n", comm);
 	else if (!path && access(comm, F_OK))
 		ft_printf("minishell: %s: command not found\n", comm);
-	else if (execve(path, arg, env))// && execve(bash[0], bash, env))
+	else if (execve(path, arg, env))
 		ft_printf("minishell: %s: permission denied\n", comm);
-	exit (126 + (path != NULL));
+	exit (126 + (access(comm, F_OK) != 0));
 }
-

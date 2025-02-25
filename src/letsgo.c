@@ -42,7 +42,6 @@ void	*letsgo(char *input, char ***env, char **cash_q, char **last_c)
 	return (ft_split_free(semicol));
 }
 
-//need to close opened fds here
 void	*letsnot(char **cash_q, char **pipe, char **semicol, int *pidfd)
 {
 	ft_free(*cash_q);
@@ -108,13 +107,13 @@ void	letsgo_pipe(char **pipe, char ***env, char **cash_q, int *pidfd)
 	letsgo_wait(pipe, pidfd, cash_q, status);
 }
 
-//void	ready_comm()
-
 void	letsgo_wait(char **pipe, int *pidfd, char **cash_q, int status)
 {
 	int	i;
 
 	ft_pidfd_debug(pipe, pidfd);
+	swap_signal_for_execute();
+	g_signal = 0;
 	i = 0;
 	while (pipe && pipe[i])
 	{
@@ -122,8 +121,12 @@ void	letsgo_wait(char **pipe, int *pidfd, char **cash_q, int status)
 			waitpid(pidfd[N * i], &status, 0);
 		i++;
 	}
+	swap_signal_for_execute();
 	free(*cash_q);
-	*cash_q = ft_itoa(((status & 0xff00) >> 8));
+	if (g_signal)
+		*cash_q = ft_itoa(g_signal + 128);
+	else
+		*cash_q = ft_itoa(((status & 0xff00) >> 8));
 	redirection_close(pipe, pidfd);
 	free(pidfd);
 	ft_split_free(pipe);

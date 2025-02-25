@@ -21,6 +21,14 @@
 #  define N 4
 # endif
 
+# ifndef MS_DEBUG
+#  define MS_DEBUG 0
+# endif
+
+# ifndef MS_CUTE
+#  define MS_CUTE 1
+# endif
+
 # include "../libft/header/libft.h"
 # include <fcntl.h>
 # include <stdio.h>
@@ -30,6 +38,8 @@
 # include <sys/wait.h>
 # include <signal.h>
 
+extern int	g_signal;
+
 //minishell.c
 //main, init
 
@@ -38,6 +48,10 @@ void	ft_split_debug(char **split, char *msg);
 void	ft_pidfd_debug(char **split, int *pidfd);
 void	ft_str_debug(char *str, char *msg);
 void	ft_dup_debug(int a, int b, char *msg);
+
+//signal.c
+void	init_signals(void);
+void	swap_signal_for_execute(void);
 
 //get_prompt.c
 char	*get_prompt(char *prompt, char **env, int cash_question);
@@ -57,10 +71,10 @@ int		ft_source(char *arg, char ***env);
 
 //exec_pipe.c
 void	ft_exec_pipe(char **comm, char ***env, int *pidfd, int i);
+//exec_which
 
 //pipe_help.c
 int		invalid_pipe(char *input);
-//exec_which
 
 //redirection.c
 int		redirection(char **pipe, int *pidfd);
