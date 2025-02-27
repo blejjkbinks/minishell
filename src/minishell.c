@@ -35,6 +35,8 @@ int	main(int argc, char **argv, char **envp)
 			letsgo(input, env, &cash_question, &last_command);
 		if (!input && MS_CUTE)
 			exit(0 + (0 * ft_printf("( •_•) minishell ctrl+d'ed (´･_･`)\n")));
+		if (!input && !MS_CUTE)
+			exit (0 + (0 * ft_printf("exit\n")));
 		free(input);
 	}
 	exit(1 + (0 * ft_printf("usage: %s\n", argv[0])));
