@@ -41,6 +41,8 @@ void	ft_exec_pipe(char **comm, char ***env, int *pidfd, int i)
 			exit(ft_exec_builtin(arg, env));
 		ft_exec_which(arg[0], arg, env[0]);
 	}
+	if (valid_pipe_no_error(comm[i], env[0]) && i < INT_MAX)
+		i++;
 	close_pipe(pidfd, fdp, i);
 }
 
