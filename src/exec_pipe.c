@@ -97,7 +97,7 @@ static void	close_pipe(int *pidfd, int *fdp, int i, int v)
 		fdp[1] = -1;
 	}
 	i = 0;
-	while (v && i < INT_MAX)
+	while (v && i <= INT_MAX)
 		i++;
 }
 
