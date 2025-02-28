@@ -74,6 +74,7 @@ void	ft_exec_pipe(char **comm, char ***env, int *pidfd, int i);
 //exec_which
 
 //pipe_help.c
+int		valid_pipe_no_error(char *comm, char **env);
 int		invalid_pipe(char *input);
 
 //redirection.c

@@ -12,10 +12,10 @@
 
 #include "minishell.h"
 
+static char	**ft_exec_split_comm(char *comm);
 static void	ft_exec_which(char *comm, char **arg, char **env);
 static void	ready_pipe(int *pidfd, int *fdp, int i);
 static void	close_pipe(int *pidfd, int *fdp, int i);
-static void	twenty_five_lines_norminette(int norminette);
 
 void	ft_exec_pipe(char **comm, char ***env, int *pidfd, int i)
 {
@@ -34,16 +34,25 @@ void	ft_exec_pipe(char **comm, char ***env, int *pidfd, int i)
 	pidfd[N * i] = fork();
 	if (pidfd[N * i] == 0)
 	{
-		arg = ft_split_quotes(comm[i], ' ');
-		ft_splittrim_quotes(arg);
-		ft_strtolower(arg[0]);
-		ft_split_debug(arg, "EXEC");
-		ready_pipe(pidfd, fdp, i);
+		arg = ft_exec_split_comm(comm[i]);
+		if (!valid_pipe_no_error(comm[i], env[0]))
+			ready_pipe(pidfd, fdp, i);
 		if (ft_isbuiltin(arg[0]))
 			exit(ft_exec_builtin(arg, env));
 		ft_exec_which(arg[0], arg, env[0]);
 	}
 	close_pipe(pidfd, fdp, i);
+}
+
+static char	**ft_exec_split_comm(char *comm)
+{
+	char	**arg;
+
+	arg = ft_split_quotes(comm, ' ');
+	ft_splittrim_quotes(arg);
+	ft_strtolower(arg[0]);
+	ft_split_debug(arg, "EXEC");
+	return (arg);
 }
 
 static void	ready_pipe(int *pidfd, int *fdp, int i)
@@ -72,13 +81,7 @@ static void	ready_pipe(int *pidfd, int *fdp, int i)
 		dup2(fdp[1], STDOUT_FILENO);
 		close(fdp[1]);
 	}
-	twenty_five_lines_norminette(fdp[0]);
-}
-
-static void	twenty_five_lines_norminette(int norminette)
-{
-	if (norminette != -1)
-		close(norminette);
+	close(fdp[0]);
 }
 
 static void	close_pipe(int *pidfd, int *fdp, int i)

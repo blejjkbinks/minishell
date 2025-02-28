@@ -14,6 +14,25 @@
 
 static int	check_pipe_content(char *input, int i, int has_command);
 
+int	valid_pipe_no_error(char *comm, char **env)
+{
+	char	*path;
+	DIR		*dir;
+
+	if (ft_isbuiltin(comm))
+		return (0);
+	path = ft_which(comm, env);
+	dir = opendir(comm);
+	if (!path || dir || !ft_strlen(comm))
+	{
+		ft_free(path);
+		closedir(dir);
+		return (1);
+	}
+	ft_free(path);
+	return (0);
+}
+
 int	invalid_pipe(char *input)
 {
 	int	has_command;
