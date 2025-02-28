@@ -73,13 +73,13 @@ char	**ready_pipe(char *input, char **last_c)
 	add_history(input);
 	ft_free(*last_c);
 	*last_c = input;
-//	input = cash_money(input, env, *cash_q);
-//	ft_str_debug(input, "CASH");
 	semicol = ft_split_quotes(input, ';');
 	ft_split_debug(semicol, "SCOL");
-//	ft_free(input);
 	return (semicol);
 }
+//	input = cash_money(input, env, *cash_q);
+//	ft_str_debug(input, "CASH");
+//	ft_free(input);
 
 void	letsgo_pipe(char **pipe, char ***env, char **cash_q, int *pidfd)
 {
