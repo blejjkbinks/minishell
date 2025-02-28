@@ -35,7 +35,7 @@ void	ft_exec_pipe(char **comm, char ***env, int *pidfd, int i)
 	if (pidfd[N * i] == 0)
 	{
 		arg = ft_exec_split_comm(comm[i]);
-		if (!valid_pipe_no_error(comm[i], env[0]))
+		if (!valid_pipe_no_error(arg[0], env[0]))
 			ready_pipe(pidfd, fdp, i);
 		if (ft_isbuiltin(arg[0]))
 			exit(ft_exec_builtin(arg, env));
