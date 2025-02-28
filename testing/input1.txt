@@ -1,3 +1,0 @@
-echo asd
-echo pwd
-pwd

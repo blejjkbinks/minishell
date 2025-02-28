@@ -46,7 +46,7 @@ static int	check_pipe_content(char *input, int i, int has_command)
 	i++;
 	while (input[i] && ft_isspace(input[i]))
 		i++;
-	if (input[i] == '\0')
+	if (input[i] == '\0' || input[i] == '|')
 	{
 		printf("minishell: invalid token '|'\n");
 		return (1);
