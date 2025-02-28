@@ -104,6 +104,7 @@ int		ft_env_set(char **env, char *name, char *val);
 int		ft_env(char **env);
 char	**ft_export(char **env, char *arg);
 char	**ft_unset(char **env, char *name);
+int		ft_export_loop(char **comm, int i, int x, char ***env);
 int		ft_export_magic(char *arg, char ***env, int x, int len);
 
 //cd_pwd.c

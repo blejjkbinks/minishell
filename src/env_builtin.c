@@ -78,6 +78,19 @@ char	**ft_unset(char **env, char *name_src)
 	return (env);
 }
 
+int	ft_export_loop(char **comm, int i, int x, char ***env)
+{
+	int	r;
+
+	r = 0;
+	while (comm[i] && !r)
+	{
+		r = ft_export_magic(comm[i], env, x, ft_env_name(comm[i], NULL));
+		i++;
+	}
+	return (r);
+}
+
 int	ft_export_magic(char *arg, char ***env, int x, int len)
 {
 	if (x == 0)
