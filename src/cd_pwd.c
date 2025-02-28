@@ -52,9 +52,9 @@ static int	ft_cd_oldpwd(char **arg, char **env, int err)
 		ft_printf("cd: no such file or directory: %s\n", arg[1]);
 	if (err == ENOTDIR)
 		ft_printf("cd: not a directory: %s\n", arg[1]);
-	if (!err && ft_strcmp(ft_env_get(env, "OLDPWD"), ft_env_get(env, "PWD")))
-		ft_env_set(env, "OLDPWD", ft_env_get(env, "PWD"));
 	str = ft_getcwd();
+	if (!err && ft_strcmp(str, ft_env_get(env, "PWD")))
+		ft_env_set(env, "OLDPWD", ft_env_get(env, "PWD"));
 	ft_env_set(env, "PWD", str);
 	free(str);
 	if (err)
