@@ -15,7 +15,7 @@
 static char	**ft_exec_split_comm(char *comm);
 static void	ft_exec_which(char *comm, char **arg, char **env);
 static void	ready_pipe(int *pidfd, int *fdp, int i);
-static void	close_pipe(int *pidfd, int *fdp, int i);
+static void	close_pipe(int *pidfd, int *fdp, int i, int v);
 
 void	ft_exec_pipe(char **comm, char ***env, int *pidfd, int i)
 {
@@ -41,9 +41,7 @@ void	ft_exec_pipe(char **comm, char ***env, int *pidfd, int i)
 			exit(ft_exec_builtin(arg, env));
 		ft_exec_which(arg[0], arg, env[0]);
 	}
-	if (valid_pipe_no_error(comm[i], env[0]) && i < INT_MAX)
-		i++;
-	close_pipe(pidfd, fdp, i);
+	close_pipe(pidfd, fdp, i, valid_pipe_no_error(comm[i], env[0]));
 }
 
 static char	**ft_exec_split_comm(char *comm)
@@ -86,7 +84,7 @@ static void	ready_pipe(int *pidfd, int *fdp, int i)
 	close(fdp[0]);
 }
 
-static void	close_pipe(int *pidfd, int *fdp, int i)
+static void	close_pipe(int *pidfd, int *fdp, int i, int v)
 {
 	if (i && pidfd[(N * (i - 1)) + 3] != -1)
 	{
@@ -98,6 +96,9 @@ static void	close_pipe(int *pidfd, int *fdp, int i)
 		close(fdp[1]);
 		fdp[1] = -1;
 	}
+	i = 0;
+	while (v && i < INT_MAX)
+		i++;
 }
 
 static void	ft_exec_which(char *comm, char **arg, char **env)
