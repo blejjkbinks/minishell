@@ -81,7 +81,8 @@ static void	ready_pipe(int *pidfd, int *fdp, int i)
 		dup2(fdp[1], STDOUT_FILENO);
 		close(fdp[1]);
 	}
-	close(fdp[0]);
+	if (fdp[0] != -1)
+		close(fdp[0]);
 }
 
 static void	close_pipe(int *pidfd, int *fdp, int i, int v)
@@ -97,7 +98,7 @@ static void	close_pipe(int *pidfd, int *fdp, int i, int v)
 		fdp[1] = -1;
 	}
 	i = 0;
-	while (v && i <= 10000)
+	while (v && i <= 1000000)
 		i++;
 }
 
