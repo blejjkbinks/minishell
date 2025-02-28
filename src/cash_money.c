@@ -17,18 +17,26 @@ static char	*cash_get_var(char *str, int *i, char ***env, char *cash_q);
 static char	*cash_get_var_dollar(char *str, int *i, char ***env);
 static char	*cash_malloc(char *str, char ***env, char *cash_q);
 
-char	*cash_money(char *str, char ***env, char *cash_q)
+void	cash_money(char **pipe, char ***env, char *cash_q)
 {
 	int		i;
-	char	*ret;
+	int		j;
+	char	*tmp;
 
 	i = 0;
-	while (str[i] == ' ')
+	while (pipe && pipe[i])
+	{
+		tmp = pipe[i];
+		j = 0;
+		while (pipe[i][j] == ' ')
+			j++;
+		if (pipe[i][j] == '#')
+			pipe[i] = NULL;
+		else
+			pipe[i] = cash_money_loop(&(pipe[i][j]), env, cash_q, j);
+		free(tmp);
 		i++;
-	if (str[i] == '#')
-		return (NULL);
-	ret = cash_money_loop(str, env, cash_q, i);
-	return (ret);
+	}
 }
 
 static char	*cash_money_loop(char *str, char ***env, char *cash_q, int i)

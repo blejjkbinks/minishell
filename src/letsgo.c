@@ -13,7 +13,8 @@
 #include "minishell.h"
 
 void	letsgo_pipe(char **pipe, char ***env, char **cash_q, int *pidfd);
-char	**ready_pipe(char *input, char ***env, char **cash_q, char **last_c);
+//char	**ready_pipe(char *input, char ***env, char **cash_q, char **last_c);
+char	**ready_pipe(char *input, char **last_c);
 void	*letsnot(char **cash_q, char **pipe, char **semicol, int *pidfd);
 void	letsgo_wait(char **pipe, int *pidfd, char **cash_q, int status);
 
@@ -26,7 +27,7 @@ void	*letsgo(char *input, char ***env, char **cash_q, char **last_c)
 
 	if (ft_isquoted_closed(input))
 		return (letsnot(cash_q, NULL, NULL, NULL));
-	semicol = ready_pipe(input, env, cash_q, last_c);
+	semicol = ready_pipe(input, last_c);
 	i = 0;
 	while (semicol && semicol[i])
 	{
@@ -34,6 +35,7 @@ void	*letsgo(char *input, char ***env, char **cash_q, char **last_c)
 		pidfd = (int *)ft_calloc(ft_split_len(pipe) * N, sizeof(int));
 		if (redirection(pipe, pidfd) || invalid_pipe(input))
 			return (letsnot(cash_q, pipe, semicol, pidfd));
+		cash_money(pipe, env, *cash_q);
 		ft_pidfd_debug(pipe, pidfd);
 		ft_split_debug(pipe, "PIPE");
 		letsgo_pipe(pipe, env, cash_q, pidfd);
@@ -60,7 +62,8 @@ void	*letsnot(char **cash_q, char **pipe, char **semicol, int *pidfd)
 	return (NULL);
 }
 
-char	**ready_pipe(char *input, char ***env, char **cash_q, char **last_c)
+//char	**ready_pipe(char *input, char ***env, char **cash_q, char **last_c)
+char	**ready_pipe(char *input, char **last_c)
 {
 	char	**semicol;
 
@@ -70,11 +73,11 @@ char	**ready_pipe(char *input, char ***env, char **cash_q, char **last_c)
 	add_history(input);
 	ft_free(*last_c);
 	*last_c = input;
-	input = cash_money(input, env, *cash_q);
-	ft_str_debug(input, "CASH");
+//	input = cash_money(input, env, *cash_q);
+//	ft_str_debug(input, "CASH");
 	semicol = ft_split_quotes(input, ';');
 	ft_split_debug(semicol, "SCOL");
-	ft_free(input);
+//	ft_free(input);
 	return (semicol);
 }
 

@@ -14,7 +14,7 @@
 
 static char	**ft_exec_split_comm(char *comm);
 static void	ft_exec_which(char *comm, char **arg, char **env);
-static void	ready_pipe(int *pidfd, int *fdp, int i);
+static void	open_pipe(int *pidfd, int *fdp, int i);
 static void	close_pipe(int *pidfd, int *fdp, int i, int v);
 
 void	ft_exec_pipe(char **comm, char ***env, int *pidfd, int i)
@@ -36,7 +36,7 @@ void	ft_exec_pipe(char **comm, char ***env, int *pidfd, int i)
 	{
 		arg = ft_exec_split_comm(comm[i]);
 		if (!valid_pipe_no_error(arg[0], env[0]))
-			ready_pipe(pidfd, fdp, i);
+			open_pipe(pidfd, fdp, i);
 		if (ft_isbuiltin(arg[0]))
 			exit(ft_exec_builtin(arg, env));
 		ft_exec_which(arg[0], arg, env[0]);
@@ -55,7 +55,7 @@ static char	**ft_exec_split_comm(char *comm)
 	return (arg);
 }
 
-static void	ready_pipe(int *pidfd, int *fdp, int i)
+static void	open_pipe(int *pidfd, int *fdp, int i)
 {
 	if (pidfd[(N * i) + 1])
 	{

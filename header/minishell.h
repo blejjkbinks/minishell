@@ -89,7 +89,7 @@ int		open_redirection(char *str, int mode, int *rin, int *rout);
 int		open_heredoc(char *str);
 
 //cash_money.c
-char	*cash_money(char *str, char ***env, char *cash_q);
+void	cash_money(char **pipe, char ***env, char *cash_q);
 
 //double_exclam.c
 char	*double_exclam(char *str, char *last_c);
