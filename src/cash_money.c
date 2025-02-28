@@ -33,7 +33,7 @@ void	cash_money(char **pipe, char ***env, char *cash_q)
 		if (pipe[i][j] == '#')
 			pipe[i] = NULL;
 		else
-			pipe[i] = cash_money_loop(&(pipe[i][j]), env, cash_q, j);
+			pipe[i] = cash_money_loop(&(pipe[i][j]), env, cash_q, 0);
 		free(tmp);
 		i++;
 	}
