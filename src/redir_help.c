@@ -106,7 +106,8 @@ int	open_redirection(char *str, int mode, int *rin, int *rout)
 		ft_printf("'%s' m:%c, in:%d, out:%d\n", str, mode, *rin, *rout);
 	if (*rin < 0 || *rout < 0)
 	{
-		ft_printf("minishell: %s: no such file or directory\n", str);
+		if (*rin != -5)
+			ft_printf("minishell: %s: no such file or directory\n", str);
 		free(str);
 		return (4);
 	}
@@ -114,6 +115,7 @@ int	open_redirection(char *str, int mode, int *rin, int *rout)
 	return (0);
 }
 
+/*
 int	open_heredoc(char *str)
 {
 	int		fd;
@@ -135,3 +137,4 @@ int	open_heredoc(char *str)
 	fd = open(MS_HEREDOC_PATH, O_RDONLY);
 	return (fd);
 }
+*/

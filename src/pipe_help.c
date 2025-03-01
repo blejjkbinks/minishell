@@ -72,5 +72,3 @@ static int	check_pipe_content(char *input, int i, int has_command)
 	}
 	return (0);
 }
-//printf("Pipe '|' must be followed by a command\n");
-//printf("Pipe '|' must be preceded by a command\n");

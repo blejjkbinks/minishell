@@ -58,7 +58,7 @@ char	*get_prompt(char *prompt, char **env, int cash_question);
 
 //letsgo.c
 void	*letsgo(char *input, char ***env, char **cash_q, char **last_c);
-//letsgo_pipe, ready_pipe, ready_comm, letsgo_wait
+//letsgo_pipe, letsnot, ready_pipe, letsgo_wait
 
 //find_builtin.c
 int		ft_isbuiltin(char *str);
@@ -71,7 +71,7 @@ int		ft_source(char *arg, char ***env);
 
 //exec_pipe.c
 void	ft_exec_pipe(char **comm, char ***env, int *pidfd, int i);
-//exec_which
+//exec_which, open_pipe, close_pipe
 
 //pipe_help.c
 int		valid_pipe_no_error(char *comm, char **env);
@@ -86,6 +86,8 @@ int		find_redirection(char *str, int *rin, int *rout);
 int		find_mode(char *str, int *i, int *mode);
 int		trim_redirection(char *str, int mode, int *rin, int *rout);
 int		open_redirection(char *str, int mode, int *rin, int *rout);
+
+//heredoc.c
 int		open_heredoc(char *str);
 
 //cash_money.c

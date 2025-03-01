@@ -83,6 +83,8 @@ int	ft_export_loop(char **comm, int i, int x, char ***env)
 	int	r;
 
 	r = 0;
+	if (x == 3 && !comm[i])
+		ft_env(env[2]);
 	while (comm[i] && !r)
 	{
 		r = ft_export_magic(comm[i], env, x, ft_env_name(comm[i], NULL));

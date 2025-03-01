@@ -32,12 +32,12 @@ L_READLINE := -L/usr/local/opt/readline/lib -lreadline
 MAKEFLAGS += --no-print-directory
 
 SRC := \
-	cd_pwd.c	env_builtin.c	env_help.c \
+	cd_pwd.c		env_builtin.c	env_help.c \
 	exec_pipe.c		find_builtin.c	exec_builtin.c \
 	minishell.c		get_prompt.c 	letsgo.c \
-	cash_money.c	double_exclam.c		redirection.c \
-	pipe_help.c		redir_help.c 	debug.c 	signal.c \
-	
+	cash_money.c	double_exclam.c	redirection.c \
+	pipe_help.c		redir_help.c \
+	debug.c 		signal.c		heredoc.c \
 
 SRC := $(addprefix $(SRC_DIR)/, $(SRC))
 
