@@ -26,6 +26,8 @@ char	*get_next_line(int fd)
 		ret[i + 1] = 0;
 		if (read(fd, &ret[i], 1) == 1)
 			i++;
+		else if (!i)
+			break ;
 		if (ret[i - 1] == '\n')
 			return (ret);
 		if (i + 1 == c)
