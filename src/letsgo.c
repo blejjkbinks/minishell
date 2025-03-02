@@ -61,6 +61,7 @@ void	*letsnot(char **cash_q, char **pipe, char **semicol, int *pidfd)
 	ft_free(pidfd);
 	ft_split_free(pipe);
 	ft_split_free(semicol);
+	g_signal = 0;
 	return (NULL);
 }
 
