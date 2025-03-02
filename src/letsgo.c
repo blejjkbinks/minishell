@@ -25,6 +25,7 @@ void	*letsgo(char *input, char ***env, char **cash_q, char **last_c)
 	int		*pidfd;
 	int		i;
 
+	g_signal = 0;
 	if (ft_isquoted_closed(input))
 		return (letsnot(cash_q, NULL, NULL, NULL));
 	semicol = ready_pipe(input, last_c);
