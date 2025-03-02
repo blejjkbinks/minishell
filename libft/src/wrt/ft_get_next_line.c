@@ -21,14 +21,13 @@ char	*get_next_line(int fd)
 	c = DEFAULT_CAP;
 	i = 0;
 	ret = (char *)ft_malloc(c * sizeof(char));
-	while (ret && read(fd, &ret[i], 1) == 1)
+	while (ret || i)
 	{
-		if (ret[i] == '\n')
-		{
-			ret[i] = 0;
+		ret[i + 1] = 0;
+		if (read(fd, &ret[i], 1) == 1)
+			i++;
+		if (ret[i - 1] == '\n')
 			return (ret);
-		}
-		ret[++i] = 0;
 		if (i + 1 == c)
 			ret = ft_realloc(ret, i, c * 2, &c);
 	}

@@ -36,14 +36,14 @@ void	reading_input(int *interrupted, int fd, char *delimiter)
 	{
 		ft_printf("'%s'> ", delimiter);
 		line = get_next_line(0);
-		if (!line && g_signal == 0)
-		{
-			ft_printf("\n");
-			return ;
-		}
 		if (g_signal == 2)
 		{
 			*interrupted = 1;
+			return ;
+		}
+		if (!line && g_signal == 0)
+		{
+			ft_printf("\n");
 			return ;
 		}
 		if (!ft_strcmp(line, delimiter) && line)
@@ -52,7 +52,11 @@ void	reading_input(int *interrupted, int fd, char *delimiter)
 			return ;
 		}
 		write(fd, line, ft_strlen(line));
-		write(fd, "\n", 1);
+		/*if (!ft_strchr(line, '\n'))
+		{
+			write(fd, "\n", 1);
+			write(1, "\n", 1);
+		}*/
 		free(line);
 	}
 }
@@ -69,7 +73,6 @@ int	open_heredoc(char *delimiter)
 	reading_input(&interrupted, fd, delimiter);
 	close(fd);
 	sigaction(SIGINT, &old_action, NULL);
-	//printf("%i\n", g_signal);
 	if (interrupted)
 		return (-5);
 	return (open(MS_HEREDOC_PATH, O_RDONLY));
