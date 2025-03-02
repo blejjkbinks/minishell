@@ -63,6 +63,7 @@ int	open_heredoc(char *delimiter)
 	int					interrupted;
 
 	interrupted = 0;
+	g_signal = 0;
 	fd = open(MS_HEREDOC_PATH, O_CREAT | O_WRONLY | O_TRUNC, 0666);
 	set_heredoc_signal_handler(&old_action);
 	reading_input(&interrupted, fd, delimiter);
