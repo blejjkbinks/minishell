@@ -12,20 +12,20 @@
 
 #include "minishell.h"
 
-static void	heredoc_sigint_handler(int signo)
+static void	heredoc_sig_handler(int signo)
 {
-	(void)signo;
+	g_signal = signo;
 	write(1, "\n", 1);
 }
 
 static void	set_heredoc_signal_handler(struct sigaction *old_action)
 {
-	struct sigaction	new_action;
+	struct sigaction	int_new_action;
 
-	new_action.sa_handler = heredoc_sigint_handler;
-	sigemptyset(&new_action.sa_mask);
-	new_action.sa_flags = 0;
-	sigaction(SIGINT, &new_action, old_action);
+	int_new_action.sa_handler = heredoc_sig_handler;
+	sigemptyset(&int_new_action.sa_mask);
+	int_new_action.sa_flags = 0;
+	sigaction(SIGINT, &int_new_action, old_action);
 }
 
 void	reading_input(int *interrupted, int fd, char *delimiter)
@@ -36,12 +36,17 @@ void	reading_input(int *interrupted, int fd, char *delimiter)
 	{
 		ft_printf("'%s'> ", delimiter);
 		line = get_next_line(0);
-		if (!line)
+		if (!line && g_signal == 0)
+		{
+			ft_printf("\n");
+			return ;
+		}
+		if (g_signal == 2)
 		{
 			*interrupted = 1;
 			return ;
 		}
-		if (!ft_strcmp(line, delimiter))
+		if (!ft_strcmp(line, delimiter) && line)
 		{
 			free(line);
 			return ;
@@ -64,10 +69,8 @@ int	open_heredoc(char *delimiter)
 	reading_input(&interrupted, fd, delimiter);
 	close(fd);
 	sigaction(SIGINT, &old_action, NULL);
+	//printf("%i\n", g_signal);
 	if (interrupted)
-	{
-		unlink(MS_HEREDOC_PATH);
 		return (-5);
-	}
 	return (open(MS_HEREDOC_PATH, O_RDONLY));
 }

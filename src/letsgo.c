@@ -49,6 +49,8 @@ void	*letsnot(char **cash_q, char **pipe, char **semicol, int *pidfd)
 	ft_free(*cash_q);
 	if (pidfd && *pidfd == 258)
 		*cash_q = ft_itoa(258);
+	else if (g_signal == 2)
+		*cash_q = ft_itoa(130);
 	else
 		*cash_q = ft_itoa(1);
 	if (!pidfd && MS_CUTE)
