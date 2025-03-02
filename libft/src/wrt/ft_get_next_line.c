@@ -20,7 +20,6 @@ char	*get_next_line(int fd)
 	size_t	i;
 	size_t	c;
 
-	ft_printf("get_next_line(%d)\n", fd);
 	if (fd != 0)
 		return (gnl_normal_file(fd));
 	c = DEFAULT_CAP;
