@@ -46,17 +46,12 @@ void	reading_input(int *interrupted, int fd, char *delimiter)
 			ft_printf("\n");
 			return ;
 		}
-		if (!ft_strcmp(line, delimiter) && line)
+		if (!ft_strncmp(line, delimiter, ft_strlen(line) - 1) && line)
 		{
 			free(line);
 			return ;
 		}
 		write(fd, line, ft_strlen(line));
-		/*if (!ft_strchr(line, '\n'))
-		{
-			write(fd, "\n", 1);
-			write(1, "\n", 1);
-		}*/
 		free(line);
 	}
 }
