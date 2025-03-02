@@ -173,3 +173,13 @@ bash-3.2$ echo $?
 0
 bash-3.2$ 
 ```
+
+heredoc testing
+
+ctrl+c with buffer
+
+ctrl+c at beginning of line
+
+ctrl+d with buffer
+
+ctrl+d at beginning of line
