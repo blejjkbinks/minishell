@@ -57,8 +57,8 @@ bash-3.2$ cat << d << f > file1 | tr a b > file2
 > asd
 > asd
 > d
-> qwe
-> qwe
+> axc
+> axc
 > f
 bash-3.2$ cat file1
 qwe
@@ -172,6 +172,21 @@ bash-3.2$ cat << asd
 bash-3.2$ echo $?
 0
 bash-3.2$ 
+```
+
+```
+$minishell$ blejj@ ./minishell (main) :3 $ echo asd | | echo asd
+minishell: invalid token '|'
+$minishell$ blejj@ ./minishell (main) :( $ echo asd | 
+minishell: invalid token '|'
+$minishell$ blejj@ ./minishell (main) :( $  | echo asd
+minishell: invalid token '|'
+$minishell$ blejj@ ./minishell (main) :( $ | echo asd
+minishell: invalid token '|'
+$minishell$ blejj@ ./minishell (main) :( $ echo $?
+1
+$minishell$ blejj@ ./minishell (main) :3 $ echo <
+minishell: invalid token >< >:(
 ```
 
 heredoc testing
