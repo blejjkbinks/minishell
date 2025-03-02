@@ -46,8 +46,10 @@ void	reading_input(int *interrupted, int fd, char *delimiter)
 			ft_printf("\n");
 			return ;
 		}
+		ft_printf("heredoc_debug: '%s'\n", line);
 		if (!ft_strncmp(line, delimiter, ft_strlen(line) - 1) && line)
 		{
+			ft_printf("heredoc_debug: !ft_strncmp\n");
 			free(line);
 			return ;
 		}
