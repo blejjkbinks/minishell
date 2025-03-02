@@ -47,8 +47,8 @@ void	reading_input(int *interrupted, int fd, char *delimiter)
 			return ;
 		}
 		ft_printf("hd_debug: '%s', %d\n", line, ft_max(ft_strlen(delimiter), ft_strlen(line) - 1));
-		if (!ft_strncmp(line, delimiter, \
-			ft_max(ft_strlen(delimiter), ft_strlen(line) - 1) && line))
+		if (!ft_strncmp(line, delimiter, 
+			ft_max(ft_strlen(delimiter), ft_strlen(line) - 1)) && line)
 		{
 			free(line);
 			return ;
