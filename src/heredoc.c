@@ -18,7 +18,7 @@ static void	heredoc_sig_handler(int signo)
 	write(1, "\n", 1);
 }
 
-static void	set_heredoc_signal_handler(struct sigaction *old_action)
+static void	set_heredoc_intsignal_handler(struct sigaction *old_action)
 {
 	struct sigaction	int_new_action;
 
@@ -26,6 +26,15 @@ static void	set_heredoc_signal_handler(struct sigaction *old_action)
 	sigemptyset(&int_new_action.sa_mask);
 	int_new_action.sa_flags = 0;
 	sigaction(SIGINT, &int_new_action, old_action);
+}
+static void	set_heredoc_quitsignal_handler(struct sigaction *old_action)
+{
+	struct sigaction	quit_new_action;
+
+	quit_new_action.sa_handler = heredoc_sig_handler;
+	sigemptyset(&quit_new_action.sa_mask);
+	quit_new_action.sa_flags = 0;
+	sigaction(SIGQUIT, &quit_new_action, old_action);
 }
 
 void	reading_input(int *interrupted, int fd, char *delimiter)
@@ -59,16 +68,19 @@ void	reading_input(int *interrupted, int fd, char *delimiter)
 
 int	open_heredoc(char *delimiter)
 {
-	struct sigaction	old_action;
+	struct sigaction	int_old_action;
+	struct sigaction	quit_old_action;
 	int					fd;
 	int					interrupted;
 
 	interrupted = 0;
 	fd = open(MS_HEREDOC_PATH, O_CREAT | O_WRONLY | O_TRUNC, 0666);
-	set_heredoc_signal_handler(&old_action);
+	set_heredoc_intsignal_handler(&int_old_action);
+	set_heredoc_quitsignal_handler(&quit_old_action);
 	reading_input(&interrupted, fd, delimiter);
 	close(fd);
-	sigaction(SIGINT, &old_action, NULL);
+	sigaction(SIGQUIT, &quit_old_action, NULL);
+	sigaction(SIGINT, &int_old_action, NULL);
 	//printf("%i\n", g_signal);
 	if (interrupted)
 		return (-5);

@@ -24,7 +24,6 @@ void	ms_sig_interupt(int signo)
 void	ms_sig_interupt_alt(int signo)
 {
 	g_signal = signo;
-	ft_printf("this is the signal %i\n", g_signal);
 	if (signo == SIGINT)
 		printf("\n");
 	else if (signo == SIGQUIT)
