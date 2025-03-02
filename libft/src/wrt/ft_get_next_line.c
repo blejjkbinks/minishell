@@ -12,12 +12,16 @@
 
 #include "libft.h"
 
+char	*gnl_normal_file(int fd);
+
 char	*get_next_line(int fd)
 {
 	char	*ret;
 	size_t	i;
 	size_t	c;
 
+	if (fd != 0)
+		return (gnl_normal_file(fd));
 	c = DEFAULT_CAP;
 	i = 0;
 	ret = (char *)ft_malloc(c * sizeof(char));
@@ -30,6 +34,31 @@ char	*get_next_line(int fd)
 			break ;
 		if (ret[i - 1] == '\n')
 			return (ret);
+		if (i + 1 == c)
+			ret = ft_realloc(ret, i, c * 2, &c);
+	}
+	if (!i)
+		return (ft_free(ret));
+	return (ret);
+}
+
+char	*gnl_normal_file(int fd)
+{
+	char	*ret;
+	size_t	i;
+	size_t	c;
+
+	c = DEFAULT_CAP;
+	i = 0;
+	ret = (char *)ft_malloc(c * sizeof(char));
+	while (ret && read(fd, &ret[i], 1) == 1)
+	{
+		if (ret[i] == '\n')
+		{
+			ret[i] = 0;
+			return (ret);
+		}
+		ret[++i] = 0;
 		if (i + 1 == c)
 			ret = ft_realloc(ret, i, c * 2, &c);
 	}
