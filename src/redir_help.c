@@ -109,6 +109,11 @@ int	open_redirection(char *str, int mode, int *rin, int *rout)
 		if (*rin != -5)
 			ft_printf("minishell: %s: no such file or directory\n", str);
 		free(str);
+		if (*rin == -5)
+		{
+			*rin = 0;
+			return (0);
+		}
 		return (4);
 	}
 	free(str);
