@@ -19,8 +19,8 @@ static void	close_pipe(int *pidfd, int *fdp, int i, int v);
 
 void	ft_exec_pipe(char **comm, char ***env, int *pidfd, int i)
 {
-	char	**arg;
-	int		fdp[2];
+	char				**arg;
+	int					fdp[2];
 	struct sigaction	sa_sig_quit;
 
 	fdp[0] = -1;

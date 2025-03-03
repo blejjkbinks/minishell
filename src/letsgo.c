@@ -96,7 +96,6 @@ void	letsgo_pipe(char **pipe, char ***env, char **cash_q, int *pidfd)
 	{
 		comm = ft_split_quotes(pipe[0], ' ');
 		ft_splittrim_quotes(comm);
-		ft_strtolower(comm[0]);
 		if (comm && ft_isbuiltin(comm[0]) > 1)
 			ft_split_debug(comm, "SINGLE");
 		if (comm && ft_isbuiltin(comm[0]) > 1)
@@ -113,6 +112,7 @@ void	letsgo_pipe(char **pipe, char ***env, char **cash_q, int *pidfd)
 	}
 	letsgo_wait(pipe, pidfd, cash_q, status);
 }
+//ft_strtolower(comm[0]);
 
 void	letsgo_wait(char **pipe, int *pidfd, char **cash_q, int status)
 {
