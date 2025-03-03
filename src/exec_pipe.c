@@ -34,6 +34,7 @@ void	ft_exec_pipe(char **comm, char ***env, int *pidfd, int i)
 	pidfd[N * i] = fork();
 	if (pidfd[N * i] == 0)
 	{
+		signal(SIGQUIT, SIG_DFL);
 		arg = ft_exec_split_comm(comm[i]);
 		if (!valid_pipe_no_error(arg[0], env[0]))
 			open_pipe(pidfd, fdp, i);
