@@ -1,18 +1,8 @@
+# minishell, can do all that
 ```
-blejj@blejjs-MacBook-Pro ~ % echo $SHLVL
-1
-blejj@blejjs-MacBook-Pro ~ % bash
-
-The default interactive shell is now zsh.
-To update your account to use zsh, please run `chsh -s /bin/zsh`.
-For more details, please visit https://support.apple.com/kb/HT208050.
 bash-3.2$ echo $SHLVL
 2
 bash-3.2$ bash
-
-The default interactive shell is now zsh.
-To update your account to use zsh, please run `chsh -s /bin/zsh`.
-For more details, please visit https://support.apple.com/kb/HT208050.
 bash-3.2$ echo $SHLVL
 3
 bash-3.2$ exit
@@ -124,11 +114,7 @@ Makefile	file1		header		minishellrc
 file		file2		libft		src
 bash-3.2$ exit
 exit
-blejj@blejjs-MacBook-Pro ~ % bash
-
-The default interactive shell is now zsh.
-To update your account to use zsh, please run `chsh -s /bin/zsh`.
-For more details, please visit https://support.apple.com/kb/HT208050.
+bash-3.2$ bash
 bash-3.2$ ls
 Applications	Downloads	Music		Templates
 Desktop		Library		Pictures	minishell
@@ -188,13 +174,3 @@ $minishell$ blejj@ ./minishell (main) :( $ echo $?
 $minishell$ blejj@ ./minishell (main) :3 $ echo <
 minishell: invalid token >< >:(
 ```
-
-heredoc testing
-
-ctrl+c with buffer
-
-ctrl+c at beginning of line
-
-ctrl+d with buffer
-
-ctrl+d at beginning of line
