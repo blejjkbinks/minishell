@@ -21,6 +21,7 @@ void	ft_exec_pipe(char **comm, char ***env, int *pidfd, int i)
 {
 	char	**arg;
 	int		fdp[2];
+	struct sigaction	sa_sig_quit;
 
 	fdp[0] = -1;
 	fdp[1] = -1;
@@ -34,7 +35,10 @@ void	ft_exec_pipe(char **comm, char ***env, int *pidfd, int i)
 	pidfd[N * i] = fork();
 	if (pidfd[N * i] == 0)
 	{
-		signal(SIGQUIT, SIG_DFL);
+		sa_sig_quit.sa_handler = SIG_DFL;
+		sigemptyset(&sa_sig_quit.sa_mask);
+		sa_sig_quit.sa_flags = 0;
+		sigaction(SIGQUIT, &sa_sig_quit, NULL);
 		arg = ft_exec_split_comm(comm[i]);
 		if (!valid_pipe_no_error(arg[0], env[0]))
 			open_pipe(pidfd, fdp, i);
