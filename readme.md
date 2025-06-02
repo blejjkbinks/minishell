@@ -5,6 +5,7 @@ Bash clone with
 - Execution of external commands using `$PATH`
 - Builtin commands (`cd`, `echo`, `env`, `export`, `unset`, `exit`, `alias`)
 - Environment variable expansion with `$`, `~` for `$HOME`
+- Local variables without `export`
 - Signal handling (`ctrl+c`, `ctrl+d`, `ctrl+\`)
 - No libc or stdio, all built from scratch
 - Readline used for interactive line editing
