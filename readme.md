@@ -1,4 +1,17 @@
-# minishell, can do all that
+# minishell
+
+Bash clone with
+- Command parsing, handling quotes (`'`, `"`), pipes (`|`, `;`), redirection (`>`, `>>`, `<`, `<<`)
+- Execution of external commands using `$PATH`
+- Builtin commands (`cd`, `echo`, `env`, `export`, `unset`, `exit`, `alias`)
+- Environment variable expansion with `$`, `~` for `$HOME`
+- Signal handling (`ctrl+c`, `ctrl+d`, `ctrl+\`)
+- No libc or stdio, all built from scratch
+- Readline used for interactive line editing
+- Norminette compliance
+
+Some edge cases from bash, minishell should behave exactly the same:  
+
 ```
 bash-3.2$ echo $SHLVL
 2
